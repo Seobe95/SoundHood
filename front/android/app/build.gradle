@@ -105,12 +105,19 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    project.ext.envConfigFiles = [
+            debug: "env/.env.development",
+            product: "env/.env.production",
+            anothercustombuild: ".env"
+    ]
+
+    apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
