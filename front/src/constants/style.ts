@@ -47,7 +47,7 @@ const theme: ThemeType = {
     backgroundColor: '#121212',
     backgroundColorSecondary: '#1E1E1E',
     fontColorPrimary: '#E0E0E0',
-    fontColorSecondary: '#BDBDBD',
+    fontColorSecondary: '#828282',
     borderColor: '#424242',
     ...colors,
   },

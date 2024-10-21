@@ -4,4 +4,4 @@ const authNavigations = {
   AUTH_HOME: 'AuthHome',
 } as const;
 
-export {authNavigations};
+export { authNavigations };
