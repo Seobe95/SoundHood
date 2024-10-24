@@ -1,20 +1,22 @@
 import React from 'react';
-import {Platform, SafeAreaView, StyleSheet, Text} from 'react-native';
-import Config from 'react-native-config';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { CustomThemeProvider } from './src/context/CustomThemeContext';
+import AuthNavigator from './src/navigators/auth/AuthNavigator';
+import { NavigationContainer } from '@react-navigation/native';
 
 function App() {
-  const test = Config.DEVICE_UUID ?? 'none';
   return (
-    <SafeAreaView>
-      <Text style={styles.text}>{test}</Text>
-    </SafeAreaView>
+    <GestureHandlerRootView>
+      <SafeAreaProvider>
+        <CustomThemeProvider>
+          <NavigationContainer>
+            <AuthNavigator />
+          </NavigationContainer>
+        </CustomThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
-
-const styles = StyleSheet.create({
-  text: {
-    color: Platform.OS === 'android' ? 'black' : 'white',
-  },
-});
 
 export default App;
