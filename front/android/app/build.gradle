@@ -72,14 +72,22 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+project.ext.envConfigFiles = [
+        developdebug: "env/.env.development",
+        product: "env/.env.production",
+        anothercustombuild: ".env"
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.front"
+    namespace "com.soundhood.seobe"
     defaultConfig {
-        applicationId "com.front"
+        applicationId "com.soundhood.seobe"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -106,13 +114,19 @@ android {
         }
     }
 
-    project.ext.envConfigFiles = [
-            debug: "env/.env.development",
-            product: "env/.env.production",
-            anothercustombuild: ".env"
-    ]
+    flavorDimensions 'version'
+    productFlavors {
+        develop {
+            dimension "version"
+        }
+        staging {
 
-    apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+        }
+        product {
+            dimension "version"
+        }
+    }
+
 }
 
 dependencies {

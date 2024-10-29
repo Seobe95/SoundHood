@@ -1,4 +1,4 @@
-package com.front
+package com.soundhood.seobe
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

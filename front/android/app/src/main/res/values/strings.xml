@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">front</string>
+    <string name="app_name">SoundHood</string>
+    <string name="naver_map_client_id">@string/NAVER_MAP_CLIENT_ID</string>
 </resources>
