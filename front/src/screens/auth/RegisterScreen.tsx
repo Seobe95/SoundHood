@@ -1,11 +1,13 @@
 import React, { useContext, useRef } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
-import { ColorsType } from '../../constants';
-import { ThemeContext } from '../../context/CustomThemeContext';
-import CustomButton from '../../components/CustomButton';
-import InputField from '../../components/InputField';
-import { useForm } from '../../hooks/useForm';
-import { validateRegister } from '../../utils/validate';
+import { ColorsType } from '@/constants';
+import { ThemeContext } from '@/context/CustomThemeContext';
+import CustomButton from '@/components/CustomButton';
+import InputField from '@/components/InputField';
+import { useForm } from '@/hooks/useForm';
+import { validateRegister } from '@/utils/validate';
+import useAuth from '@/hooks/queries/useAuth';
+import Config from 'react-native-config';
 
 interface RegisterScreenProps {}
 
@@ -15,10 +17,21 @@ function RegisterScreen({}: RegisterScreenProps) {
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
   const passwordCheckRef = useRef<TextInput>(null);
-  const register = useForm({
+  const { signupMutation, loginMutation } = useAuth();
+  const signup = useForm({
     initialValue: { email: '', password: '', passwordCheck: '' },
     validate: validateRegister,
   });
+  const onPress = async () => {
+    const { email, password } = signup.values;
+    console.log(email, password, Config.API_URI);
+    signupMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => loginMutation.mutate({ email, password }),
+      },
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -28,30 +41,34 @@ function RegisterScreen({}: RegisterScreenProps) {
           keyboardType="email-address"
           ref={emailRef}
           onSubmitEditing={() => passwordRef.current?.focus()}
-          error={register.errors.email}
-          touched={register.touched.email}
+          error={signup.errors.email}
+          touched={signup.touched.email}
           blurOnSubmit={false}
-          {...register.getTextInputProps('email')}
+          {...signup.getTextInputProps('email')}
         />
         <InputField
           placeholder="비밀번호"
           secureTextEntry
           ref={passwordRef}
-          error={register.errors.password}
-          touched={register.touched.password}
-          {...register.getTextInputProps('password')}
+          error={signup.errors.password}
+          touched={signup.touched.password}
+          {...signup.getTextInputProps('password')}
         />
         <InputField
           placeholder="비밀번호 확인"
           secureTextEntry
           ref={passwordCheckRef}
-          error={register.errors.passwordCheck}
-          touched={register.touched.passwordCheck}
-          {...register.getTextInputProps('passwordCheck')}
+          error={signup.errors.passwordCheck}
+          touched={signup.touched.passwordCheck}
+          {...signup.getTextInputProps('passwordCheck')}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton label="로그인" />
+        <CustomButton
+          label="회원가입"
+          onPress={onPress}
+          invalid={!signup.isVaild}
+        />
       </View>
     </View>
   );
