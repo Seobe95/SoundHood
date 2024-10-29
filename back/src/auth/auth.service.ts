@@ -102,4 +102,22 @@ export class AuthService {
 
     return { accessToken, refreshToken };
   }
+
+  getProfile(user: User) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, hashedRefreshToken, ...rest } = user;
+
+    return { ...rest };
+  }
+
+  async deleteRefreshToken(user: User) {
+    try {
+      await this.userRepository.update(user.id, { hashedRefreshToken: null });
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        '로그아웃 도중 에러가 발생했습니다.',
+      );
+    }
+  }
 }

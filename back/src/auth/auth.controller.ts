@@ -31,4 +31,16 @@ export class AuthController {
   refresh(@GetUser() user: User) {
     return this.authService.refreshToken(user);
   }
+
+  @Get('/me')
+  @UseGuards(AuthGuard())
+  getProfile(@GetUser() user: User) {
+    return this.authService.getProfile(user);
+  }
+
+  @Post('/logout')
+  @UseGuards(AuthGuard())
+  logout(@GetUser() user: User) {
+    return this.authService.deleteRefreshToken(user);
+  }
 }
