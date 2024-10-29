@@ -7,8 +7,8 @@ import MapScreen from '@/screens/main/MapScreen';
 
 function RootNavigator() {
   const { isLogin, logoutMutation } = useAuth();
-  return isLogin ? <MapScreen /> : <AuthNavigator />;
-  // return <MapScreen />;
+  // return isLogin ? <MapScreen /> : <AuthNavigator />;
+  return <MapScreen />;
 }
 
 const styles = StyleSheet.create({});
