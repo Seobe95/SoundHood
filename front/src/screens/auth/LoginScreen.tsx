@@ -1,11 +1,12 @@
 import React, { useContext, useRef } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
-import { ColorsType } from '../../constants';
-import { ThemeContext } from '../../context/CustomThemeContext';
-import CustomButton from '../../components/CustomButton';
-import InputField from '../../components/InputField';
-import { useForm } from '../../hooks/useForm';
-import { validateLogin } from '../../utils/validate';
+import { ThemeContext } from '@/context/CustomThemeContext';
+import CustomButton from '@/components/CustomButton';
+import { useForm } from '@/hooks/useForm';
+import { validateLogin } from '@/utils/validate';
+import useAuth from '@/hooks/queries/useAuth';
+import { ColorsType } from '@/constants';
+import InputField from '@/components/InputField';
 
 interface LoginScreenProps {}
 
@@ -14,10 +15,19 @@ function LoginScreen({}: LoginScreenProps) {
   const styles = makeStyles(themeColor);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
+  const { loginMutation } = useAuth();
   const login = useForm({
     initialValue: { email: '', password: '' },
     validate: validateLogin,
   });
+  const onPress = async () => {
+    loginMutation.mutate(login.values);
+    // await apiInstance
+    //   .post('http://localhost:3030/auth/signin', login.values)
+    //   .then(res => {
+    //     console.log(res.data);
+    //   });
+  };
 
   return (
     <View style={styles.container}>
@@ -46,7 +56,11 @@ function LoginScreen({}: LoginScreenProps) {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton label="로그인" invalid={!login.isVaild} />
+        <CustomButton
+          label="로그인"
+          invalid={!login.isVaild}
+          onPress={onPress}
+        />
       </View>
     </View>
   );

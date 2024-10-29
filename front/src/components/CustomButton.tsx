@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Platform, StyleSheet, Text } from 'react-native';
 import { Pressable, PressableProps } from 'react-native-gesture-handler';
-import { ColorsType } from '../constants';
-import { ThemeContext } from '../context/CustomThemeContext';
+import { ColorsType } from '@/constants';
+import { ThemeContext } from '@/context/CustomThemeContext';
 
 interface CustomButtonProps extends PressableProps {
   label: string;

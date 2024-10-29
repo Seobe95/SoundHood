@@ -4,4 +4,9 @@ const authNavigations = {
   AUTH_HOME: 'AuthHome',
 } as const;
 
-export { authNavigations };
+const authToken = {
+  ACCESS_TOKEN: 'AccessToken',
+  REFRESH_TOKEN: 'RefreshToken',
+} as const;
+
+export { authNavigations, authToken };

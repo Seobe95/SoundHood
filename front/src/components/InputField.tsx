@@ -8,9 +8,9 @@ import {
   TextInputProps,
   View,
 } from 'react-native';
-import { ThemeContext } from '../context/CustomThemeContext';
-import { ColorsType } from '../constants';
-import { mergeRefs } from '../utils/common';
+import { ThemeContext } from '@/context/CustomThemeContext';
+import { ColorsType } from '@/constants';
+import { mergeRefs } from '@/utils/common';
 
 interface InputFieldProps extends TextInputProps {
   disabled?: boolean;

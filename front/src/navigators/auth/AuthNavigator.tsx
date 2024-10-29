@@ -1,11 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import AuthHomeScreen from '../../screens/auth/AuthHomeScreen';
-import LoginScreen from '../../screens/auth/LoginScreen';
-import RegisterScreen from '../../screens/auth/RegisterScreen';
-import { authNavigations } from '../../constants';
-import { ThemeContext } from '../../context/CustomThemeContext';
+import AuthHomeScreen from '@/screens/auth/AuthHomeScreen';
+import LoginScreen from '@/screens/auth/LoginScreen';
+import RegisterScreen from '@/screens/auth/RegisterScreen';
+import { authNavigations } from '@/constants';
+import { ThemeContext } from '@/context/CustomThemeContext';
 
 interface AuthNavigationProps {}
 
