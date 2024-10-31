@@ -8,14 +8,14 @@ import DetailNavigator, {
   DetailStackParamList,
 } from '../detail/DetailNavigator';
 import PostScreen from '@/screens/post/PostScreen';
-import { rootStackNavigator } from '@/constants';
+import { rootStackNavigations } from '@/constants';
 
 export type RootStackParamList = {
-  [rootStackNavigator.AUTH]: NavigatorScreenParams<AuthStackParamList>;
-  [rootStackNavigator.MAIN_TAP]: NavigatorScreenParams<MainTabParamList>;
-  [rootStackNavigator.DETAIL]: NavigatorScreenParams<DetailStackParamList>;
-  [rootStackNavigator.POST]: undefined;
-  [rootStackNavigator.SETTING]: undefined;
+  [rootStackNavigations.AUTH]: NavigatorScreenParams<AuthStackParamList>;
+  [rootStackNavigations.MAIN_TAP]: NavigatorScreenParams<MainTabParamList>;
+  [rootStackNavigations.DETAIL]: NavigatorScreenParams<DetailStackParamList>;
+  [rootStackNavigations.POST]: undefined;
+  [rootStackNavigations.SETTING]: undefined;
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -27,16 +27,19 @@ function RootNavigator() {
         headerShown: false,
       }}>
       <RootStack.Screen
-        name={rootStackNavigator.MAIN_TAP}
+        name={rootStackNavigations.MAIN_TAP}
         component={TabNavigator}
       />
       <RootStack.Screen
-        name={rootStackNavigator.AUTH}
+        name={rootStackNavigations.AUTH}
         component={AuthNavigator}
       />
-      <RootStack.Screen name={rootStackNavigator.POST} component={PostScreen} />
       <RootStack.Screen
-        name={rootStackNavigator.DETAIL}
+        name={rootStackNavigations.POST}
+        component={PostScreen}
+      />
+      <RootStack.Screen
+        name={rootStackNavigations.DETAIL}
         component={DetailNavigator}
       />
     </RootStack.Navigator>

@@ -1,32 +1,33 @@
+import { detailStackNavigations } from '@/constants';
+import DetailScreen from '@/screens/post/DetailScreen';
 import EditScreen from '@/screens/post/EditScreen';
 import ReportScreen from '@/screens/post/ReportScreen';
+import { CompositeScreenProps } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-
-interface DetailNavigatorProps {}
-
-const detailStackNavigator = {
-  REPORT: 'report',
-  EDIT: 'edit',
-} as const;
+import { StyleSheet } from 'react-native';
 
 export type DetailStackParamList = {
-  [detailStackNavigator.EDIT]: undefined;
-  [detailStackNavigator.REPORT]: undefined;
+  [detailStackNavigations.EDIT]: undefined;
+  [detailStackNavigations.REPORT]: undefined;
+  [detailStackNavigations.DETAIL]: undefined;
 };
 
 const DetailStack = createStackNavigator<DetailStackParamList>();
 
-function DetailNavigator({}: DetailNavigatorProps) {
+function DetailNavigator() {
   return (
     <DetailStack.Navigator>
       <DetailStack.Screen
-        name={detailStackNavigator.EDIT}
+        name={detailStackNavigations.DETAIL}
+        component={DetailScreen}
+      />
+      <DetailStack.Screen
+        name={detailStackNavigations.EDIT}
         component={EditScreen}
       />
       <DetailStack.Screen
-        name={detailStackNavigator.REPORT}
+        name={detailStackNavigations.REPORT}
         component={ReportScreen}
       />
     </DetailStack.Navigator>

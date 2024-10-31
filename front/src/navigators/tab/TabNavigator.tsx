@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/react-in-jsx-scope */
-import { mainTabNavigations, rootStackNavigator } from '@/constants';
+import { mainTabNavigations, rootStackNavigations } from '@/constants';
 import ListScreen from '@/screens/main/ListScreen';
 import MyPageScreen from '@/screens/main/MyPageScreen';
 import {
@@ -22,7 +22,10 @@ export type MainTabParamList = {
 
 const MainTab = createBottomTabNavigator<MainTabParamList>();
 
-type TabNavigatorProps = StackScreenProps<RootStackParamList, 'mainTap'>;
+type TabNavigatorProps = StackScreenProps<
+  RootStackParamList,
+  typeof rootStackNavigations.MAIN_TAP
+>;
 
 const handleTabbarIcon = (
   routeName: (typeof mainTabNavigations)[keyof typeof mainTabNavigations],

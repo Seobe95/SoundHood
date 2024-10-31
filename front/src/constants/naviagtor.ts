@@ -10,12 +10,13 @@ const authNavigations = {
   AUTH_HOME: 'AuthHome',
 } as const;
 
-const detailStackNavigator = {
+const detailStackNavigations = {
+  DETAIL: 'detail',
   REPORT: 'report',
   EDIT: 'edit',
 } as const;
 
-const rootStackNavigator = {
+const rootStackNavigations = {
   MAIN_TAP: 'mainTap',
   AUTH: 'auth',
   POST: 'post',
@@ -26,6 +27,6 @@ const rootStackNavigator = {
 export {
   authNavigations,
   mainTabNavigations,
-  detailStackNavigator,
-  rootStackNavigator,
+  detailStackNavigations,
+  rootStackNavigations,
 };
