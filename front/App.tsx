@@ -5,7 +5,7 @@ import { CustomThemeProvider } from './src/context/CustomThemeContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import queryClient from './src/api/queryClient';
-import RootNavigator from './src/navigators/root/RootNavigator';
+import RootNavigator from '@/navigators/root/RootNavigator';
 
 function App() {
   return (

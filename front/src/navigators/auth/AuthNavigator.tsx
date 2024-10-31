@@ -21,6 +21,7 @@ function AuthNavigator({}: AuthNavigationProps) {
   const themeColor = useContext(ThemeContext);
   return (
     <Stack.Navigator
+      initialRouteName={authNavigations.AUTH_HOME}
       screenOptions={{
         cardStyle: {
           backgroundColor: themeColor.backgroundColor,
