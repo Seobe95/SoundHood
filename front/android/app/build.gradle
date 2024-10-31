@@ -78,6 +78,12 @@ project.ext.envConfigFiles = [
         anothercustombuild: ".env"
 ]
 
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+project.ext.vectoricons = [
+    iconFontNames: [ 'Ionicons.ttf' ] // Specify font files
+]
+
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 android {
