@@ -1,1 +1,47 @@
-node_modules
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*.local
+
+# Production build
+dist/
+
+# Dependency directories
+coverage/
+tmp/
+
+# IDE or editor specific files
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# NestJS CLI
+.nest-cli.json
+
+# TypeScript specific files
+*.tsbuildinfo
+
+# Docker
+docker-compose.yml
+docker-compose.override.yml
+.docker/
+
+# Other
+!.eslintrc.js
+!.prettierrc
+
+# Ignore any local overrides
+local.env
+local.*
