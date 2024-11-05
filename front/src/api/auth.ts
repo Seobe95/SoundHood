@@ -1,7 +1,7 @@
-import { authToken } from '../constants';
-import { Profile } from '../types/domain';
-import { getEncryptedStorage } from '../utils';
+import { storageKeys } from '@/constants';
 import { apiInstance } from './axios';
+import { getEncryptedStorage } from '@/utils';
+import { Profile } from '@/types/domain';
 
 type RequestUser = {
   email: string;
@@ -40,7 +40,7 @@ const getProfile = async () => {
 };
 
 const getAccessToken = async () => {
-  const refreshToken = await getEncryptedStorage(authToken.REFRESH_TOKEN);
+  const refreshToken = await getEncryptedStorage(storageKeys.REFRESH_TOKEN);
   const { data } = await apiInstance.get('/auth/refresh', {
     headers: {
       Authorization: `Bearer ${refreshToken}`,

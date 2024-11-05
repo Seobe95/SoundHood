@@ -1,7 +1,7 @@
 const mainTabNavigations = {
-  MAP: 'map',
-  LIST: 'list',
-  MY_PAGE: 'myPage',
+  MAP: 'Map',
+  LIST: 'List',
+  MY_PAGE: 'MyPage',
 } as const;
 
 const authNavigations = {
@@ -10,22 +10,29 @@ const authNavigations = {
   AUTH_HOME: 'AuthHome',
 } as const;
 
-const detailStackNavigator = {
-  REPORT: 'report',
-  EDIT: 'edit',
+const detailStackNavigations = {
+  DETAIL: 'Detail',
+  REPORT: 'Report',
+  EDIT: 'Edit',
 } as const;
 
-const rootStackNavigator = {
-  MAIN_TAP: 'mainTap',
-  AUTH: 'auth',
-  POST: 'post',
-  DETAIL: 'detail',
-  SETTING: 'setting',
+const rootStackNavigations = {
+  MAIN_TAP: 'MainTapNavigator',
+  AUTH: 'AuthNavigator',
+  POST: 'PostNavigator',
+  DETAIL: 'DetailNavigator',
+  SETTING: 'Setting',
+} as const;
+
+const postStackNavigations = {
+  POST: 'Post',
+  SEARCH: 'Search',
 } as const;
 
 export {
   authNavigations,
   mainTabNavigations,
-  detailStackNavigator,
-  rootStackNavigator,
+  detailStackNavigations,
+  rootStackNavigations,
+  postStackNavigations,
 };

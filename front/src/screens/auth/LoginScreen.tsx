@@ -1,12 +1,12 @@
 import React, { useContext, useRef } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext';
-import CustomButton from '@/components/CustomButton';
+import CustomButton from '@/components/common/CustomButton';
 import { useForm } from '@/hooks/useForm';
 import { validateLogin } from '@/utils/validate';
 import useAuth from '@/hooks/queries/useAuth';
 import { ColorsType } from '@/constants';
-import InputField from '@/components/InputField';
+import InputField from '@/components/common/InputField';
 
 interface LoginScreenProps {}
 
