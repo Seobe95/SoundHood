@@ -1,12 +1,13 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/react-in-jsx-scope */
-import { mainTabNavigations, rootStackNavigations } from '@/constants';
+import {
+  mainTabNavigations,
+  postStackNavigations,
+  rootStackNavigations,
+} from '@/constants';
 import ListScreen from '@/screens/main/ListScreen';
 import MyPageScreen from '@/screens/main/MyPageScreen';
-import {
-  BottomTabScreenProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -65,8 +66,8 @@ function TabNavigator({ navigation }: TabNavigatorProps) {
               name={'musical-notes-outline'}
               size={30}
               onPress={() => {
-                navigation.navigate('auth', {
-                  screen: 'AuthHome',
+                navigation.navigate(rootStackNavigations.POST, {
+                  screen: postStackNavigations.POST,
                 });
               }}
               style={{

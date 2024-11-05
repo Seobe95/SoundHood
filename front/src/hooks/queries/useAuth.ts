@@ -11,11 +11,11 @@ import {
   UseMutationCustomOptions,
   UseQueryCustomOptions,
 } from '../../types/common';
-import { removeEncryptedStorage, storeEncryptedStorage } from '../../utils';
-import { authToken, queryKeys, storageKeys } from '../../constants';
-import { removeHeader, setHeader } from '../../utils/header';
+import { removeEncryptedStorage, storeEncryptedStorage } from '@/utils';
+import { queryKeys, storageKeys } from '@/constants';
+import { removeHeader, setHeader } from '@/utils';
 import { useEffect } from 'react';
-import queryClient from '../../api/queryClient';
+import queryClient from '@/api/queryClient';
 
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
@@ -28,7 +28,7 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
     mutationFn: postSignin,
     onSuccess: ({ accessToken, refreshToken }) => {
-      storeEncryptedStorage(authToken.REFRESH_TOKEN, refreshToken);
+      storeEncryptedStorage(storageKeys.REFRESH_TOKEN, refreshToken);
       setHeader('Authorization', `Bearer ${accessToken}`);
     },
     onSettled: () => {

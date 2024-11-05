@@ -2,7 +2,6 @@ import { detailStackNavigations } from '@/constants';
 import DetailScreen from '@/screens/post/DetailScreen';
 import EditScreen from '@/screens/post/EditScreen';
 import ReportScreen from '@/screens/post/ReportScreen';
-import { CompositeScreenProps } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { StyleSheet } from 'react-native';

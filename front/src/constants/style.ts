@@ -2,6 +2,7 @@ type PointColorsType = Record<keyof typeof colors, string>;
 type DefaultColorsType = {
   backgroundColor: string;
   backgroundColorSecondary: string;
+  pressedBackgroundColorSecondary: string;
   fontColorPrimary: string;
   fontColorSecondary: string;
   borderColor: string;
@@ -38,6 +39,7 @@ const theme: ThemeType = {
   light: {
     backgroundColor: '#FFFFFF',
     backgroundColorSecondary: '#E0E0E0',
+    pressedBackgroundColorSecondary: '#F0F0F0',
     fontColorPrimary: '#212121',
     fontColorSecondary: '#757575',
     borderColor: '#BDBDBD',
@@ -46,6 +48,7 @@ const theme: ThemeType = {
   dark: {
     backgroundColor: '#121212',
     backgroundColorSecondary: '#1E1E1E',
+    pressedBackgroundColorSecondary: '#2A2A2A',
     fontColorPrimary: '#E0E0E0',
     fontColorSecondary: '#828282',
     borderColor: '#424242',

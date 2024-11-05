@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { authNavigations, ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
-import CustomButton from '@/components/CustomButton';
+import CustomButton from '@/components/common/CustomButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParamList } from '@/navigators/auth/AuthNavigator';
