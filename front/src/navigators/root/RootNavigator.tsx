@@ -1,20 +1,20 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import AuthNavigator, { AuthStackParamList } from '../auth/AuthNavigator';
-import { createStackNavigator } from '@react-navigation/stack';
 import TabNavigator, { MainTabParamList } from '../tab/TabNavigator';
+import PostNavigator, { PostStackParamList } from '../post/PostNavigator';
+import { createStackNavigator } from '@react-navigation/stack';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import DetailNavigator, {
   DetailStackParamList,
 } from '../detail/DetailNavigator';
-import PostScreen from '@/screens/post/PostScreen';
 import { rootStackNavigations } from '@/constants';
 
 export type RootStackParamList = {
   [rootStackNavigations.AUTH]: NavigatorScreenParams<AuthStackParamList>;
   [rootStackNavigations.MAIN_TAP]: NavigatorScreenParams<MainTabParamList>;
   [rootStackNavigations.DETAIL]: NavigatorScreenParams<DetailStackParamList>;
-  [rootStackNavigations.POST]: undefined;
+  [rootStackNavigations.POST]: NavigatorScreenParams<PostStackParamList>;
   [rootStackNavigations.SETTING]: undefined;
 };
 
@@ -36,7 +36,7 @@ function RootNavigator() {
       />
       <RootStack.Screen
         name={rootStackNavigations.POST}
-        component={PostScreen}
+        component={PostNavigator}
       />
       <RootStack.Screen
         name={rootStackNavigations.DETAIL}
