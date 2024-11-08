@@ -22,11 +22,6 @@ function LoginScreen({}: LoginScreenProps) {
   });
   const onPress = async () => {
     loginMutation.mutate(login.values);
-    // await apiInstance
-    //   .post('http://localhost:3030/auth/signin', login.values)
-    //   .then(res => {
-    //     console.log(res.data);
-    //   });
   };
 
   return (
@@ -39,7 +34,6 @@ function LoginScreen({}: LoginScreenProps) {
           onSubmitEditing={() => passwordRef.current?.focus()}
           error={login.errors.email}
           touched={login.touched.email}
-          blurOnSubmit={false}
           inputMode="email"
           returnKeyType="next"
           {...login.getTextInputProps('email')}
