@@ -1629,6 +1629,27 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNPermissions (5.1.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.35.0):
     - DoubleConversion
     - glog
@@ -1769,6 +1790,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1917,6 +1939,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-masked-view/masked-view"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNPermissions:
+    :path: "../node_modules/react-native-permissions"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
@@ -1995,11 +2019,12 @@ SPEC CHECKSUMS:
   ReactCommon: 422e364463f33e336fc4db196aeb50fd801d90d6
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNGestureHandler: fc5ce5bf284640d3af6431c3a5c3bc121e98d045
+  RNPermissions: 3782550fc5c08b6b204ba94554422f0e151a9e47
   RNScreens: e389d6a6a66a4f0d3662924ecae803073ccce8ec
   RNVectorIcons: 07792a9538e8577c1263fcad187712e90d65d8fb
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 157bed1c62656587df4639d4dc29714898f8fb10
 
-PODFILE CHECKSUM: b1735a8b3996a801bf958fbff1a46c4a3b891ce3
+PODFILE CHECKSUM: c205c86436d56814b082e98c7bc0f41ce8b5a33e
 
 COCOAPODS: 1.15.2
