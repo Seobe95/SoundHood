@@ -1,6 +1,7 @@
 import { TrackItems } from '@/api/spotify';
 import { ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
+import { RFValue } from '@/utils';
 import React, { useContext } from 'react';
 import {
   Image,
@@ -10,6 +11,7 @@ import {
   View,
   Text,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 interface SongInfoProps extends PressableProps {
@@ -19,7 +21,8 @@ interface SongInfoProps extends PressableProps {
 
 function SongInfo({ size = 'large', song, ...props }: SongInfoProps) {
   const theme = useContext(ThemeContext);
-  const styles = makeStyles(theme);
+  const { top } = useSafeAreaInsets();
+  const styles = makeStyles(theme, top);
   const title = song?.name;
   const artist = song?.artists[0].name;
   const imageUri = song?.album.images[0].url;
@@ -76,7 +79,7 @@ function SongInfo({ size = 'large', song, ...props }: SongInfoProps) {
   );
 }
 
-const makeStyles = (color: ColorsType) =>
+const makeStyles = (color: ColorsType, top: number) =>
   StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -119,16 +122,16 @@ const makeStyles = (color: ColorsType) =>
       color: color.fontColorPrimary,
     },
     largeTitleFont: {
-      fontSize: 24,
+      fontSize: RFValue(24, top),
     },
     smallTitleFont: {
-      fontSize: 18,
+      fontSize: RFValue(18, top),
     },
     largeArtistFont: {
-      fontSize: 18,
+      fontSize: RFValue(18, top),
     },
     smallArtistFont: {
-      fontSize: 16,
+      fontSize: RFValue(16, top),
     },
     icon: {
       flex: 0,

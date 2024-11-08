@@ -1,10 +1,19 @@
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, useColorScheme } from 'react-native';
 
 interface MapScreenProps {}
+
 function MapScreen({}: MapScreenProps) {
-  return <NaverMapView style={styles.container} />;
+  const isDarkMode = useColorScheme() === 'dark';
+
+  return (
+    <NaverMapView
+      style={styles.container}
+      isNightModeEnabled={isDarkMode}
+      mapType="Navi"
+    />
+  );
 }
 
 const styles = StyleSheet.create({

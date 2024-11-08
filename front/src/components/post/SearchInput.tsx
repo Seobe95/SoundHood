@@ -13,52 +13,69 @@ import { ThemeContext } from '@/context/CustomThemeContext';
 import { ColorsType } from '@/constants';
 import { mergeRefs } from '@/utils/common';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { RFValue } from '@/utils';
+import { PostStackParamList } from '@/navigators/post/PostNavigator';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 interface SearchBarProps extends TextInputProps {}
 
 const deviceHeight = Dimensions.get('screen').height;
 
-const SearchBar = forwardRef<TextInput, SearchBarProps>(
-  ({ ...props }: SearchBarProps, ref) => {
-    const themeColor = useContext(ThemeContext);
-    const styles = makeStyles(themeColor);
-    const innerRef = useRef<TextInput | null>(null);
+function SearchBar({ ...props }: SearchBarProps) {
+  const themeColor = useContext(ThemeContext);
+  const { top } = useSafeAreaInsets();
+  const styles = makeStyles(themeColor, top);
+  const innerRef = useRef<TextInput | null>(null);
+  const navigation = useNavigation<StackNavigationProp<PostStackParamList>>();
 
-    const handlePressInput = () => {
-      innerRef.current?.focus();
-    };
+  const handlePressInput = () => {
+    innerRef.current?.focus();
+  };
 
-    return (
-      <Pressable onPress={handlePressInput}>
-        <View style={[styles.container]}>
-          <Icon name="search" size={20} style={styles.icon} />
-          <TextInput
-            ref={ref ? mergeRefs(innerRef, ref) : innerRef}
-            placeholderTextColor={themeColor.fontColorSecondary}
-            style={[styles.input]}
-            autoCapitalize="none"
-            spellCheck={false}
-            autoCorrect={false}
-            onSubmitEditing={() => Keyboard.dismiss()}
-            returnKeyType="search"
-            {...props}
-          />
-        </View>
+  return (
+    <Pressable style={styles.container} onPress={handlePressInput}>
+      <View style={[styles.inputContainer]}>
+        <Icon name="search" size={20} style={styles.icon} />
+        <TextInput
+          ref={innerRef}
+          placeholderTextColor={themeColor.fontColorSecondary}
+          style={[styles.input]}
+          autoCapitalize="none"
+          spellCheck={false}
+          autoCorrect={false}
+          onSubmitEditing={() => Keyboard.dismiss()}
+          returnKeyType="search"
+          {...props}
+        />
+      </View>
+      <Pressable
+        style={({ pressed }) =>
+          pressed ? styles.pressedCancelButton : styles.cancelButton
+        }
+        onPress={() => navigation.pop()}>
+        <Text style={styles.cancelButtonFont}>취소</Text>
       </Pressable>
-    );
-  },
-);
+    </Pressable>
+  );
+}
 
-const makeStyles = (color: ColorsType) =>
+const makeStyles = (color: ColorsType, top = 0) =>
   StyleSheet.create({
     container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    inputContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      alignItems: 'center',
       borderWidth: 1,
       borderColor: color.borderColor,
       borderRadius: 16,
       padding: deviceHeight > 700 ? 16 : 10,
-      flexDirection: 'row',
       backgroundColor: color.backgroundColor,
-      // justifyContent: 'center',
     },
     icon: {
       paddingRight: 10,
@@ -66,19 +83,24 @@ const makeStyles = (color: ColorsType) =>
     },
     input: {
       flex: 1,
-      fontSize: 16,
+      fontSize: RFValue(16, top),
       color: color.fontColorPrimary,
       padding: 0,
     },
-    inputError: {
-      borderColor: color.PINK_500,
+    cancelButton: {
+      justifyContent: 'center',
+      paddingHorizontal: 10,
+      padding: 16,
     },
-    disabled: {
-      borderColor: color.PINK_500,
+    pressedCancelButton: {
+      justifyContent: 'center',
+      paddingHorizontal: 10,
+      padding: 16,
+      opacity: 0.2,
     },
-    disabledText: {
-      color: color.PINK_500,
-      marginTop: 8,
+    cancelButtonFont: {
+      color: color.fontColorPrimary,
+      fontSize: RFValue(16, top),
     },
   });
 

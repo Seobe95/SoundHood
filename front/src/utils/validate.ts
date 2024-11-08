@@ -1,3 +1,5 @@
+import { TrackItems } from '@/api/spotify';
+
 interface UserInformation {
   email: string;
   password: string;
@@ -72,4 +74,19 @@ function validateRegister(
   return errors;
 }
 
-export { validateLogin, validateRegister };
+interface PostMusicParams {
+  content: string;
+}
+
+function validatePost({ content }: PostMusicParams) {
+  const errors = {
+    content: '',
+  };
+  if (content === '') {
+    errors.content = '음악을 소개해주세요!';
+  }
+
+  return errors;
+}
+
+export { validateLogin, validateRegister, validatePost };

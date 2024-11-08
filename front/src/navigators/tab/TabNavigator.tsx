@@ -8,12 +8,16 @@ import {
 import ListScreen from '@/screens/main/ListScreen';
 import MyPageScreen from '@/screens/main/MyPageScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { ReactNode } from 'react';
-import { StyleSheet } from 'react-native';
+import { ReactNode, useContext } from 'react';
+import { StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MapScreen from '@/screens/main/MapScreen';
 import { RootStackParamList } from '../root/RootNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
+import HeaderRightButton from '@/components/common/HeaderRightButton';
+import { ThemeContext } from '@/context/CustomThemeContext';
+import { LabelPosition } from '@react-navigation/bottom-tabs/lib/typescript/src/types';
+import { RFValue } from '@/utils';
 
 export type MainTabParamList = {
   [mainTabNavigations.MAP]: undefined;
@@ -37,48 +41,78 @@ const handleTabbarIcon = (
   },
 ): ReactNode | undefined => {
   const { focused, color, size } = props;
+  let tintColor;
   let iconName;
+
   switch (routeName) {
     case mainTabNavigations.MAP:
       iconName = focused ? 'map' : 'map-outline';
+      tintColor = focused ? color : '#8E8E8F';
       break;
     case mainTabNavigations.LIST:
       iconName = focused ? 'newspaper' : 'newspaper-outline';
+      tintColor = focused ? color : '#8E8E8F';
       break;
     case mainTabNavigations.MY_PAGE:
       iconName = focused ? 'person-circle' : 'person-circle-outline';
+      tintColor = focused ? color : '#8E8E8F';
       break;
   }
   // react/react-in-jsx-scope
-  return <Icon name={iconName} size={size} color={color} />;
+  return <Icon name={iconName} size={size} color={tintColor} />;
 };
 
 function TabNavigator({ navigation }: TabNavigatorProps) {
+  const themeColor = useContext(ThemeContext);
   return (
     <MainTab.Navigator
       initialRouteName={mainTabNavigations.MAP}
       screenOptions={({ route }) => ({
-        tabBarIcon: props => handleTabbarIcon(route.name, props),
-        headerShown: true,
-        headerRight: () => {
-          return (
-            <Icon
-              name={'musical-notes-outline'}
-              size={30}
-              onPress={() => {
-                navigation.navigate(rootStackNavigations.POST, {
-                  screen: postStackNavigations.POST,
-                });
-              }}
-              style={{
-                marginRight: 12,
-              }}
-            />
-          );
+        tabBarStyle: {
+          backgroundColor: themeColor.backgroundColor,
         },
+        tabBarIconStyle: {
+          color: themeColor.BLUE_300,
+        },
+        tabBarIcon: props =>
+          handleTabbarIcon(route.name, {
+            ...props,
+          }),
+        headerShown: true,
+        headerRightContainerStyle: {
+          paddingRight: 8,
+        },
+        headerStyle: {
+          backgroundColor: themeColor.backgroundColor,
+        },
+        headerTitleStyle: {
+          color: themeColor.fontColorPrimary,
+        },
+        headerRight: () => (
+          <HeaderRightButton
+            icon={
+              <Icon
+                name="musical-notes-outline"
+                size={25}
+                color={themeColor.fontColorPrimary}
+              />
+            }
+            onPress={() =>
+              navigation.navigate('PostNavigator', {
+                screen: 'Post',
+              })
+            }
+          />
+        ),
       })}>
-      <MainTab.Screen name={mainTabNavigations.MAP} component={MapScreen} />
-      <MainTab.Screen name={mainTabNavigations.LIST} component={ListScreen} />
+      <MainTab.Screen
+        name={mainTabNavigations.MAP}
+        component={MapScreen}
+        options={{
+          headerTitle: 'Sound Hood',
+        }}
+      />
+      {/* <MainTab.Screen name={mainTabNavigations.LIST} component={ListScreen} /> */}
       <MainTab.Screen
         name={mainTabNavigations.MY_PAGE}
         component={MyPageScreen}

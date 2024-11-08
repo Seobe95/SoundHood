@@ -3,6 +3,8 @@ import { Platform, StyleSheet, Text } from 'react-native';
 import { Pressable, PressableProps } from 'react-native-gesture-handler';
 import { ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { RFValue } from '@/utils';
 
 interface CustomButtonProps extends PressableProps {
   label: string;
@@ -19,7 +21,8 @@ function CustomButton({
   ...props
 }: CustomButtonProps) {
   const themeColor = useContext(ThemeContext);
-  const styles = makeStyles(themeColor);
+  const { top } = useSafeAreaInsets();
+  const styles = makeStyles(themeColor, top);
   return (
     <Pressable
       style={({ pressed }) => [
@@ -42,10 +45,10 @@ function CustomButton({
   );
 }
 
-const makeStyles = (color: ColorsType) =>
+const makeStyles = (color: ColorsType, top = 0) =>
   StyleSheet.create({
     container: {
-      borderRadius: Platform.OS === 'android' ? 4 : 3,
+      borderRadius: 8,
       justifyContent: 'center',
     },
     large: {
@@ -76,13 +79,13 @@ const makeStyles = (color: ColorsType) =>
       borderWidth: 1,
     },
     filledText: {
-      color: color.fontColorPrimary,
+      color: '#FFFFFF',
     },
     outlineText: {
       color: color.BLUE_400,
     },
     text: {
-      fontSize: 16,
+      fontSize: RFValue(16, top),
       fontWeight: 'bold',
     },
     invalidText: {

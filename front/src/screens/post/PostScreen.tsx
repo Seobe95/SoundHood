@@ -1,83 +1,68 @@
+import CustomButton from '@/components/common/CustomButton';
+import ContentInput from '@/components/post/ContentInput';
 import SongInfo from '@/components/post/SongInfo';
-import { ColorsType, rootStackNavigations } from '@/constants';
+import { ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
+import { useForm } from '@/hooks/useForm';
 import { PostStackParamList } from '@/navigators/post/PostNavigator';
-import { RootStackParamList } from '@/navigators/root/RootNavigator';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
-import {
-  EventArg,
-  NavigationAction,
-  useNavigation,
-} from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import React, { useContext, useEffect } from 'react';
-import { Alert, Platform, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-type PostScreenProps = StackNavigationProp<
-  RootStackParamList,
-  typeof rootStackNavigations.POST
->;
+import { RFValue, validatePost } from '@/utils';
+import React, { useContext } from 'react';
+import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePostNavigation } from '@/hooks/navigation/usePostNavigation.ts';
+import { useKeyboardVisibility } from '@/hooks/keyboard/useKeyboardVisibility.ts';
 
 function PostScreen() {
   const themeColor = useContext(ThemeContext);
-  const styles = makeStyles(themeColor);
-  const { selectedSong, reset } = useSearchSpotifyStore();
-  const postNavigate = useNavigation<StackNavigationProp<PostStackParamList>>();
-  const rootNavigate = useNavigation<PostScreenProps>();
+  const { top, bottom } = useSafeAreaInsets();
+  const styles = makeStyles(themeColor, top, bottom);
+  const { selectedSong } = useSearchSpotifyStore();
+  const postNavigate = usePostNavigation<PostStackParamList>();
+  const content = useForm({
+    initialValue: { content: '' },
+    validate: validatePost,
+  });
+  const { isKeyboardVisible } = useKeyboardVisibility();
   const navigateToSearchScreen = () => {
-    postNavigate.navigate('Search');
+    postNavigate.navigation.navigate('Search');
   };
 
-  useEffect(() => {
-    const beforeRemoveHandler = (
-      e: EventArg<
-        'beforeRemove',
-        true,
-        {
-          action: NavigationAction;
-        }
-      >,
-    ) => {
-      e.preventDefault();
-      Alert.alert('Test', 'test', [
-        { text: 'calcel', style: 'cancel', onPress: () => {} },
-        {
-          text: 'remove',
-          style: 'destructive',
-          onPress: () => {
-            rootNavigate.dispatch(e.data.action);
-            reset();
-          },
-        },
-      ]);
-    };
-
-    rootNavigate.addListener('beforeRemove', beforeRemoveHandler);
-    return () => {
-      rootNavigate.removeListener('beforeRemove', beforeRemoveHandler);
-    };
-  }, [rootNavigate, reset]);
   return (
-    <SafeAreaView style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => {
+        Keyboard.dismiss();
+      }}>
       <View style={styles.fontContainer}>
-        <Text style={styles.font}>
+        <Text style={styles.font} allowFontScaling={false}>
           내가 사는 <Text style={styles.boldFont}>동네</Text>에
         </Text>
-        <Text style={styles.font}>
+        <Text style={styles.font} allowFontScaling={false}>
           <Text style={styles.boldFont}>좋아하는 노래</Text>를 등록해보세요!
         </Text>
       </View>
-      {selectedSong ? (
-        <SongInfo song={selectedSong} onPress={navigateToSearchScreen} />
-      ) : (
-        <SongInfo onPress={navigateToSearchScreen} />
+      <View style={styles.contentContainer}>
+        {selectedSong ? (
+          <SongInfo song={selectedSong} onPress={navigateToSearchScreen} />
+        ) : (
+          <SongInfo onPress={navigateToSearchScreen} />
+        )}
+        <ContentInput
+          placeholder="음악을 소개해주세요. 최대 40자까지 작성 가능합니다."
+          {...content.getTextInputProps('content')}
+        />
+      </View>
+      {!isKeyboardVisible && (
+        <View style={styles.buttonContainer}>
+          <CustomButton label="등록하기" disabled={content.isVaild} />
+        </View>
       )}
-    </SafeAreaView>
+    </Pressable>
   );
 }
 
-const makeStyles = (color: ColorsType) =>
+const makeStyles = (color: ColorsType, top: number, bottom: number) =>
   StyleSheet.create({
     container: {
       backgroundColor: color.backgroundColor,
@@ -87,14 +72,22 @@ const makeStyles = (color: ColorsType) =>
     },
     fontContainer: {
       marginBottom: 32,
+      flex: 0,
     },
     font: {
       color: color.fontColorPrimary,
-      fontSize: Platform.OS === 'android' ? 24 : 32,
+      fontSize: RFValue(28, top),
       fontWeight: '300',
     },
     boldFont: {
       fontWeight: 'bold',
+    },
+    contentContainer: {
+      gap: 16,
+      flex: 2,
+    },
+    buttonContainer: {
+      marginBottom: 16 + bottom,
     },
   });
 
