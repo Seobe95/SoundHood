@@ -3,3 +3,4 @@ export * from './validate';
 export * from './encryptedStorage';
 export * from './header';
 export * from './base64';
+export * from './resizeFont.ts';
