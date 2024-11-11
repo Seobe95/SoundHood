@@ -1,11 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/react-in-jsx-scope */
-import {
-  mainTabNavigations,
-  postStackNavigations,
-  rootStackNavigations,
-} from '@/constants';
-import ListScreen from '@/screens/main/ListScreen';
+import { mainTabNavigations, rootStackNavigations } from '@/constants';
 import MyPageScreen from '@/screens/main/MyPageScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ReactNode, useContext } from 'react';
@@ -16,8 +11,6 @@ import { RootStackParamList } from '../root/RootNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import HeaderRightButton from '@/components/common/HeaderRightButton';
 import { ThemeContext } from '@/context/CustomThemeContext';
-import { LabelPosition } from '@react-navigation/bottom-tabs/lib/typescript/src/types';
-import { RFValue } from '@/utils';
 
 export type MainTabParamList = {
   [mainTabNavigations.MAP]: undefined;
@@ -109,7 +102,7 @@ function TabNavigator({ navigation }: TabNavigatorProps) {
         name={mainTabNavigations.MAP}
         component={MapScreen}
         options={{
-          headerTitle: 'Sound Hood',
+          headerShown: false,
         }}
       />
       {/* <MainTab.Screen name={mainTabNavigations.LIST} component={ListScreen} /> */}
