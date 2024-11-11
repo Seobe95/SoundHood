@@ -4,10 +4,14 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { ColumnNumericTransformer } from 'src/@common/transformer/numeric.transformer';
+import { User } from '../auth/user.entity';
+import { Like } from '../like/like.entity';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -41,6 +45,12 @@ export class Post extends BaseEntity {
   @Column()
   albumCover: string;
 
+  @Column({
+    type: 'int',
+    default: 0,
+  })
+  likeCount: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -49,4 +59,10 @@ export class Post extends BaseEntity {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  @ManyToOne(() => User, (user) => user.post, { eager: false })
+  user: User;
+
+  @OneToMany(() => Like, (like) => like.post)
+  likes: Like[];
 }
