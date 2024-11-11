@@ -4,10 +4,13 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
+import { Post } from '../post/post.entity';
+import { Like } from '../like/like.entity';
 
 @Entity()
 @Unique(['email'])
@@ -44,4 +47,10 @@ export class User extends BaseEntity {
 
   @Column({ nullable: true })
   hashedRefreshToken?: string;
+
+  @OneToMany(() => Post, (post) => post.user, { eager: false })
+  post: Post[];
+
+  @OneToMany(() => Like, (like) => like.user)
+  likes: Like[];
 }
