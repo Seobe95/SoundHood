@@ -1,28 +1,45 @@
-import useSettingStore from '@/stores/useSettingStore.ts';
-import { useEffect } from 'react';
-import { Platform } from 'react-native';
-import { PERMISSIONS, request } from 'react-native-permissions';
+import { useEffect, useRef, useState } from 'react';
+import useAppState from '@/hooks/common/useAppState.ts';
+import usePersistLocation from '@/hooks/map/usePersistLocation.ts';
+import { NaverMapViewRef } from '@mj-studio/react-native-naver-map';
+
+export type LatLng = {
+  latitude: number;
+  longitude: number;
+};
 
 function useLocation() {
-  const { setLocationPermission, locationPermission } = useSettingStore();
+  const mapRef = useRef<NaverMapViewRef>(null);
+  const [userLocation, setUserLocation] = useState<LatLng & { zoom: number }>({
+    // 기본값: 서울시청
+    latitude: 37.5665851,
+    longitude: 126.9782038,
+    zoom: 14,
+  });
+  const { getPersistLocation, storeCurrentLocation } = usePersistLocation();
+  const { isComeback } = useAppState();
 
   useEffect(() => {
-    if (Platform.OS === 'ios') {
-      request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE).then(status => {
-        setLocationPermission(status);
-      });
-    } else {
-      request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
-        .then(status => {
-          setLocationPermission(status);
-        })
-        .catch(e => {
-          console.error(`Location request has been failed: ${e}`);
-        });
+    async function handlePersistLocation() {
+      switch (isComeback) {
+        case false:
+          storeCurrentLocation(userLocation);
+        default:
+          console.log('null');
+      }
+      const persistLocation = await getPersistLocation();
+      if (persistLocation !== null) {
+        mapRef.current?.animateCameraTo(persistLocation);
+      }
     }
-  }, [setLocationPermission]);
+    handlePersistLocation();
+  }, [isComeback]);
 
-  return { locationPermission };
+  return {
+    mapRef,
+    userLocation,
+    setUserLocation,
+  };
 }
 
 export default useLocation;

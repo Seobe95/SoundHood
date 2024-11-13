@@ -17,7 +17,7 @@ const removeEncryptedStorage = async (key: string) => {
   }
 };
 
-const getEncryptedStorage = async (key: string): Promise<string | null> => {
+const getEncryptedStorage = async <T>(key: string): Promise<T | null> => {
   try {
     const result = await EncryptedStorage.getItem(key);
     if (result) {

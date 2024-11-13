@@ -8,6 +8,7 @@ const storageKeys = {
   ACCESS_TOKEN: 'accessToken',
   REFRESH_TOKEN: 'refreshToken',
   SPOTIFY_TOKEN: 'spotifyToken',
+  LOCATION: 'location',
 } as const;
 
 export { queryKeys, storageKeys };
