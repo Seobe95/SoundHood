@@ -15,7 +15,7 @@ import { removeEncryptedStorage, storeEncryptedStorage } from '@/utils';
 import { queryKeys, storageKeys } from '@/constants';
 import { removeHeader, setHeader } from '@/utils';
 import { useEffect } from 'react';
-import queryClient from '@/api/queryClient';
+import { queryClient } from '@/api';
 
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({

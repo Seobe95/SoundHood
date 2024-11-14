@@ -11,4 +11,4 @@ const queryClient = new QueryClient({
   },
 });
 
-export default queryClient;
+export { queryClient };

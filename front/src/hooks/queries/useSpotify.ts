@@ -6,10 +6,10 @@ import {
   TrackItems,
 } from '@/api/spotify';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
-import { ResponseError, UseQueryCustomOptions } from '@/types/common';
 import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { ResponseError, UseQueryCustomOptions } from '@/types';
 
 function useGetSpotifyAccessToken(
   queryOptions?: UseQueryCustomOptions<SpotifyResponseToken>,
@@ -24,7 +24,6 @@ function useGetSpotifyAccessToken(
     refetchInterval: 3540 * 1000,
     ...queryOptions,
   });
-
   useEffect(() => {
     if (isSuccess && data?.access_token) {
       console.log(data.access_token);
