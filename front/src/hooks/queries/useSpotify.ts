@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { debounce } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { ResponseError, UseQueryCustomOptions } from '@/types';
+import { spotifyQueryKeys } from '@/constants';
 
 function useGetSpotifyAccessToken(
   queryOptions?: UseQueryCustomOptions<SpotifyResponseToken>,
@@ -18,7 +19,7 @@ function useGetSpotifyAccessToken(
     SpotifyResponseToken,
     ResponseError
   >({
-    queryKey: ['spotify', 'getAccessToken'],
+    queryKey: [spotifyQueryKeys.SPOTIFY, spotifyQueryKeys.GET_ACCESS_TOKEN],
     queryFn: getSpotifyAccessToken,
     staleTime: 3540 * 1000,
     refetchInterval: 3540 * 1000,
@@ -44,7 +45,11 @@ function useSearchSongs(
     TrackItems[],
     ResponseError
   >({
-    queryKey: ['spotify', 'getSearchResult', { query, limit }],
+    queryKey: [
+      spotifyQueryKeys.SPOTIFY,
+      spotifyQueryKeys.GET_SEARCH_RESULT,
+      { query, limit },
+    ],
     queryFn: () => getSearchResults({ query, limit }),
     enabled: query === '' ? false : true,
     ...queryOptions,

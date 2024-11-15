@@ -1,6 +1,9 @@
-import { useSpotify } from '@/hooks/queries/useSpotify';
+import {
+  useGetSpotifyAccessToken,
+  useSpotify,
+} from '@/hooks/queries/useSpotify';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
 import SearchBar from './SearchInput';
 import SongInfo from './SongInfo';
@@ -15,16 +18,23 @@ import { useNavigation } from '@react-navigation/native';
  *
  * @Todo Infinity Scroll 구현 필요
  */
-function SearchResultList() {
+function SearchSongResultList() {
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
   const { onChangeText } = useSpotify();
+  const spotifyAccessTokenQuery = useGetSpotifyAccessToken();
   const { searchResult, setSelectedSong } = useSearchSpotifyStore();
   const navigation = useNavigation<StackNavigationProp<PostStackParamList>>();
   const handlePressSong = async (song: TrackItems) => {
     setSelectedSong(song);
     navigation.goBack();
   };
+
+  useEffect(() => {
+    if (spotifyAccessTokenQuery.isSuccess) {
+      console.log('Get');
+    }
+  }, [spotifyAccessTokenQuery.isSuccess]);
 
   return (
     <FlatList
@@ -64,4 +74,4 @@ const makeStyles = (color: ColorsType) =>
     },
   });
 
-export default SearchResultList;
+export default SearchSongResultList;

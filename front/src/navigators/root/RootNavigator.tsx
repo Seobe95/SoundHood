@@ -27,6 +27,9 @@ function RootNavigator() {
         headerShown: false,
       }}>
       <RootStack.Screen
+        options={{
+          animationTypeForReplace: 'pop',
+        }}
         name={rootStackNavigations.MAIN_TAP}
         component={TabNavigator}
       />

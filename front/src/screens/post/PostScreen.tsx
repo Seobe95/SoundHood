@@ -25,7 +25,7 @@ function PostScreen() {
   });
   const { isKeyboardVisible } = useKeyboardVisibility();
   const navigateToSearchScreen = () => {
-    postNavigate.navigation.navigate('Search');
+    postNavigate.navigation.navigate('Search', { searchType: 'SONG' });
   };
 
   return (
