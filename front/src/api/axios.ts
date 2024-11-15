@@ -11,4 +11,12 @@ const spotifyIntance = axios.create({
   withCredentials: true,
 });
 
-export { apiInstance, spotifyIntance };
+const kakaoAPIInstance = axios.create({
+  baseURL: 'https://dapi.kakao.com/v2/local',
+  withCredentials: true,
+  headers: {
+    Authorization: `KakaoAK ${Config.KAKAO_REST_API_KEY}`,
+  },
+});
+
+export { apiInstance, spotifyIntance, kakaoAPIInstance };

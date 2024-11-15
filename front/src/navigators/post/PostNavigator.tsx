@@ -4,7 +4,7 @@ import HeaderRightButton from '@/components/common/HeaderRightButton';
 import { ColorsType, postStackNavigations } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import PostScreen from '@/screens/post/PostScreen';
-import SearchScreen from '@/screens/post/SearchScreen';
+import SearchScreen from '@/screens/common/SearchScreen.tsx';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
@@ -13,14 +13,15 @@ interface PostNavigatorProps {}
 
 export type PostStackParamList = {
   [postStackNavigations.POST]: undefined;
-  [postStackNavigations.SEARCH]: undefined;
+  [postStackNavigations.SEARCH]: {
+    searchType: 'ADDRESS' | 'SONG';
+  };
 };
 
 const PostStackNavigator = createStackNavigator<PostStackParamList>();
 
 function PostNavigator({}: PostNavigatorProps) {
   const theme = useContext(ThemeContext);
-  const { selectedSong } = useSearchSpotifyStore();
   return (
     <PostStackNavigator.Navigator
       screenOptions={{

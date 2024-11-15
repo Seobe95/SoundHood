@@ -13,7 +13,11 @@ import HeaderRightButton from '@/components/common/HeaderRightButton';
 import { ThemeContext } from '@/context/CustomThemeContext';
 
 export type MainTabParamList = {
-  [mainTabNavigations.MAP]: undefined;
+  [mainTabNavigations.MAP]: {
+    latitude?: number;
+    longitude?: number;
+    addressName?: string;
+  };
   [mainTabNavigations.LIST]: undefined;
   [mainTabNavigations.MY_PAGE]: undefined;
 };

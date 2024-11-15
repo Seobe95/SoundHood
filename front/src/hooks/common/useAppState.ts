@@ -18,6 +18,7 @@ function useAppState() {
         ) {
           setIsComeback(true);
         }
+        console.log(appState.current);
         appState.current = nextAppState;
       },
     );
@@ -25,7 +26,7 @@ function useAppState() {
     return () => appStateListener.remove();
   }, []);
 
-  return { isComeback };
+  return { isComeback, setIsComeback };
 }
 
 export default useAppState;

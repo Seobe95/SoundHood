@@ -12,10 +12,10 @@ import {
   UseQueryCustomOptions,
 } from '../../types/common';
 import { removeEncryptedStorage, storeEncryptedStorage } from '@/utils';
-import { queryKeys, storageKeys } from '@/constants';
+import { authQueryKeys, storageKeys } from '@/constants';
 import { removeHeader, setHeader } from '@/utils';
 import { useEffect } from 'react';
-import queryClient from '@/api/queryClient';
+import { queryClient } from '@/api';
 
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
@@ -33,10 +33,10 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
     },
     onSettled: () => {
       queryClient.refetchQueries({
-        queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
+        queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_ACCESS_TOKEN],
       });
       queryClient.invalidateQueries({
-        queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
+        queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_PROFILE],
       });
     },
     onError: error => {
@@ -48,7 +48,7 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
 
 function useGetRefreshToken() {
   const { data, isSuccess, isError } = useQuery<ResponseToken>({
-    queryKey: [queryKeys.AUTH, queryKeys.GET_ACCESS_TOKEN],
+    queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_ACCESS_TOKEN],
     queryFn: getAccessToken,
     staleTime: 1000 * 60 * 30 - 1000 * 60 * 3,
     refetchInterval: 1000 * 60 * 30 - 1000 * 60 * 3,
@@ -76,7 +76,7 @@ function useGetRefreshToken() {
 
 function useGetProfile(queryOptions?: UseQueryCustomOptions) {
   return useQuery({
-    queryKey: [queryKeys.AUTH, queryKeys.GET_PROFILE],
+    queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_PROFILE],
     queryFn: getProfile,
     ...queryOptions,
   });
@@ -90,7 +90,7 @@ function useLogout(mutationOptions?: UseMutationCustomOptions) {
       removeEncryptedStorage(storageKeys.REFRESH_TOKEN);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [queryKeys.AUTH] });
+      queryClient.invalidateQueries({ queryKey: [authQueryKeys.AUTH] });
     },
     ...mutationOptions,
   });

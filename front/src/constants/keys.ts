@@ -1,7 +1,19 @@
-const queryKeys = {
+const authQueryKeys = {
   AUTH: 'auth',
   GET_ACCESS_TOKEN: 'getAccessToken',
   GET_PROFILE: 'getProfile',
+} as const;
+
+const spotifyQueryKeys = {
+  SPOTIFY: 'spotify',
+  GET_SEARCH_RESULT: 'getSearchResult',
+  GET_ACCESS_TOKEN: 'getAccessToken',
+} as const;
+
+const kakaoQueryKeys = {
+  KAKAO: 'kakao',
+  SEARCH_ADDRESS: 'searchAddress',
+  GET_ADDRESS_FROM_COORDINATE: 'getAddressFromCoordinate',
 } as const;
 
 const storageKeys = {
@@ -11,4 +23,4 @@ const storageKeys = {
   LOCATION: 'location',
 } as const;
 
-export { queryKeys, storageKeys };
+export { authQueryKeys, storageKeys, spotifyQueryKeys, kakaoQueryKeys };
