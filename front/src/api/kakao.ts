@@ -1,5 +1,4 @@
 import { kakaoAPIInstance } from '@/api/axios.ts';
-import Config from 'react-native-config';
 import {
   KakaoAddressFromCoordinateResponse,
   KakaoSearchAddressResponse,
@@ -15,16 +14,10 @@ const getSearchAddress = async ({ query }: GetSearchAddressParams) => {
     analyze_type: 'similar',
   }).toString();
 
-  const result = await kakaoAPIInstance.get<KakaoSearchAddressResponse>(
+  const { data } = await kakaoAPIInstance.get<KakaoSearchAddressResponse>(
     `/search/address.json?${params}`,
-    {
-      headers: {
-        Authorization: `KakaoAK ${Config.KAKAO_REST_API_KEY}`,
-      },
-    },
   );
-  console.log(result);
-  return result;
+  return data;
 };
 
 type GetAddressFromCoordinate = {
@@ -40,16 +33,11 @@ const getAddressFromCoordinate = async ({
     x: `${longitude}`,
     y: `${latitude}`,
   }).toString();
-  const result = await kakaoAPIInstance.get<KakaoAddressFromCoordinateResponse>(
-    `/geo/coord2regioncode?${params}`,
-    {
-      headers: {
-        Authorization: `KakaoAK ${Config.KAKAO_REST_API_KEY}`,
-      },
-    },
-  );
-  console.log(result);
-  return result;
+  const { data } =
+    await kakaoAPIInstance.get<KakaoAddressFromCoordinateResponse>(
+      `/geo/coord2regioncode?${params}`,
+    );
+  return data;
 };
 
 export { getSearchAddress, getAddressFromCoordinate };
