@@ -6,16 +6,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { QueryClientProvider } from '@tanstack/react-query';
 import RootNavigator from '@/navigators/root/RootNavigator';
 import { queryClient } from '@/api';
+import { AuthProvider } from '@/context/AuthContext.tsx';
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView>
         <SafeAreaProvider>
-          <CustomThemeProvider>
-            <NavigationContainer>
-              <RootNavigator />
-            </NavigationContainer>
-          </CustomThemeProvider>
+          <AuthProvider>
+            <CustomThemeProvider>
+              <NavigationContainer>
+                <RootNavigator />
+              </NavigationContainer>
+            </CustomThemeProvider>
+          </AuthProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>

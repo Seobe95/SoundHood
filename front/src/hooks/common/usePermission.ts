@@ -3,14 +3,15 @@ import {
   check,
   Permission,
   PERMISSIONS,
+  PermissionStatus,
   request,
 } from 'react-native-permissions';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 type PermissionsType = 'LOCATION' | 'PHOTO';
 
 const alertMessages = {
-  LOCATION_TITLE: '위치권한 허용이 필요합니다.',
+  LOCATION_TITLE: '위치권한 허용이 필요한 기능입니다.',
   LOCATION_DESCRIPTION: '설정에서 위치를 허용해주세요.',
   PHOTO_TITLE: '사진첩 접근이 필요합니다.',
   PHOTO_DESCRIPTION: '설정에서 사진첩 접근을 허용해주세요.',
@@ -31,25 +32,27 @@ type PermissionOS = {
 };
 
 function usePermission(type: PermissionsType) {
+  const [checked, setChecked] = useState<PermissionStatus>('denied');
+  const requestSettingAlert = () => {
+    Alert.alert(
+      alertMessages[`${type}_TITLE`],
+      alertMessages[`${type}_DESCRIPTION`],
+      [
+        {
+          text: '설정하기',
+          onPress: Linking.openSettings,
+        },
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+      ],
+    );
+  };
   useEffect(() => {
     const isAndroid = Platform.OS === 'android';
     const permissionOS = isAndroid ? androidPermission : iOSPermission;
-    const requestSettingAlert = () => {
-      Alert.alert(
-        alertMessages[`${type}_TITLE`],
-        alertMessages[`${type}_DESCRIPTION`],
-        [
-          {
-            text: '설정하기',
-            onPress: Linking.openSettings,
-          },
-          {
-            text: '취소',
-            style: 'cancel',
-          },
-        ],
-      );
-    };
+
     (async () => {
       const checked = await check(permissionOS[type]);
       switch (checked) {
@@ -69,8 +72,11 @@ function usePermission(type: PermissionsType) {
         default:
           break;
       }
+      setChecked(checked);
     })();
   }, [type]);
+
+  return { checked, requestSettingAlert };
 }
 
 export default usePermission;

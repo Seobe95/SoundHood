@@ -6,6 +6,7 @@ import LoginScreen from '@/screens/auth/LoginScreen';
 import RegisterScreen from '@/screens/auth/RegisterScreen';
 import { authNavigations } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
+import useAuthNavigation from '@/hooks/common/useAuthNavigation.ts';
 
 interface AuthNavigationProps {}
 
@@ -13,12 +14,16 @@ export type AuthStackParamList = {
   [authNavigations.AUTH_HOME]: undefined;
   [authNavigations.LOGIN]: undefined;
   [authNavigations.REGISTER]: undefined;
+  [authNavigations.KAKAO]: undefined;
+  [authNavigations.APPLE]: undefined;
 };
 
 const Stack = createStackNavigator<AuthStackParamList>();
 
 function AuthNavigator({}: AuthNavigationProps) {
   const themeColor = useContext(ThemeContext);
+  useAuthNavigation();
+
   return (
     <Stack.Navigator
       initialRouteName={authNavigations.AUTH_HOME}

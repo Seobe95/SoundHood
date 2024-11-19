@@ -73,7 +73,7 @@ function useSearchSongs(
 
 function useSpotify(limit = 10) {
   const [searchParams, setSearchParams] = useState('');
-  const { reset } = useSearchSpotifyStore();
+  const { setSearchSongs } = useSearchSpotifyStore();
   const debounceSearch = useMemo(
     () =>
       debounce((param: string) => {
@@ -83,7 +83,7 @@ function useSpotify(limit = 10) {
   );
   const onChangeText = (text: string) => {
     if (text === '') {
-      reset();
+      setSearchSongs(null);
       setSearchParams('');
       debounceSearch.cancel();
     } else {

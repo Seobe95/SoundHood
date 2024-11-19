@@ -13,6 +13,12 @@ type ResponseToken = {
   refreshToken: string;
 };
 
+export type UserInfo = {
+  id: number;
+  nickname: string;
+  imageUrl: string;
+};
+
 type ResponseProfile = Profile;
 
 const postSignup = async ({ email, password }: RequestUser) => {
@@ -34,7 +40,7 @@ const postSignin = async ({
   return data;
 };
 
-const getProfile = async () => {
+const getProfile = async (): Promise<UserInfo> => {
   const { data } = await apiInstance.get('/auth/me');
   return data;
 };

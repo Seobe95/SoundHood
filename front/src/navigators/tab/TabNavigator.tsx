@@ -4,12 +4,10 @@ import { mainTabNavigations, rootStackNavigations } from '@/constants';
 import MyPageScreen from '@/screens/main/MyPageScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ReactNode, useContext } from 'react';
-import { StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import MapScreen from '@/screens/main/MapScreen';
 import { RootStackParamList } from '../root/RootNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
-import HeaderRightButton from '@/components/common/HeaderRightButton';
 import { ThemeContext } from '@/context/CustomThemeContext';
 
 export type MainTabParamList = {
@@ -76,48 +74,31 @@ function TabNavigator({ navigation }: TabNavigatorProps) {
             ...props,
           }),
         headerShown: true,
-        headerRightContainerStyle: {
-          paddingRight: 8,
-        },
         headerStyle: {
           backgroundColor: themeColor.backgroundColor,
         },
         headerTitleStyle: {
           color: themeColor.fontColorPrimary,
         },
-        headerRight: () => (
-          <HeaderRightButton
-            icon={
-              <Icon
-                name="musical-notes-outline"
-                size={25}
-                color={themeColor.fontColorPrimary}
-              />
-            }
-            onPress={() =>
-              navigation.navigate('PostNavigator', {
-                screen: 'Post',
-              })
-            }
-          />
-        ),
       })}>
       <MainTab.Screen
         name={mainTabNavigations.MAP}
         component={MapScreen}
         options={{
           headerShown: false,
+          title: '지도',
         }}
       />
       {/* <MainTab.Screen name={mainTabNavigations.LIST} component={ListScreen} /> */}
       <MainTab.Screen
         name={mainTabNavigations.MY_PAGE}
         component={MyPageScreen}
+        options={{
+          title: '설정',
+        }}
       />
     </MainTab.Navigator>
   );
 }
-
-const styles = StyleSheet.create({});
 
 export default TabNavigator;

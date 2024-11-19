@@ -41,16 +41,6 @@ function FloatingButton({ ...props }: FloatingButtonProps) {
 
 const makeStyles = (color: ColorsType, top = 0) =>
   StyleSheet.create({
-    container: {
-      position: 'absolute',
-      width: '100%',
-      flexDirection: 'row',
-      paddingHorizontal: 16,
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 16,
-      maxHeight: 50,
-    },
     buttonContainer: {
       backgroundColor: '#FFFFFF',
       justifyContent: 'center',

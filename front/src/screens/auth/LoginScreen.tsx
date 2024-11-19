@@ -8,9 +8,7 @@ import useAuth from '@/hooks/queries/useAuth';
 import { ColorsType } from '@/constants';
 import InputField from '@/components/common/InputField';
 
-interface LoginScreenProps {}
-
-function LoginScreen({}: LoginScreenProps) {
+function LoginScreen() {
   const themeColor = useContext(ThemeContext);
   const styles = makeStyles(themeColor);
   const emailRef = useRef<TextInput>(null);
