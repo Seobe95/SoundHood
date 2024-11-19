@@ -11,7 +11,9 @@ import React, { useContext } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePostNavigation } from '@/hooks/navigation/usePostNavigation.ts';
-import { useKeyboardVisibility } from '@/hooks/keyboard/useKeyboardVisibility.ts';
+import useCurrentLocation from '@/hooks/map/useCurrentLocation.ts';
+import { useCreatePost } from '@/hooks/queries/usePost.ts';
+import { CreatePostParams } from '@/api';
 
 function PostScreen() {
   const themeColor = useContext(ThemeContext);
@@ -19,14 +21,29 @@ function PostScreen() {
   const styles = makeStyles(themeColor, top, bottom);
   const { selectedSong } = useSearchSpotifyStore();
   const postNavigate = usePostNavigation<PostStackParamList>();
+  const { addressName, location } = useCurrentLocation();
+  const createPost = useCreatePost();
   const content = useForm({
     initialValue: { content: '' },
     validate: validatePost,
   });
-  const { isKeyboardVisible } = useKeyboardVisibility();
-  const navigateToSearchScreen = () => {
+
+  function navigateToSearchScreen() {
     postNavigate.navigation.navigate('Search', { searchType: 'SONG' });
-  };
+  }
+
+  function onSubmit() {
+    const post: CreatePostParams = {
+      post: {
+        latitude: location!.latitude,
+        longitude: location!.longitude,
+        title: selectedSong!.name,
+        description: content.values.content,
+        albumCover: selectedSong!.album.images[0].url,
+      },
+    };
+    createPost.mutate(post);
+  }
 
   return (
     <Pressable
@@ -35,9 +52,16 @@ function PostScreen() {
         Keyboard.dismiss();
       }}>
       <View style={styles.fontContainer}>
-        <Text style={styles.font} allowFontScaling={false}>
-          내가 사는 <Text style={styles.boldFont}>동네</Text>에
-        </Text>
+        {addressName ? (
+          <Text style={[styles.font]} allowFontScaling={false}>
+            <Text style={styles.boldFont}>{addressName}</Text>에
+          </Text>
+        ) : (
+          <Text style={styles.font} allowFontScaling={false}>
+            내가 사는 <Text style={styles.boldFont}>동네</Text>에
+          </Text>
+        )}
+
         <Text style={styles.font} allowFontScaling={false}>
           <Text style={styles.boldFont}>좋아하는 노래</Text>를 등록해보세요!
         </Text>
@@ -53,11 +77,9 @@ function PostScreen() {
           {...content.getTextInputProps('content')}
         />
       </View>
-      {!isKeyboardVisible && (
-        <View style={styles.buttonContainer}>
-          <CustomButton label="등록하기" disabled={content.isVaild} />
-        </View>
-      )}
+      <View style={styles.buttonContainer}>
+        <CustomButton label="등록하기" disabled={content.isVaild} />
+      </View>
     </Pressable>
   );
 }

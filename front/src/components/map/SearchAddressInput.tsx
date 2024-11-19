@@ -16,7 +16,9 @@ function SearchAddressInput({ label, ...props }: SearchAddressInputProps) {
   return (
     <Pressable style={[styles.inputContainer]} {...props}>
       {label ? (
-        <Text>{label}</Text>
+        <Text style={[styles.text, { color: theme.fontColorPrimary }]}>
+          {label}
+        </Text>
       ) : (
         <Text style={styles.text}>음악들이 궁금한 동네를 검색해보세요!</Text>
       )}

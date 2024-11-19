@@ -8,6 +8,8 @@ const authNavigations = {
   LOGIN: 'Login',
   REGISTER: 'Register',
   AUTH_HOME: 'AuthHome',
+  KAKAO: 'Kakao',
+  APPLE: 'Apple',
 } as const;
 
 const detailStackNavigations = {

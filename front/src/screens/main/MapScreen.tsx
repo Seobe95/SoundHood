@@ -1,8 +1,18 @@
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
 import React, { useContext, useEffect } from 'react';
-import { Keyboard, StyleSheet, useColorScheme, View } from 'react-native';
+import {
+  Alert,
+  Keyboard,
+  StyleSheet,
+  useColorScheme,
+  View,
+} from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
-import { ColorsType, mainTabNavigations } from '@/constants';
+import {
+  ColorsType,
+  mainTabNavigations,
+  rootStackNavigations,
+} from '@/constants';
 import { StackScreenProps } from '@react-navigation/stack';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
@@ -13,42 +23,62 @@ import FloatingButton from '@/components/map/FloatingButton.tsx';
 import usePermission from '@/hooks/common/usePermission.ts';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SearchAddressInput from '@/components/map/SearchAddressInput.tsx';
-import usePersistLocation from '@/hooks/map/usePersistLocation.ts';
+import { AuthContext } from '@/context/AuthContext.tsx';
 
-type MapScreenProps = CompositeScreenProps<
+export type MapScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MAP>,
-  StackScreenProps<RootStackParamList>
+  StackScreenProps<RootStackParamList, typeof rootStackNavigations.MAIN_TAP>
 >;
 
 function MapScreen({ navigation, route }: MapScreenProps) {
-  usePermission('LOCATION');
+  const { checked, requestSettingAlert } = usePermission('LOCATION');
   const { top } = useSafeAreaInsets();
   const isDarkMode = useColorScheme() === 'dark';
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
-  const { userLocation, setUserLocation, mapRef, animateCameraTo } =
-    useLocation();
-  const { getPersistLocation } = usePersistLocation();
+  const { userLocation, setUserLocation, mapRef } = useLocation();
+  const auth = useContext(AuthContext);
 
-  useEffect(() => {
-    async function handleLocation() {
-      const persistLocation = await getPersistLocation();
-      if (persistLocation !== null) {
-        animateCameraTo(persistLocation);
-      }
-    }
-    if (
-      typeof route.params?.latitude === 'number' &&
-      typeof route.params?.longitude === 'number'
-    ) {
-      animateCameraTo({
-        latitude: route.params?.latitude,
-        longitude: route.params?.longitude,
+  function alertNeedAuth() {
+    Alert.alert(
+      '로그인이 필요한 기능입니다.',
+      '음악을 등록하기 위해선 로그인이 필요해요.',
+      [
+        {
+          text: '로그인',
+          onPress: () =>
+            navigation.navigate('AuthNavigator', {
+              screen: 'AuthHome',
+            }),
+        },
+        {
+          text: '취소',
+          style: 'cancel',
+        },
+      ],
+    );
+  }
+
+  function onPressPostButton() {
+    if (auth.isLogin) {
+      navigation.navigate('PostNavigator', {
+        screen: 'Post',
       });
-    } else {
-      handleLocation();
+      return;
     }
-  }, [mapRef, route.params, getPersistLocation, animateCameraTo]);
+    if (checked === 'denied' || checked === 'blocked') {
+      requestSettingAlert();
+      return;
+    }
+    alertNeedAuth();
+  }
+
+  function onPressSearchButton() {
+    navigation.navigate('PostNavigator', {
+      screen: 'Search',
+      params: { searchType: 'ADDRESS' },
+    });
+  }
 
   return (
     <>
@@ -68,21 +98,10 @@ function MapScreen({ navigation, route }: MapScreenProps) {
       />
       <View style={[styles.floatingContainer, { top: top || 20 }]}>
         <SearchAddressInput
-          onPress={() => {
-            navigation.navigate('PostNavigator', {
-              screen: 'Search',
-              params: { searchType: 'ADDRESS' },
-            });
-          }}
+          onPress={onPressSearchButton}
           label={route.params?.addressName || undefined}
         />
-        <FloatingButton
-          onPress={() =>
-            navigation.navigate('PostNavigator', {
-              screen: 'Post',
-            })
-          }
-        />
+        <FloatingButton onPress={onPressPostButton} />
       </View>
     </>
   );
@@ -112,6 +131,17 @@ const makeStyles = (color: ColorsType) =>
       alignItems: 'center',
       gap: 16,
       maxHeight: 50,
+    },
+    locationButton: {
+      position: 'absolute',
+      bottom: 50,
+      left: 20,
+      width: 50,
+      height: 50,
+      backgroundColor: color.backgroundColor,
+      justifyContent: 'center',
+      alignItems: 'flex-end',
+      padding: 0,
     },
   });
 

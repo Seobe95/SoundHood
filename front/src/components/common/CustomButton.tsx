@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Platform, StyleSheet, Text } from 'react-native';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Pressable, PressableProps } from 'react-native-gesture-handler';
 import { ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
@@ -11,6 +11,7 @@ interface CustomButtonProps extends PressableProps {
   size?: 'large' | 'medium';
   variant?: 'filled' | 'outline';
   invalid?: boolean;
+  isLoading?: boolean;
 }
 
 function CustomButton({
@@ -18,6 +19,7 @@ function CustomButton({
   size = 'large',
   variant = 'filled',
   invalid = false,
+  isLoading = false,
   ...props
 }: CustomButtonProps) {
   const themeColor = useContext(ThemeContext);
@@ -33,14 +35,18 @@ function CustomButton({
       ]}
       disabled={invalid}
       {...props}>
-      <Text
-        style={[
-          styles.text,
-          styles[`${variant}Text`],
-          invalid && styles.invalidText,
-        ]}>
-        {label}
-      </Text>
+      {isLoading ? (
+        <View></View>
+      ) : (
+        <Text
+          style={[
+            styles.text,
+            styles[`${variant}Text`],
+            invalid && styles.invalidText,
+          ]}>
+          {label}
+        </Text>
+      )}
     </Pressable>
   );
 }
