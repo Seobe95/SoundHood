@@ -6,8 +6,10 @@ import {
   postSignin,
   postSignup,
   ResponseToken,
+  UserInfo,
 } from '../../api/auth';
 import {
+  ResponseError,
   UseMutationCustomOptions,
   UseQueryCustomOptions,
 } from '../../types/common';
@@ -74,8 +76,8 @@ function useGetRefreshToken() {
   return { isSuccess, isError };
 }
 
-function useGetProfile(queryOptions?: UseQueryCustomOptions) {
-  return useQuery({
+function useGetProfile(queryOptions?: UseQueryCustomOptions<UserInfo>) {
+  return useQuery<UserInfo, ResponseError>({
     queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_PROFILE],
     queryFn: getProfile,
     ...queryOptions,
@@ -102,14 +104,11 @@ function useAuth() {
   const getProfileQuery = useGetProfile({
     enabled: refreshTokenQuery.isSuccess,
   });
-  const isLogin = getProfileQuery.isSuccess;
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
-
   return {
     signupMutation,
     loginMutation,
-    isLogin,
     getProfileQuery,
     logoutMutation,
   };
