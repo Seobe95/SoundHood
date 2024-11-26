@@ -11,6 +11,9 @@ export class CreatePostDto {
   title: string;
 
   @IsString()
+  artist: string;
+
+  @IsString()
   description: string;
 
   @IsDateString()
@@ -18,4 +21,7 @@ export class CreatePostDto {
 
   @IsString()
   albumCover: string;
+
+  @IsString()
+  nickname: string;
 }

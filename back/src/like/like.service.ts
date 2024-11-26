@@ -15,7 +15,7 @@ export class LikeService {
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
   ) {}
 
-  async toggleLike(userId: number, postId: number) {
+  async toggleLike(userId: string, postId: string) {
     const post = await this.postRepository
       .createQueryBuilder('post')
       .where('post.id = :id', { id: postId })
@@ -48,7 +48,7 @@ export class LikeService {
     }
   }
 
-  async getLikesCount(postId: number) {
+  async getLikesCount(postId: string) {
     return await this.likeRepository.count({ where: { post: { id: postId } } });
   }
 }

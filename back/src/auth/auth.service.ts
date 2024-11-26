@@ -1,8 +1,10 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from './user.entity';
@@ -63,6 +65,36 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
+  async updateUser(id: string, nickname?: string, profileImageUri?: string) {
+    if (!nickname && !profileImageUri) {
+      throw new BadRequestException('변경할 데이터가 없습니다.');
+    }
+    try {
+      const user = await this.userRepository
+        .createQueryBuilder('user')
+        .where('user.id = :id', { id })
+        .getOne();
+
+      if (!user) {
+        throw new NotFoundException('존재하지 않는 유저입니다.');
+      }
+      if (nickname) {
+        user.nickname = nickname;
+      }
+      if (profileImageUri) {
+        user.imageUri = profileImageUri;
+      }
+      if (nickname || profileImageUri) {
+        await this.userRepository.save(user);
+      }
+    } catch (e) {
+      throw new InternalServerErrorException(
+        e,
+        '닉네임 변경 중 문제가 발생했습니다.',
+      );
+    }
+  }
+
   private async getTokens(payload: { email: string }) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
@@ -78,7 +110,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async updateHashedRefreshToken(id: number, refreshToken: string) {
+  async updateHashedRefreshToken(id: string, refreshToken: string) {
     const salt = await bcrypt.genSalt();
     const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
 

@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -17,6 +16,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../auth/user.entity';
 import { GetUser } from '../@common/decorators/get-user.decorator';
+import { GetPostIdDto } from './dto/get-post-id.dto';
 
 @Controller()
 export class PostController {
@@ -40,7 +40,8 @@ export class PostController {
   }
 
   @Get('/posts/:id')
-  getPostById(@Param('id', ParseIntPipe) id: number) {
+  getPostById(@Param(ValidationPipe) params: GetPostIdDto) {
+    const { id } = params;
     return this.postService.getPostById(id);
   }
 
@@ -52,7 +53,8 @@ export class PostController {
 
   @Delete('/posts/:id')
   @UseGuards(AuthGuard())
-  deletePost(@Param('id', ParseIntPipe) id: number) {
+  deletePost(@Param(ValidationPipe) params: GetPostIdDto) {
+    const { id } = params;
     return this.postService.deletePost(id);
   }
 
@@ -60,9 +62,10 @@ export class PostController {
   @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
   updatePost(
-    @Param('id', ParseIntPipe) id: number,
+    @Param() params: GetPostIdDto,
     @Body() updatePostDto: Omit<CreatePostDto, 'latitude' | 'longitude'>,
   ) {
+    const { id } = params;
     return this.postService.updatePost(id, updatePostDto);
   }
 }

@@ -2,6 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
+  Patch,
   Post,
   UseGuards,
   ValidationPipe,
@@ -30,6 +33,15 @@ export class AuthController {
   @UseGuards(AuthGuard())
   refresh(@GetUser() user: User) {
     return this.authService.refreshToken(user);
+  }
+
+  @Patch('/me')
+  @UseGuards(AuthGuard())
+  updateUser(
+    @Param('userId', ParseIntPipe) userId: string,
+    @Body() nickname: string,
+  ) {
+    return this.authService.updateUser(userId, nickname);
   }
 
   @Get('/me')

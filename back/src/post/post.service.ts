@@ -61,13 +61,12 @@ export class PostService {
       .getMany();
   }
 
-  async getPostById(id: number) {
+  async getPostById(id: string) {
     try {
       const foundPost = await this.postRepository
         .createQueryBuilder('post')
         .where('post.id = :id', { id })
         .getOne();
-
       if (!foundPost) {
         throw new NotFoundException('존재하지 않는 피드입니다.');
       }
@@ -94,6 +93,7 @@ export class PostService {
 
     try {
       await this.postRepository.save(post);
+      return post;
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(
@@ -102,7 +102,7 @@ export class PostService {
     }
   }
 
-  async deletePost(id: number) {
+  async deletePost(id: string) {
     try {
       const result = await this.postRepository
         .createQueryBuilder('post')
@@ -123,7 +123,7 @@ export class PostService {
   }
 
   async updatePost(
-    id: number,
+    id: string,
     updatePostDto: Omit<CreatePostDto, 'latitude' | 'longitude'>,
   ) {
     const post = await this.getPostById(id);

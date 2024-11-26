@@ -15,8 +15,8 @@ import { Like } from '../like/like.entity';
 
 @Entity()
 export class Post extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({
     type: 'decimal',

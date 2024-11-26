@@ -17,6 +17,8 @@ export type UserInfo = {
   id: number;
   nickname: string;
   imageUrl: string;
+  loginType: 'email' | 'kakao' | 'apple';
+  kakaoImageUri?: string;
 };
 
 type ResponseProfile = Profile;

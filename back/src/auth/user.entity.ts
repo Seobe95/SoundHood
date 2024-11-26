@@ -15,8 +15,8 @@ import { Like } from '../like/like.entity';
 @Entity()
 @Unique(['email'])
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   loginType: 'email' | 'kakao' | 'apple';
