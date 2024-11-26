@@ -17,15 +17,21 @@ import Icon from 'react-native-vector-icons/Ionicons';
 interface SongInfoProps extends PressableProps {
   size?: 'large' | 'small';
   song?: TrackItems;
+  title?: string;
+  artist?: string;
+  imageUri?: string;
 }
 
-function SongInfo({ size = 'large', song, ...props }: SongInfoProps) {
+function SongInfo({
+  size = 'large',
+  title,
+  artist,
+  imageUri,
+  ...props
+}: SongInfoProps) {
   const theme = useContext(ThemeContext);
   const { top } = useSafeAreaInsets();
   const styles = makeStyles(theme, top);
-  const title = song?.name;
-  const artist = song?.artists[0].name;
-  const imageUri = song?.album.images[0].url;
   return (
     <Pressable
       style={({ pressed }) => [
@@ -74,7 +80,7 @@ function SongInfo({ size = 'large', song, ...props }: SongInfoProps) {
           </Text>
         </View>
       )}
-      {!song && <Icon name="chevron-forward" size={25} style={styles.icon} />}
+      {!title && <Icon name="chevron-forward" size={25} style={styles.icon} />}
     </Pressable>
   );
 }
