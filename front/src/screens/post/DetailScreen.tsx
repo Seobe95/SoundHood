@@ -1,25 +1,16 @@
 import React, { useContext, useEffect, useState } from 'react';
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ColorsType, detailStackNavigations } from '@/constants';
 import { DetailStackParamList } from '@/navigators/detail/DetailNavigator.tsx';
-import { useReadPostById } from '@/hooks/queries/usePost.ts';
+import { useReadPostById, useUpdateLikePost } from '@/hooks/queries/usePost.ts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderRightButton from '@/components/common/HeaderRightButton.tsx';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { AuthContext } from '@/context/AuthContext.tsx';
 import CustomButton from '@/components/common/CustomButton.tsx';
 import { RFValue } from '@/utils';
 import SongInfo from '@/components/post/SongInfo.tsx';
-import { isError } from 'lodash';
 
 type DetailScreenProps = {} & DetailStackScreenProps;
 
@@ -34,39 +25,47 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   const { top } = useSafeAreaInsets();
   const theme = useContext(ThemeContext);
   const [isLike, setIsLike] = useState(false);
-  const auth = useContext(AuthContext);
   const styles = makeStyles(theme, top);
-  const { data, isSuccess, error } = useReadPostById({
+  const { data, isSuccess } = useReadPostById({
     id: route.params.id,
   });
-  console.log(error);
+  const handlePostLike = useUpdateLikePost({
+    mutationOptions: {
+      onSuccess: () => {
+        setIsLike(prev => !prev);
+      },
+      onError: data => {
+        console.log('FFF');
+      },
+    },
+  });
+
   function handleLike() {
-    setIsLike(!isLike);
+    handlePostLike.mutate({ id: route.params.id });
   }
 
   useEffect(() => {
     if (data) {
+      setIsLike(data.hasLiked);
       navigation.setOptions({
         title: data.title,
         headerRight: () => {
-          if (auth.isLogin) {
-            return (
-              <HeaderRightButton>
-                <Icon
-                  name={'ellipsis-horizontal-circle-outline'}
-                  size={30}
-                  color={theme.fontColorPrimary}
-                />
-              </HeaderRightButton>
-            );
-          }
+          return (
+            <HeaderRightButton>
+              <Icon
+                name={'ellipsis-horizontal-circle-outline'}
+                size={30}
+                color={theme.fontColorPrimary}
+              />
+            </HeaderRightButton>
+          );
         },
         headerRightContainerStyle: {
           paddingRight: 16,
         },
       });
     }
-  }, [isSuccess, data, theme, auth.isLogin, navigation]);
+  }, [isSuccess]);
   return (
     <View style={styles.container}>
       {data && (
@@ -89,7 +88,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
               <Icon
                 name={'heart'}
                 size={20}
-                color={isLike ? '#ffffff' : theme.PINK_200}
+                color={isLike ? theme.PINK_200 : '#ffffff'}
               />
               <Text style={styles.likeButtonText}>좋아요</Text>
             </Pressable>
