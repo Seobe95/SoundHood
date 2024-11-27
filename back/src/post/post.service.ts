@@ -8,12 +8,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from '../auth/user.entity';
+import { Like } from '../like/like.entity';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
+    @InjectRepository(Like) private likeRepository: Repository<Like>,
   ) {}
 
   async getAllMarkers() {
@@ -61,7 +63,7 @@ export class PostService {
       .getMany();
   }
 
-  async getPostById(id: string) {
+  async getPostById(id: string, userId?: string | null) {
     try {
       const foundPost = await this.postRepository
         .createQueryBuilder('post')
@@ -70,7 +72,15 @@ export class PostService {
       if (!foundPost) {
         throw new NotFoundException('존재하지 않는 피드입니다.');
       }
-      return foundPost;
+      let hasLiked = false;
+      if (userId) {
+        const existingLike = await this.likeRepository.findOne({
+          where: { user: { id: userId }, post: { id: id } },
+        });
+        hasLiked = !!existingLike;
+      }
+
+      return { ...foundPost, hasLiked };
     } catch {
       throw new InternalServerErrorException(
         '장소를 가져오는 도중 에러가 발생했습니다.',
@@ -93,7 +103,7 @@ export class PostService {
 
     try {
       await this.postRepository.save(post);
-      return post;
+      return { ...post, hasLiked: false };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(
@@ -126,7 +136,7 @@ export class PostService {
     id: string,
     updatePostDto: Omit<CreatePostDto, 'latitude' | 'longitude'>,
   ) {
-    const post = await this.getPostById(id);
+    const post = await this.getPostById(id, null);
     const { title, description, date, albumCover } = updatePostDto;
     post.title = title;
     post.description = description;

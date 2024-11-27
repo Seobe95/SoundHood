@@ -40,9 +40,13 @@ export class PostController {
   }
 
   @Get('/posts/:id')
-  getPostById(@Param(ValidationPipe) params: GetPostIdDto) {
+  @UseGuards(AuthGuard())
+  getPostById(
+    @GetUser() user: User,
+    @Param(ValidationPipe) params: GetPostIdDto,
+  ) {
     const { id } = params;
-    return this.postService.getPostById(id);
+    return this.postService.getPostById(id, user.id);
   }
 
   @Post('/posts')

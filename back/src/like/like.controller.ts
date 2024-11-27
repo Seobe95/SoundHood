@@ -19,11 +19,11 @@ export class LikeController {
   @Patch()
   @UseGuards(AuthGuard())
   toggleLike(
-    @Param(ValidationPipe) params: GetPostIdDto,
+    @Param('postId', ValidationPipe) postId: string,
     @GetUser() user: User,
   ) {
-    const { id } = params;
-    return this.likeService.toggleLike(user.id, id);
+    console.log(postId, user.id);
+    return this.likeService.toggleLike(user.id, postId);
   }
 
   @Get('count')
