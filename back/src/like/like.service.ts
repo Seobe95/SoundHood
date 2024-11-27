@@ -20,7 +20,9 @@ export class LikeService {
       .createQueryBuilder('post')
       .where('post.id = :id', { id: postId })
       .getOne();
+
     if (!post) throw new NotFoundException('Post not found');
+
     try {
       const existingLike = await this.likeRepository.findOne({
         where: {
@@ -42,6 +44,7 @@ export class LikeService {
       }
 
       await this.postRepository.save(post);
+      return postId;
     } catch (e) {
       console.log(e);
       throw new InternalServerErrorException('좋아요 에러');

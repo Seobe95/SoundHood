@@ -16,6 +16,13 @@ const kakaoQueryKeys = {
   GET_ADDRESS_FROM_COORDINATE: 'getAddressFromCoordinate',
 } as const;
 
+const postQueryKeys = {
+  POST: 'post',
+  READ_POST_BY_ID: 'readPostById',
+  READ_POST: 'readPost',
+  READ_POST_LIKE_COUNT: 'readPostLikeCount',
+} as const;
+
 const storageKeys = {
   ACCESS_TOKEN: 'accessToken',
   REFRESH_TOKEN: 'refreshToken',
@@ -23,4 +30,10 @@ const storageKeys = {
   LOCATION: 'location',
 } as const;
 
-export { authQueryKeys, storageKeys, spotifyQueryKeys, kakaoQueryKeys };
+export {
+  authQueryKeys,
+  storageKeys,
+  spotifyQueryKeys,
+  kakaoQueryKeys,
+  postQueryKeys,
+};
