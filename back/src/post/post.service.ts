@@ -68,19 +68,31 @@ export class PostService {
     try {
       const foundPost = await this.postRepository
         .createQueryBuilder('post')
+        .leftJoinAndSelect('post.user', 'user')
         .where('post.id = :id', { id })
         .getOne();
 
       if (!foundPost) {
         throw new NotFoundException('존재하지 않는 피드입니다.');
       }
+      const { user, ...post } = foundPost;
       const existingLike = await this.likeRepository.findOne({
         where: { user: { id: userId }, post: { id: id } },
       });
       const hasLiked = !!existingLike;
-      const isMyPost = foundPost.author === userId;
+      const isMyPost = user.id === userId;
 
-      return { ...foundPost, hasLiked, isMyPost };
+      return {
+        ...post,
+        hasLiked,
+        isMyPost,
+        author: {
+          id: user.id,
+          nickname: user.nickname,
+          profileUri:
+            user.loginType === 'kakao' ? user.kakaoImageUri : user.imageUri,
+        },
+      };
     } catch {
       throw new InternalServerErrorException(
         '장소를 가져오는 도중 에러가 발생했습니다.',

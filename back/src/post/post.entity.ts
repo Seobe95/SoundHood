@@ -7,7 +7,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 import { ColumnNumericTransformer } from 'src/@common/transformer/numeric.transformer';
@@ -70,7 +69,4 @@ export class Post extends BaseEntity {
 
   @OneToMany(() => Like, (like) => like.post)
   likes: Like[];
-
-  @RelationId((post: Post) => post.user) // user 관계의 ID를 가져옴
-  author: string;
 }
