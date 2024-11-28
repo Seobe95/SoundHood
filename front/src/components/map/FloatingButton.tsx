@@ -48,7 +48,7 @@ const makeStyles = (color: ColorsType, top = 0) =>
       width: 45,
       height: 45,
       borderRadius: 50,
-      borderWidth: Platform.OS === 'ios' ? 3 : 2,
+      borderWidth: 2,
       borderColor: color.BLUE_300,
     },
     pressedButtonContainer: {
