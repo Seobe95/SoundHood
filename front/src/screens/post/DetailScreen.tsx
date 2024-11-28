@@ -13,6 +13,7 @@ import { RFValue } from '@/utils';
 import SongInfo from '@/components/post/SongInfo.tsx';
 import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
 import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
+import UserInfo from '@/components/detail/UserInfo.tsx';
 
 type DetailScreenProps = {} & DetailStackScreenProps;
 
@@ -27,6 +28,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   const { top } = useSafeAreaInsets();
   const theme = useContext(ThemeContext);
   const [isLike, setIsLike] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
   const styles = makeStyles(theme, top);
   const { show, hide } = useCustomActionSheetStore();
   const { data, isSuccess } = useReadPostById({
@@ -36,6 +38,9 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
     mutationOptions: {
       onSuccess: () => {
         setIsLike(prev => !prev);
+        isLike
+          ? setLikeCount(prev => prev - 1)
+          : setLikeCount(prev => prev + 1);
       },
       onError: data => {
         console.log('FFF');
@@ -50,6 +55,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   useEffect(() => {
     if (data) {
       setIsLike(data.hasLiked);
+      setLikeCount(data.likeCount);
       navigation.setOptions({
         title: data.title,
         headerRight: () => {
@@ -68,6 +74,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
         },
       });
     }
+    console.log(isSuccess);
   }, [isSuccess]);
 
   return (
@@ -83,10 +90,9 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
             />
             <View style={styles.descriptionContainer}>
               <Text style={[styles.text, styles.descriptionText]}>
-                <Text style={styles.nicknameText}>닉네임</Text>
-                {`\n`}
                 {data.description}
               </Text>
+              <UserInfo nickname={data.author.nickname} likeCount={likeCount} />
             </View>
             <View style={styles.buttonContainer}>
               <Pressable style={styles.likeButton} onPress={handleLike}>
@@ -123,12 +129,6 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
               size={'large'}
               variant={'filled'}
             />
-            <CustomButton
-              label={'취소'}
-              size={'large'}
-              variant={'outline'}
-              onPress={hide}
-            />
           </>
         ) : (
           <>
@@ -141,14 +141,14 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
                 navigation.navigate('Report');
               }}
             />
-            <CustomButton
-              label={'취소'}
-              size={'large'}
-              variant={'outline'}
-              onPress={hide}
-            />
           </>
         )}
+        <CustomButton
+          label={'취소'}
+          size={'large'}
+          variant={'outline'}
+          onPress={hide}
+        />
       </CustomActionSheet>
     </>
   );
@@ -191,7 +191,8 @@ const makeStyles = (color: ColorsType, top = 0) =>
       borderColor: color.borderColor,
       borderRadius: 16,
       padding: deviceHeight > 700 ? 16 : 10,
-      flexDirection: 'row',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
       backgroundColor: color.backgroundColorSecondary,
       height: 130,
       width: '100%',
@@ -200,11 +201,7 @@ const makeStyles = (color: ColorsType, top = 0) =>
     descriptionText: {
       fontSize: RFValue(16, top),
     },
-    nicknameText: {
-      fontSize: RFValue(18, top),
-      marginBottom: 8,
-      fontWeight: 'bold',
-    },
+
     buttonContainer: {
       flexDirection: 'row',
       width: '100%',
