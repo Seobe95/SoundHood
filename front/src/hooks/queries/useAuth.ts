@@ -52,8 +52,8 @@ function useGetRefreshToken() {
   const { data, isSuccess, isError } = useQuery<ResponseToken>({
     queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_ACCESS_TOKEN],
     queryFn: getAccessToken,
-    staleTime: 1000 * 60 * 30 - 1000 * 60 * 3,
-    refetchInterval: 1000 * 60 * 30 - 1000 * 60 * 3,
+    staleTime: 1000 * 60 * 60 - 1000 * 60 * 3,
+    refetchInterval: 1000 * 60 * 60 - 1000 * 60 * 3,
     refetchOnReconnect: true,
     refetchIntervalInBackground: true,
   });
