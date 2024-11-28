@@ -6,9 +6,12 @@ const apiInstance = axios.create({
   withCredentials: true,
 });
 
-const spotifyIntance = axios.create({
+const spotifyInstance = axios.create({
   baseURL: 'https://api.spotify.com/v1/search',
   withCredentials: true,
+  headers: {
+    'Accept-Language': 'ko-KR,ko;q=0.9',
+  },
 });
 
 const kakaoAPIInstance = axios.create({
@@ -19,4 +22,4 @@ const kakaoAPIInstance = axios.create({
   },
 });
 
-export { apiInstance, spotifyIntance, kakaoAPIInstance };
+export { apiInstance, spotifyInstance, kakaoAPIInstance };

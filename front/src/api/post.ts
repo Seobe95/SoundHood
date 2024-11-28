@@ -2,6 +2,7 @@ import { apiInstance } from '@/api/axios.ts';
 
 export type Post = {
   id: number;
+  author: string;
   latitude: number;
   longitude: number;
   title: string;
@@ -10,6 +11,7 @@ export type Post = {
   date: string;
   albumCover: string;
   hasLiked: boolean;
+  isMyPost: boolean;
 };
 
 async function readPosts() {
