@@ -1,9 +1,7 @@
-import { storageKeys } from '@/constants';
-import { getEncryptedStorage, storeEncryptedStorage } from '@/utils';
 import encodeBase64 from '@/utils/base64';
-import axios, { AxiosError, isAxiosError } from 'axios';
+import axios from 'axios';
 import Config from 'react-native-config';
-import { spotifyIntance } from './axios';
+import { spotifyInstance } from './axios';
 
 export type SpotifyResponseToken = {
   access_token: string;
@@ -77,9 +75,10 @@ const getSearchResults = async ({
     limit: `${limit}`,
   }).toString();
 
-  const { data } = await spotifyIntance.get<SongType>(
+  const { data } = await spotifyInstance.get<SongType>(
     `https://api.spotify.com/v1/search?${params}`,
   );
+  console.log(data);
   return data.tracks.items;
 };
 

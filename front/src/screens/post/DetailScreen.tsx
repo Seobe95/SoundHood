@@ -11,6 +11,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CustomButton from '@/components/common/CustomButton.tsx';
 import { RFValue } from '@/utils';
 import SongInfo from '@/components/post/SongInfo.tsx';
+import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
+import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 
 type DetailScreenProps = {} & DetailStackScreenProps;
 
@@ -26,6 +28,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   const theme = useContext(ThemeContext);
   const [isLike, setIsLike] = useState(false);
   const styles = makeStyles(theme, top);
+  const { show, hide } = useCustomActionSheetStore();
   const { data, isSuccess } = useReadPostById({
     id: route.params.id,
   });
@@ -51,7 +54,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
         title: data.title,
         headerRight: () => {
           return (
-            <HeaderRightButton>
+            <HeaderRightButton onPress={show}>
               <Icon
                 name={'ellipsis-horizontal-circle-outline'}
                 size={30}
@@ -66,41 +69,88 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
       });
     }
   }, [isSuccess]);
+
   return (
-    <View style={styles.container}>
-      {data && (
-        <View style={styles.songContainer}>
-          <SongInfo
-            title={data.title}
-            artist={'한로로'}
-            imageUri={data.albumCover}
-            disabled={true}
-          />
-          <View style={styles.descriptionContainer}>
-            <Text style={[styles.text, styles.descriptionText]}>
-              <Text style={styles.nicknameText}>닉네임</Text>
-              {`\n`}
-              {data.description}
-            </Text>
-          </View>
-          <View style={styles.buttonContainer}>
-            <Pressable style={styles.likeButton} onPress={handleLike}>
-              <Icon
-                name={'heart'}
-                size={20}
-                color={isLike ? theme.PINK_200 : '#ffffff'}
-              />
-              <Text style={styles.likeButtonText}>좋아요</Text>
-            </Pressable>
-            <CustomButton
-              label={'Spotify에서 듣기'}
-              size={'medium'}
-              variant={'spotify'}
+    <>
+      <View style={styles.container}>
+        {data && (
+          <View style={styles.songContainer}>
+            <SongInfo
+              title={data.title}
+              artist={'한로로'}
+              imageUri={data.albumCover}
+              disabled={true}
             />
+            <View style={styles.descriptionContainer}>
+              <Text style={[styles.text, styles.descriptionText]}>
+                <Text style={styles.nicknameText}>닉네임</Text>
+                {`\n`}
+                {data.description}
+              </Text>
+            </View>
+            <View style={styles.buttonContainer}>
+              <Pressable style={styles.likeButton} onPress={handleLike}>
+                <Icon
+                  name={'heart'}
+                  size={20}
+                  color={isLike ? theme.PINK_200 : '#ffffff'}
+                />
+                <Text style={styles.likeButtonText}>좋아요</Text>
+              </Pressable>
+              <CustomButton
+                label={'Spotify에서 듣기'}
+                size={'medium'}
+                variant={'spotify'}
+              />
+            </View>
           </View>
-        </View>
-      )}
-    </View>
+        )}
+      </View>
+      <CustomActionSheet>
+        {data?.isMyPost ? (
+          <>
+            <CustomButton
+              label={'수정하기'}
+              size={'large'}
+              variant={'filled'}
+              onPress={() => {
+                hide();
+                navigation.navigate('Edit');
+              }}
+            />
+            <CustomButton
+              label={'삭제하기'}
+              size={'large'}
+              variant={'filled'}
+            />
+            <CustomButton
+              label={'취소'}
+              size={'large'}
+              variant={'outline'}
+              onPress={hide}
+            />
+          </>
+        ) : (
+          <>
+            <CustomButton
+              label={'신고하기'}
+              size={'large'}
+              variant={'filled'}
+              onPress={() => {
+                hide();
+                navigation.navigate('Report');
+              }}
+            />
+            <CustomButton
+              label={'취소'}
+              size={'large'}
+              variant={'outline'}
+              onPress={hide}
+            />
+          </>
+        )}
+      </CustomActionSheet>
+    </>
   );
 }
 

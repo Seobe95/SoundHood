@@ -16,6 +16,7 @@ export class PostService {
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
     @InjectRepository(Like) private likeRepository: Repository<Like>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
   async getAllMarkers() {
@@ -63,24 +64,23 @@ export class PostService {
       .getMany();
   }
 
-  async getPostById(id: string, userId?: string | null) {
+  async getPostById(id: string, userId: string) {
     try {
       const foundPost = await this.postRepository
         .createQueryBuilder('post')
         .where('post.id = :id', { id })
         .getOne();
+
       if (!foundPost) {
         throw new NotFoundException('존재하지 않는 피드입니다.');
       }
-      let hasLiked = false;
-      if (userId) {
-        const existingLike = await this.likeRepository.findOne({
-          where: { user: { id: userId }, post: { id: id } },
-        });
-        hasLiked = !!existingLike;
-      }
+      const existingLike = await this.likeRepository.findOne({
+        where: { user: { id: userId }, post: { id: id } },
+      });
+      const hasLiked = !!existingLike;
+      const isMyPost = foundPost.author === userId;
 
-      return { ...foundPost, hasLiked };
+      return { ...foundPost, hasLiked, isMyPost };
     } catch {
       throw new InternalServerErrorException(
         '장소를 가져오는 도중 에러가 발생했습니다.',
@@ -88,7 +88,11 @@ export class PostService {
     }
   }
 
-  async createPost(createPostDto: CreatePostDto) {
+  async createPost(createPostDto: CreatePostDto, userId: string) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new NotFoundException('유저를 찾을 수 없습니다.');
+    }
     const { albumCover, date, description, latitude, longitude, title } =
       createPostDto;
 
@@ -99,11 +103,12 @@ export class PostService {
       latitude,
       longitude,
       title,
+      user,
     });
 
     try {
       await this.postRepository.save(post);
-      return { ...post, hasLiked: false };
+      return { ...post };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(

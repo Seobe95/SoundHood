@@ -7,6 +7,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 import { ColumnNumericTransformer } from 'src/@common/transformer/numeric.transformer';
@@ -60,9 +61,16 @@ export class Post extends BaseEntity {
   @DeleteDateColumn()
   deletedAt: Date | null;
 
-  @ManyToOne(() => User, (user) => user.post, { eager: false })
+  @ManyToOne(() => User, (user) => user.post, {
+    eager: false,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @OneToMany(() => Like, (like) => like.post)
   likes: Like[];
+
+  @RelationId((post: Post) => post.user) // user 관계의 ID를 가져옴
+  author: string;
 }

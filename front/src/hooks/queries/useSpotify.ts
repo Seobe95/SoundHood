@@ -1,4 +1,4 @@
-import { spotifyIntance } from '@/api/axios';
+import { spotifyInstance } from '@/api/axios';
 import {
   getSearchResults,
   getSpotifyAccessToken,
@@ -28,7 +28,7 @@ function useGetSpotifyAccessToken(
   useEffect(() => {
     if (isSuccess && data?.access_token) {
       console.log(data.access_token);
-      spotifyIntance.defaults.headers.common.Authorization = `Bearer ${data.access_token}`;
+      spotifyInstance.defaults.headers.common.Authorization = `Bearer ${data.access_token}`;
     }
   }, [isSuccess, data]);
 

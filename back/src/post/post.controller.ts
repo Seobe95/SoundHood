@@ -51,8 +51,8 @@ export class PostController {
 
   @Post('/posts')
   @UseGuards(AuthGuard())
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postService.createPost(createPostDto);
+  createPost(@Body() createPostDto: CreatePostDto, @GetUser() user: User) {
+    return this.postService.createPost(createPostDto, user.id);
   }
 
   @Delete('/posts/:id')
