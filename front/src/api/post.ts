@@ -2,9 +2,14 @@ import { apiInstance } from '@/api/axios.ts';
 
 export type Post = {
   id: number;
-  author: string;
+  author: {
+    id: string;
+    nickname: string;
+    profileUri: string;
+  };
   latitude: number;
   longitude: number;
+  likeCount: number;
   title: string;
   description: string;
   artist: string;

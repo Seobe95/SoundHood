@@ -14,6 +14,7 @@ import { AuthDto } from './dto/auth.dto';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { NicknameMaker } from '../@common/nickname/nickname.maker';
 
 @Injectable()
 export class AuthService {
@@ -24,15 +25,26 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  nicknameMaker = new NicknameMaker();
+
   async signup(authDto: AuthDto) {
     const { email, password } = authDto;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
+    let nickname: string;
+    let isDuplicate: boolean;
+
+    do {
+      nickname = this.nicknameMaker.make();
+      isDuplicate =
+        (await this.userRepository.findOne({ where: { nickname } })) !== null;
+    } while (isDuplicate);
 
     const user = this.userRepository.create({
       email,
       password: hashedPassword,
       loginType: 'email',
+      nickname: nickname,
     });
 
     try {
