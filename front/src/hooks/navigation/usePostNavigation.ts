@@ -26,6 +26,9 @@ export function usePostNavigation<T extends ParamListBase>() {
         }
       >,
     ) => {
+      if (e.data.action.type === 'REPLACE') {
+        return;
+      }
       e.preventDefault();
       Alert.alert(
         '이 페이지에서 나가시면 저장이 되지 않아요!',

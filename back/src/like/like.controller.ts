@@ -2,14 +2,15 @@ import {
   Controller,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { LikeService } from './like.service';
 import { User } from '../auth/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../@common/decorators/get-user.decorator';
+import { GetPostIdDto } from '../post/dto/get-post-id.dto';
 
 @Controller('posts/:postId/like')
 export class LikeController {
@@ -18,14 +19,16 @@ export class LikeController {
   @Patch()
   @UseGuards(AuthGuard())
   toggleLike(
-    @Param('postId', ParseIntPipe) postId: number,
+    @Param('postId', ValidationPipe) postId: string,
     @GetUser() user: User,
   ) {
+    console.log(postId, user.id);
     return this.likeService.toggleLike(user.id, postId);
   }
 
   @Get('count')
-  getLikesCount(@Param('postId', ParseIntPipe) postId: number) {
-    return this.likeService.getLikesCount(postId);
+  getLikesCount(@Param(ValidationPipe) params: GetPostIdDto) {
+    const { id } = params;
+    return this.likeService.getLikesCount(id);
   }
 }

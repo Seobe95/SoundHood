@@ -11,10 +11,12 @@ import {
   PostByIdParams,
   readPostById,
   readPosts,
+  updateLikePost,
   updatePost,
   UpdatePostParams,
 } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { postQueryKeys } from '@/constants';
 
 type QueryCustomType<T = {}> = {
   mutationOptions?: UseMutationCustomOptions;
@@ -26,7 +28,7 @@ type UseReadPostByIdParams = PostByIdParams &
 
 function useReadPostById({ id, queryOptions }: UseReadPostByIdParams) {
   return useQuery<Post, ResponseError>({
-    queryKey: ['post', 'readPostById', { id }],
+    queryKey: [postQueryKeys.POST, postQueryKeys.READ_POST_BY_ID, { id }],
     queryFn: () => readPostById({ id }),
     staleTime: 60 * 1000,
     ...queryOptions,
@@ -37,7 +39,7 @@ type UseReadPosts = Pick<QueryCustomType<Post[]>, 'queryOptions'>;
 
 function useReadPosts({ queryOptions }: UseReadPosts) {
   return useQuery<Post[], ResponseError>({
-    queryKey: ['post', 'readPost'],
+    queryKey: [postQueryKeys.POST, postQueryKeys.READ_POST],
     queryFn: () => readPosts(),
     staleTime: 60 * 1000,
     ...queryOptions,
@@ -47,7 +49,9 @@ function useReadPosts({ queryOptions }: UseReadPosts) {
 type UseCreatePostParams = CreatePostParams &
   Pick<QueryCustomType, 'mutationOptions'>;
 
-function useCreatePost(mutationOptions?: UseMutationCustomOptions) {
+function useCreatePost(
+  mutationOptions?: Pick<QueryCustomType, 'mutationOptions'>,
+) {
   return useMutation({
     mutationFn: createPost,
     ...mutationOptions,
@@ -57,21 +61,37 @@ function useCreatePost(mutationOptions?: UseMutationCustomOptions) {
 type UseUpdatePostParams = UpdatePostParams &
   Pick<QueryCustomType, 'mutationOptions'>;
 
-function useUpdatePost({ id, post, mutationOptions }: UseUpdatePostParams) {
+function useUpdatePost({
+  mutationOptions,
+}: Pick<QueryCustomType, 'mutationOptions'>) {
   return useMutation({
-    mutationFn: () => updatePost({ id, post }),
+    mutationFn: updatePost,
     ...mutationOptions,
   });
 }
 
-type UseDeletePostParams = PostByIdParams &
-  Pick<QueryCustomType, 'mutationOptions'>;
+type UseDeletePostParams = Pick<QueryCustomType, 'mutationOptions'>;
 
-function useDeletePost({ id, mutationOptions }: UseDeletePostParams) {
+function useDeletePost({ mutationOptions }: UseDeletePostParams) {
   return useMutation({
-    mutationFn: () => deletePost({ id }),
+    mutationFn: deletePost,
     ...mutationOptions,
   });
 }
 
-export { useReadPostById, useCreatePost, useUpdatePost, useDeletePost };
+type UseUpdateLikePostParams = Pick<QueryCustomType, 'mutationOptions'>;
+
+function useUpdateLikePost({ mutationOptions }: UseUpdateLikePostParams) {
+  return useMutation({
+    mutationFn: updateLikePost,
+    ...mutationOptions,
+  });
+}
+
+export {
+  useReadPostById,
+  useCreatePost,
+  useUpdatePost,
+  useDeletePost,
+  useUpdateLikePost,
+};

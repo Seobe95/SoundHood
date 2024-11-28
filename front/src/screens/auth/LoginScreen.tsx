@@ -52,6 +52,7 @@ function LoginScreen() {
           label="로그인"
           invalid={!login.isVaild}
           onPress={onPress}
+          isLoading={loginMutation.isPending}
         />
       </View>
     </View>

@@ -8,12 +8,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from '../auth/user.entity';
+import { Like } from '../like/like.entity';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post)
     private postRepository: Repository<Post>,
+    @InjectRepository(Like) private likeRepository: Repository<Like>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
 
   async getAllMarkers() {
@@ -61,17 +64,35 @@ export class PostService {
       .getMany();
   }
 
-  async getPostById(id: number) {
+  async getPostById(id: string, userId: string) {
     try {
       const foundPost = await this.postRepository
         .createQueryBuilder('post')
+        .leftJoinAndSelect('post.user', 'user')
         .where('post.id = :id', { id })
         .getOne();
 
       if (!foundPost) {
         throw new NotFoundException('존재하지 않는 피드입니다.');
       }
-      return foundPost;
+      const { user, ...post } = foundPost;
+      const existingLike = await this.likeRepository.findOne({
+        where: { user: { id: userId }, post: { id: id } },
+      });
+      const hasLiked = !!existingLike;
+      const isMyPost = user.id === userId;
+
+      return {
+        ...post,
+        hasLiked,
+        isMyPost,
+        author: {
+          id: user.id,
+          nickname: user.nickname,
+          profileUri:
+            user.loginType === 'kakao' ? user.kakaoImageUri : user.imageUri,
+        },
+      };
     } catch {
       throw new InternalServerErrorException(
         '장소를 가져오는 도중 에러가 발생했습니다.',
@@ -79,7 +100,11 @@ export class PostService {
     }
   }
 
-  async createPost(createPostDto: CreatePostDto) {
+  async createPost(createPostDto: CreatePostDto, userId: string) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new NotFoundException('유저를 찾을 수 없습니다.');
+    }
     const { albumCover, date, description, latitude, longitude, title } =
       createPostDto;
 
@@ -90,10 +115,12 @@ export class PostService {
       latitude,
       longitude,
       title,
+      user,
     });
 
     try {
       await this.postRepository.save(post);
+      return { ...post };
     } catch (error) {
       console.log(error);
       throw new InternalServerErrorException(
@@ -102,7 +129,7 @@ export class PostService {
     }
   }
 
-  async deletePost(id: number) {
+  async deletePost(id: string) {
     try {
       const result = await this.postRepository
         .createQueryBuilder('post')
@@ -123,10 +150,10 @@ export class PostService {
   }
 
   async updatePost(
-    id: number,
+    id: string,
     updatePostDto: Omit<CreatePostDto, 'latitude' | 'longitude'>,
   ) {
-    const post = await this.getPostById(id);
+    const post = await this.getPostById(id, null);
     const { title, description, date, albumCover } = updatePostDto;
     post.title = title;
     post.description = description;

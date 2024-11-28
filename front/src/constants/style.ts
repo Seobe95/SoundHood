@@ -38,7 +38,7 @@ const colors = {
 const theme: ThemeType = {
   light: {
     backgroundColor: '#FFFFFF',
-    backgroundColorSecondary: '#E0E0E0',
+    backgroundColorSecondary: '#F2F2F2',
     pressedBackgroundColorSecondary: '#F0F0F0',
     fontColorPrimary: '#212121',
     fontColorSecondary: '#757575',

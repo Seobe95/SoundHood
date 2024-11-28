@@ -1,12 +1,22 @@
 import { apiInstance } from '@/api/axios.ts';
 
 export type Post = {
+  id: number;
+  author: {
+    id: string;
+    nickname: string;
+    profileUri: string;
+  };
   latitude: number;
   longitude: number;
+  likeCount: number;
   title: string;
   description: string;
-  date: Date;
+  artist: string;
+  date: string;
   albumCover: string;
+  hasLiked: boolean;
+  isMyPost: boolean;
 };
 
 async function readPosts() {
@@ -15,7 +25,7 @@ async function readPosts() {
 }
 
 export type PostByIdParams = {
-  id: number;
+  id: string;
 };
 
 async function readPostById({ id }: PostByIdParams) {
@@ -24,7 +34,7 @@ async function readPostById({ id }: PostByIdParams) {
 }
 
 export type CreatePostParams = {
-  post: Omit<Post, 'date'>;
+  post: Omit<Post, 'date' | 'id'>;
 };
 
 async function createPost({ post }: CreatePostParams) {
@@ -52,4 +62,16 @@ async function deletePost({ id }: PostByIdParams) {
   return data;
 }
 
-export { readPosts, readPostById, createPost, updatePost, deletePost };
+async function updateLikePost({ id }: PostByIdParams) {
+  const { data } = await apiInstance.patch(`/posts/${id}/like`);
+  return data;
+}
+
+export {
+  readPosts,
+  readPostById,
+  createPost,
+  updatePost,
+  deletePost,
+  updateLikePost,
+};

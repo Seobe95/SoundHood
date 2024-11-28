@@ -7,24 +7,31 @@ import { useForm } from '@/hooks/useForm';
 import { PostStackParamList } from '@/navigators/post/PostNavigator';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
 import { RFValue, validatePost } from '@/utils';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Keyboard, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePostNavigation } from '@/hooks/navigation/usePostNavigation.ts';
 import useCurrentLocation from '@/hooks/map/useCurrentLocation.ts';
 import { useCreatePost } from '@/hooks/queries/usePost.ts';
-import { CreatePostParams } from '@/api';
+import { Post } from '@/api';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
 
 function PostScreen() {
   const themeColor = useContext(ThemeContext);
   const { top, bottom } = useSafeAreaInsets();
   const styles = makeStyles(themeColor, top, bottom);
-  const { selectedSong } = useSearchSpotifyStore();
-  const postNavigate = usePostNavigation<PostStackParamList>();
+  const { selectedSong, reset } = useSearchSpotifyStore();
   const { addressName, location } = useCurrentLocation();
   const createPost = useCreatePost();
-  const content = useForm({
-    initialValue: { content: '' },
+  const postNavigate = usePostNavigation<PostStackParamList>();
+  const rootNavigate =
+    useNavigation<StackNavigationProp<RootStackParamList, 'PostNavigator'>>();
+  const description = useForm<{ description: string }>({
+    initialValue: {
+      description: '',
+    },
     validate: validatePost,
   });
 
@@ -33,17 +40,29 @@ function PostScreen() {
   }
 
   function onSubmit() {
-    const post: CreatePostParams = {
-      post: {
-        latitude: location!.latitude,
-        longitude: location!.longitude,
-        title: selectedSong!.name,
-        description: content.values.content,
-        albumCover: selectedSong!.album.images[0].url,
-      },
+    const post: Omit<Post, 'date' | 'id'> = {
+      latitude: location!.latitude,
+      longitude: location!.longitude,
+      title: selectedSong!.name,
+      artist: selectedSong!.artists[0].name,
+      description: description.values.description,
+      albumCover: selectedSong!.album.images[0].url,
     };
-    createPost.mutate(post);
+    createPost.mutate({ post });
   }
+
+  useEffect(() => {
+    if (createPost.isSuccess) {
+      reset();
+      const { id } = createPost.data;
+      rootNavigate.replace('DetailNavigator', {
+        screen: 'Detail',
+        params: {
+          id: id,
+        },
+      });
+    }
+  }, [createPost.data, createPost.isSuccess, reset, rootNavigate]);
 
   return (
     <Pressable
@@ -68,17 +87,29 @@ function PostScreen() {
       </View>
       <View style={styles.contentContainer}>
         {selectedSong ? (
-          <SongInfo song={selectedSong} onPress={navigateToSearchScreen} />
+          <SongInfo
+            title={selectedSong.name}
+            artist={selectedSong.artists[0].name}
+            imageUri={selectedSong.album.images[0].url}
+            onPress={navigateToSearchScreen}
+          />
         ) : (
           <SongInfo onPress={navigateToSearchScreen} />
         )}
         <ContentInput
           placeholder="음악을 소개해주세요. 최대 40자까지 작성 가능합니다."
-          {...content.getTextInputProps('content')}
+          {...description.getTextInputProps('description')}
         />
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton label="등록하기" disabled={content.isVaild} />
+        <CustomButton
+          label="등록하기"
+          onPress={onSubmit}
+          invalid={
+            !(location !== null && description.isVaild && selectedSong !== null)
+          }
+          isLoading={createPost.isPending}
+        />
       </View>
     </Pressable>
   );

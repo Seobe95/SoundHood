@@ -15,8 +15,8 @@ import { Like } from '../like/like.entity';
 
 @Entity()
 export class Post extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({
     type: 'decimal',
@@ -60,7 +60,11 @@ export class Post extends BaseEntity {
   @DeleteDateColumn()
   deletedAt: Date | null;
 
-  @ManyToOne(() => User, (user) => user.post, { eager: false })
+  @ManyToOne(() => User, (user) => user.post, {
+    eager: false,
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @OneToMany(() => Like, (like) => like.post)

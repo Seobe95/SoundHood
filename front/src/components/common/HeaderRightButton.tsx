@@ -5,15 +5,16 @@ import React, { ReactNode, useContext } from 'react';
 import { Pressable, PressableProps, StyleSheet, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { HeaderButtonProps } from '@react-navigation/elements';
 
 interface HeaderRightButtonProps extends PressableProps {
   disabled?: boolean;
   label?: string;
-  icon?: ReactNode;
+  children?: ReactNode;
 }
 
 function HeaderRightButton({
-  icon,
+  children,
   label,
   disabled = false,
   ...props
@@ -32,8 +33,7 @@ function HeaderRightButton({
         disabled && styles.disabledButton,
       ]}
       {...props}>
-      {!label && icon}
-      {label && !icon && <Text style={[styles.font]}>{label}</Text>}
+      {children}
     </Pressable>
   );
 }

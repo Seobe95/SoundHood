@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -17,6 +16,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from '../auth/user.entity';
 import { GetUser } from '../@common/decorators/get-user.decorator';
+import { GetPostIdDto } from './dto/get-post-id.dto';
 
 @Controller()
 export class PostController {
@@ -40,19 +40,25 @@ export class PostController {
   }
 
   @Get('/posts/:id')
-  getPostById(@Param('id', ParseIntPipe) id: number) {
-    return this.postService.getPostById(id);
+  @UseGuards(AuthGuard())
+  getPostById(
+    @GetUser() user: User,
+    @Param(ValidationPipe) params: GetPostIdDto,
+  ) {
+    const { id } = params;
+    return this.postService.getPostById(id, user.id);
   }
 
   @Post('/posts')
   @UseGuards(AuthGuard())
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postService.createPost(createPostDto);
+  createPost(@Body() createPostDto: CreatePostDto, @GetUser() user: User) {
+    return this.postService.createPost(createPostDto, user.id);
   }
 
   @Delete('/posts/:id')
   @UseGuards(AuthGuard())
-  deletePost(@Param('id', ParseIntPipe) id: number) {
+  deletePost(@Param(ValidationPipe) params: GetPostIdDto) {
+    const { id } = params;
     return this.postService.deletePost(id);
   }
 
@@ -60,9 +66,10 @@ export class PostController {
   @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
   updatePost(
-    @Param('id', ParseIntPipe) id: number,
+    @Param() params: GetPostIdDto,
     @Body() updatePostDto: Omit<CreatePostDto, 'latitude' | 'longitude'>,
   ) {
+    const { id } = params;
     return this.postService.updatePost(id, updatePostDto);
   }
 }

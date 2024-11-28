@@ -1,4 +1,5 @@
-import { TrackItems } from '@/api/spotify';
+import { SongType, TrackItems } from '@/api/spotify';
+import { CreatePostParams } from '@/api';
 
 interface UserInformation {
   email: string;
@@ -75,15 +76,15 @@ function validateRegister(
 }
 
 interface PostMusicParams {
-  content: string;
+  description: string;
 }
 
-function validatePost({ content }: PostMusicParams) {
+function validatePost({ description }: PostMusicParams) {
   const errors = {
-    content: '',
+    description: '',
   };
-  if (content === '') {
-    errors.content = '음악을 소개해주세요!';
+  if (description === '') {
+    errors.description = '노래를 소개해주세요.';
   }
 
   return errors;

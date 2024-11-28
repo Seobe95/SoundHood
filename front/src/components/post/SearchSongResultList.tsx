@@ -52,7 +52,9 @@ function SearchSongResultList() {
         return (
           <SongInfo
             size="small"
-            song={item}
+            title={item.name}
+            artist={item.artists[0].name}
+            imageUri={item.album.images[0].url}
             onPress={() => {
               handlePressSong(item);
             }}
