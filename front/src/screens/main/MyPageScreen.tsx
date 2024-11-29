@@ -1,21 +1,15 @@
-import React, { useContext, useRef } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, View } from 'react-native';
 import CustomButton from '@/components/common/CustomButton.tsx';
 import useAuth from '@/hooks/queries/useAuth.ts';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
-import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
 import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { ColorsType } from '@/constants';
 
 interface MyPageScreenProps {}
-
-export type BottomSheetRef = {
-  show: () => void;
-  hide: () => void;
-};
 
 function MyPageScreen({}: MyPageScreenProps) {
   const { logoutMutation } = useAuth();
@@ -26,7 +20,7 @@ function MyPageScreen({}: MyPageScreenProps) {
 
   return (
     <View style={styles.container}>
-      <View style={{ height: '100%' }}>
+      <View>
         <CustomButton
           label={'로그아웃'}
           onPress={() => {
@@ -39,7 +33,7 @@ function MyPageScreen({}: MyPageScreenProps) {
             navigation.navigate('DetailNavigator', {
               screen: 'Detail',
               params: {
-                id: '95ceb85e-041c-471b-97d5-ffc7609657bc',
+                id: 'c7c7bc98-efd6-4d47-a1a1-11ba8b497658',
               },
             });
           }}

@@ -1,9 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColorsType, detailStackNavigations } from '@/constants';
+import { ColorsType, detailStackNavigations, postQueryKeys } from '@/constants';
 import { DetailStackParamList } from '@/navigators/detail/DetailNavigator.tsx';
-import { useReadPostById, useUpdateLikePost } from '@/hooks/queries/usePost.ts';
+import {
+  useDeletePost,
+  useReadPostById,
+  useUpdateLikePost,
+} from '@/hooks/queries/usePost.ts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderRightButton from '@/components/common/HeaderRightButton.tsx';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
@@ -14,6 +18,8 @@ import SongInfo from '@/components/post/SongInfo.tsx';
 import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
 import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 import UserInfo from '@/components/detail/UserInfo.tsx';
+import { alertHandler } from '@/utils';
+import { queryClient } from '@/api';
 
 type DetailScreenProps = {} & DetailStackScreenProps;
 
@@ -42,11 +48,26 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
           ? setLikeCount(prev => prev - 1)
           : setLikeCount(prev => prev + 1);
       },
-      onError: data => {
-        console.log('FFF');
+    },
+  });
+  const { mutate } = useDeletePost({
+    mutationOptions: {
+      onSuccess: () => {
+        navigation.goBack();
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({
+          queryKey: [postQueryKeys.READ_POST_BY_ID],
+        });
       },
     },
   });
+
+  function handleDelete() {
+    alertHandler('DELETE', () => {
+      mutate({ id: route.params.id });
+    });
+  }
 
   function handleLike() {
     handlePostLike.mutate({ id: route.params.id });
@@ -74,7 +95,6 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
         },
       });
     }
-    console.log(isSuccess);
   }, [isSuccess]);
 
   return (
@@ -128,6 +148,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
               label={'삭제하기'}
               size={'large'}
               variant={'filled'}
+              onPress={handleDelete}
             />
           </>
         ) : (
