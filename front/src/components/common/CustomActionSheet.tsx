@@ -22,7 +22,7 @@ function CustomActionSheet({ children }: CustomActionSheetProps) {
       <View
         style={[
           styles.bottomSheetContainer,
-          { height: 'auto', paddingBottom: isAndroid ? bottom + 16 : bottom },
+          { height: 'auto', marginBottom: isAndroid ? bottom + 16 : bottom },
         ]}>
         {children}
       </View>
@@ -45,6 +45,8 @@ const makeStyle = (color: ColorsType) =>
       padding: 16,
       borderTopRightRadius: 16,
       borderTopLeftRadius: 16,
+      borderBottomLeftRadius: 16,
+      borderBottomRightRadius: 16,
     },
     font: {
       color: color.fontColorPrimary,

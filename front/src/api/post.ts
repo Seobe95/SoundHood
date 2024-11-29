@@ -1,7 +1,7 @@
 import { apiInstance } from '@/api/axios.ts';
 
 export type Post = {
-  id: number;
+  id: string;
   author: {
     id: string;
     nickname: string;
@@ -34,7 +34,10 @@ async function readPostById({ id }: PostByIdParams) {
 }
 
 export type CreatePostParams = {
-  post: Omit<Post, 'date' | 'id'>;
+  post: Omit<
+    Post,
+    'date' | 'id' | 'hasLiked' | 'isMyPost' | 'author' | 'likeCount'
+  >;
 };
 
 async function createPost({ post }: CreatePostParams) {
@@ -46,7 +49,7 @@ async function createPost({ post }: CreatePostParams) {
 }
 
 export type UpdatePostParams = {
-  id: number;
+  id: string;
   post: Omit<Post, 'latitude' | 'longitude'>;
 };
 

@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePostNavigation } from '@/hooks/navigation/usePostNavigation.ts';
 import useCurrentLocation from '@/hooks/map/useCurrentLocation.ts';
 import { useCreatePost } from '@/hooks/queries/usePost.ts';
-import { Post } from '@/api';
+import { CreatePostParams } from '@/api';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
@@ -40,7 +40,7 @@ function PostScreen() {
   }
 
   function onSubmit() {
-    const post: Omit<Post, 'date' | 'id'> = {
+    const post: CreatePostParams['post'] = {
       latitude: location!.latitude,
       longitude: location!.longitude,
       title: selectedSong!.name,
@@ -48,7 +48,7 @@ function PostScreen() {
       description: description.values.description,
       albumCover: selectedSong!.album.images[0].url,
     };
-    createPost.mutate({ post });
+    createPost.mutate({ post: post });
   }
 
   useEffect(() => {
