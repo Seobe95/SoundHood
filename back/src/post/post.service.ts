@@ -105,8 +105,15 @@ export class PostService {
     if (!user) {
       throw new NotFoundException('유저를 찾을 수 없습니다.');
     }
-    const { albumCover, date, description, latitude, longitude, title } =
-      createPostDto;
+    const {
+      albumCover,
+      date,
+      description,
+      latitude,
+      longitude,
+      title,
+      artist,
+    } = createPostDto;
 
     const post = this.postRepository.create({
       albumCover,
@@ -116,6 +123,7 @@ export class PostService {
       longitude,
       title,
       user,
+      artist,
     });
 
     try {
@@ -151,14 +159,11 @@ export class PostService {
 
   async updatePost(
     id: string,
-    updatePostDto: Omit<CreatePostDto, 'latitude' | 'longitude'>,
+    updatePostDto: Pick<CreatePostDto, 'description'>,
   ) {
     const post = await this.getPostById(id, null);
-    const { title, description, date, albumCover } = updatePostDto;
-    post.title = title;
+    const { description } = updatePostDto;
     post.description = description;
-    post.date = date;
-    post.albumCover = albumCover;
 
     try {
       await this.postRepository.save(post);

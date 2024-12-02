@@ -45,6 +45,9 @@ export class Post extends BaseEntity {
   @Column()
   albumCover: string;
 
+  @Column()
+  artist: string;
+
   @Column({
     type: 'int',
     default: 0,
