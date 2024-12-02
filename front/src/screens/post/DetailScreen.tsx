@@ -37,7 +37,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   const [likeCount, setLikeCount] = useState(0);
   const styles = makeStyles(theme, top);
   const { show, hide } = useCustomActionSheetStore();
-  const { data, isSuccess } = useReadPostById({
+  const { data, isSuccess, isError } = useReadPostById({
     id: route.params.id,
   });
   const handlePostLike = useUpdateLikePost({
@@ -53,12 +53,11 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   const { mutate } = useDeletePost({
     mutationOptions: {
       onSuccess: () => {
-        navigation.goBack();
-      },
-      onSettled: () => {
         queryClient.invalidateQueries({
           queryKey: [postQueryKeys.READ_POST_BY_ID],
         });
+        hide();
+        navigation.goBack();
       },
     },
   });
@@ -97,6 +96,14 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
     }
   }, [isSuccess]);
 
+  useEffect(() => {
+    if (isError && !data) {
+      alertHandler('DETAIL', () => {
+        navigation.goBack();
+      });
+    }
+  }, [isError]);
+
   return (
     <>
       <View style={styles.container}>
@@ -104,7 +111,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
           <View style={styles.songContainer}>
             <SongInfo
               title={data.title}
-              artist={'한로로'}
+              artist={data.artist}
               imageUri={data.albumCover}
               disabled={true}
             />
@@ -141,7 +148,9 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
               variant={'filled'}
               onPress={() => {
                 hide();
-                navigation.navigate('Edit');
+                navigation.navigate('Edit', {
+                  data,
+                });
               }}
             />
             <CustomButton

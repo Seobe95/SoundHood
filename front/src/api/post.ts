@@ -50,12 +50,12 @@ async function createPost({ post }: CreatePostParams) {
 
 export type UpdatePostParams = {
   id: string;
-  post: Omit<Post, 'latitude' | 'longitude'>;
+  description: string;
 };
 
-async function updatePost({ id, post }: UpdatePostParams) {
+async function updatePost({ id, description }: UpdatePostParams) {
   const { data } = await apiInstance.patch<Post>(`/posts/${id}`, {
-    ...post,
+    description,
   });
   return data;
 }

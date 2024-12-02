@@ -33,7 +33,7 @@ function MyPageScreen({}: MyPageScreenProps) {
             navigation.navigate('DetailNavigator', {
               screen: 'Detail',
               params: {
-                id: 'c7c7bc98-efd6-4d47-a1a1-11ba8b497658',
+                id: 'e2e6e55b-5976-476d-a475-e848ff2035ae',
               },
             });
           }}

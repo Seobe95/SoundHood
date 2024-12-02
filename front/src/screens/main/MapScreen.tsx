@@ -24,6 +24,7 @@ import usePermission from '@/hooks/common/usePermission.ts';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SearchAddressInput from '@/components/map/SearchAddressInput.tsx';
 import { AuthContext } from '@/context/AuthContext.tsx';
+import { alertHandler } from '@/utils';
 
 export type MapScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MAP>,
@@ -39,26 +40,6 @@ function MapScreen({ navigation, route }: MapScreenProps) {
   const { userLocation, setUserLocation, mapRef } = useLocation();
   const auth = useContext(AuthContext);
 
-  function alertNeedAuth() {
-    Alert.alert(
-      '로그인이 필요한 기능입니다.',
-      '음악을 등록하기 위해선 로그인이 필요해요.',
-      [
-        {
-          text: '로그인',
-          onPress: () =>
-            navigation.navigate('AuthNavigator', {
-              screen: 'AuthHome',
-            }),
-        },
-        {
-          text: '취소',
-          style: 'cancel',
-        },
-      ],
-    );
-  }
-
   function onPressPostButton() {
     if (auth.isLogin) {
       navigation.navigate('PostNavigator', {
@@ -70,7 +51,11 @@ function MapScreen({ navigation, route }: MapScreenProps) {
       requestSettingAlert();
       return;
     }
-    alertNeedAuth();
+    alertHandler('LOGIN', () => {
+      navigation.navigate('AuthNavigator', {
+        screen: 'AuthHome',
+      });
+    });
   }
 
   function onPressSearchButton() {

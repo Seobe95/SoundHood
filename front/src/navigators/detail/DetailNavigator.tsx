@@ -10,9 +10,13 @@ import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
+import { RouteProp } from '@react-navigation/native';
+import { Post } from '@/api';
 
 export type DetailStackParamList = {
-  [detailStackNavigations.EDIT]: undefined;
+  [detailStackNavigations.EDIT]: {
+    data: Post;
+  };
   [detailStackNavigations.REPORT]: undefined;
   [detailStackNavigations.DETAIL]: {
     /** 목록에서 DetailScreen으로 이동 시 요청할 id*/
@@ -26,11 +30,33 @@ type DetailStackNavigatorProps = StackScreenProps<
   'DetailNavigator'
 >;
 
+function setHeaderTitle(
+  route: RouteProp<DetailStackParamList, keyof DetailStackParamList>,
+) {
+  let headerTitle: string | undefined;
+  switch (route.name) {
+    case detailStackNavigations.DETAIL:
+      headerTitle = '음악';
+      break;
+    case detailStackNavigations.EDIT:
+      headerTitle = '수정하기';
+      break;
+    case detailStackNavigations.REPORT:
+      headerTitle = '신고하기';
+      break;
+    default:
+      headerTitle = undefined;
+      break;
+  }
+
+  return headerTitle;
+}
+
 function DetailNavigator({}: DetailStackNavigatorProps) {
   const theme = useContext(ThemeContext);
   return (
     <DetailStack.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
         headerBackTitle: '이전',
         headerStyle: {
           backgroundColor: theme.backgroundColor,
@@ -38,7 +64,8 @@ function DetailNavigator({}: DetailStackNavigatorProps) {
           elevation: 0,
         },
         headerTitleStyle: { color: theme.fontColorPrimary },
-      }}>
+        headerTitle: setHeaderTitle(route),
+      })}>
       <DetailStack.Screen
         name={detailStackNavigations.DETAIL}
         component={DetailScreen}
