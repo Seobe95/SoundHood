@@ -48,6 +48,7 @@ function PostScreen() {
       description: description.values.description,
       albumCover: selectedSong!.album.images[0].url,
     };
+    console.log(post);
     createPost.mutate({ post: post });
   }
 

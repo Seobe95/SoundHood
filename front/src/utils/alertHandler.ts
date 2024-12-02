@@ -1,34 +1,25 @@
 import { Alert } from 'react-native';
+import { alertMessages } from '@/constants';
 
-const alertMessage = {
-  DELETE_TITLE: '정말로 해당 게시글을 삭제하시겠습니까?',
-  DELETE_MESSAGE: '삭제 후 데이터복구는 어려워요 🥺',
-  DELETE_BUTTON: '삭제하기',
-  DELETE_BUTTON_TYPE: 'destructive',
-  POST_TITLE: '작성을 취소하시고 나가시겠습니까?',
-  POST_MESSAGE: '이 페이지에서 나가시면 저장이 되지 않아요 🥺',
-  POST_BUTTON: '나가기',
-  POST_BUTTON_TYPE: 'destructive',
-  EDIT_TITLE: '수정을 취소하시고 나가시겠습니까?',
-  EDIT_MESSAGE: '이 페이지에서 나가시면 반영이 되지 않아요 🥺',
-  EDIT_BUTTON: '나가기',
-  EDIT_BUTTON_TYPE: 'destructive',
-} as const;
+type AlertMessages = typeof alertMessages;
+type AlertType = keyof AlertMessages;
 
-type AlertType = 'DELETE' | 'POST' | 'EDIT';
-
+/**
+ * 공통으로 알러트를 관리하기 위한 함수입니다.
+ @Params type: 알러트가 사용되는 곳
+ @Params onPress: 버튼을 누를 시 동작할 함수
+ * */
 function alertHandler(type: AlertType, onPress: () => void) {
-  Alert.alert(alertMessage[`${type}_TITLE`], alertMessage[`${type}_MESSAGE`], [
-    {
-      text: alertMessage[`${type}_BUTTON`],
-      style: alertMessage[`${type}_BUTTON_TYPE`],
-      onPress: onPress,
-    },
-    {
-      text: '취소',
-      style: 'cancel',
-    },
-  ]);
+  const { TITLE, MESSAGE, BUTTONS } = alertMessages[type];
+
+  const buttons = BUTTONS.map(button => {
+    return {
+      ...button,
+      onPress: button.style === 'cancel' ? undefined : onPress,
+    };
+  });
+
+  return Alert.alert(TITLE, MESSAGE, buttons);
 }
 
 export { alertHandler };

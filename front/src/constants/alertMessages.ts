@@ -1,0 +1,41 @@
+const alertMessages = {
+  DELETE: {
+    TITLE: '정말로 해당 게시글을 삭제하시겠습니까?',
+    MESSAGE: '삭제 후 데이터복구는 어려워요 🥺',
+    BUTTONS: [
+      { text: '삭제하기', style: 'destructive' },
+      { text: '취소', style: 'cancel' },
+    ],
+  },
+  POST: {
+    TITLE: '작성을 취소하시고 나가시겠습니까?',
+    MESSAGE: '이 페이지에서 나가시면 저장이 되지 않아요 🥺',
+    BUTTONS: [
+      { text: '나가기', style: 'destructive' },
+      { text: '취소', style: 'cancel' },
+    ],
+  },
+  EDIT: {
+    TITLE: '수정을 취소하시고 나가시겠습니까?',
+    MESSAGE: '이 페이지에서 나가시면 반영이 되지 않아요 🥺',
+    BUTTONS: [
+      { text: '나가기', style: 'destructive' },
+      { text: '취소', style: 'cancel' },
+    ],
+  },
+  DETAIL: {
+    TITLE: '음악을 찾을 수 없습니다.',
+    MESSAGE: '음악이 삭제되었거나, 올바르지 않은 요청입니다.',
+    BUTTONS: [{ text: '확인', style: 'default' }],
+  },
+  LOGIN: {
+    TITLE: '로그인이 필요합니다.',
+    MESSAGE: '음악을 등록하기 위해선 로그인이 필요해요.',
+    BUTTONS: [
+      { text: '로그인', style: 'default' },
+      { text: '취소', style: 'cancel' },
+    ],
+  },
+} as const;
+
+export { alertMessages };
