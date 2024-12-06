@@ -1,5 +1,10 @@
 import React, { createContext } from 'react';
-import { useColorScheme } from 'react-native';
+import {
+  Platform,
+  StatusBar,
+  StatusBarStyle,
+  useColorScheme,
+} from 'react-native';
 import { theme, ThemeType } from '../constants';
 
 interface ThemeProviderProps {
@@ -16,8 +21,15 @@ function CustomThemeProvider({ children }: ThemeProviderProps) {
     return themeMode === 'dark' ? theme.dark : theme.light;
   };
   const themeColor = makeThemeColor(deviceTheme ?? 'light');
+
   return (
-    <ThemeContext.Provider value={themeColor}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={themeColor}>
+      <StatusBar
+        animated={true}
+        barStyle={deviceTheme === 'light' ? 'dark-content' : 'light-content'}
+      />
+      {children}
+    </ThemeContext.Provider>
   );
 }
 

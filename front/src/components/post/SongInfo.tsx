@@ -20,6 +20,7 @@ interface SongInfoProps extends PressableProps {
   title?: string;
   artist?: string;
   imageUri?: string;
+  isButton?: boolean;
 }
 
 function SongInfo({
@@ -27,6 +28,7 @@ function SongInfo({
   title,
   artist,
   imageUri,
+  isButton,
   ...props
 }: SongInfoProps) {
   const theme = useContext(ThemeContext);
@@ -80,7 +82,9 @@ function SongInfo({
           </Text>
         </View>
       )}
-      {!title && <Icon name="chevron-forward" size={25} style={styles.icon} />}
+      {isButton && (
+        <Icon name="chevron-forward" size={25} style={styles.icon} />
+      )}
     </Pressable>
   );
 }
@@ -104,7 +108,7 @@ const makeStyles = (color: ColorsType, top: number) =>
     smallPressedContainer: {
       backgroundColor: color.backgroundColorSecondary,
       paddingHorizontal: 16,
-      paddingVertical: 4,
+      paddingVertical: 8,
     },
     smallContainer: {
       paddingHorizontal: 16,

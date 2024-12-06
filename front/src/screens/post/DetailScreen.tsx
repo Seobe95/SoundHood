@@ -16,10 +16,10 @@ import CustomButton from '@/components/common/CustomButton.tsx';
 import { RFValue } from '@/utils';
 import SongInfo from '@/components/post/SongInfo.tsx';
 import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
-import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 import UserInfo from '@/components/detail/UserInfo.tsx';
 import { alertHandler } from '@/utils';
 import { queryClient } from '@/api';
+import useActionSheet from '@/hooks/common/useActionSheet.ts';
 
 type DetailScreenProps = {} & DetailStackScreenProps;
 
@@ -36,7 +36,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const styles = makeStyles(theme, top);
-  const { show, hide } = useCustomActionSheetStore();
+  const { show, hide, isOpen } = useActionSheet();
   const { data, isSuccess, isError } = useReadPostById({
     id: route.params.id,
   });
@@ -104,6 +104,8 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
     }
   }, [isError]);
 
+  console.log(isOpen, 'detail');
+
   return (
     <>
       <View style={styles.container}>
@@ -139,7 +141,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
           </View>
         )}
       </View>
-      <CustomActionSheet>
+      <CustomActionSheet isOpen={isOpen} hide={hide}>
         {data?.isMyPost ? (
           <>
             <CustomButton

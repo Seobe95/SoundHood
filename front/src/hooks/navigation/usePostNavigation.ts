@@ -1,19 +1,20 @@
 import {
   EventArg,
   NavigationAction,
-  ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useEffect } from 'react';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore.ts';
 import { alertHandler } from '@/utils';
+import { PostStackParamList } from '@/navigators/post/PostNavigator.tsx';
 
 /**
  * PostScreen에서 사용되는 뒤로가기 방지 및 useNavigation을 반환합니다.
  * */
-export function usePostNavigation<T extends ParamListBase>() {
-  const navigation = useNavigation<StackNavigationProp<T>>();
+export function usePostNavigation() {
+  const navigation =
+    useNavigation<StackNavigationProp<PostStackParamList, 'Post'>>();
   const { reset } = useSearchSpotifyStore();
 
   useEffect(() => {

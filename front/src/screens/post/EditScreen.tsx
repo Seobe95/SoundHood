@@ -27,8 +27,9 @@ function EditScreen({ navigation, route }: EditScreenProps) {
         queryClient.invalidateQueries({
           queryKey: [postQueryKeys.READ_POST_BY_ID],
         });
-        navigation.replace('Detail', {
-          id: data.id,
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Detail', params: { id: data.id } }],
         });
       },
     },

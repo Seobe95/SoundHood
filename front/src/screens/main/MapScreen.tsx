@@ -1,12 +1,6 @@
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
-import React, { useContext, useEffect } from 'react';
-import {
-  Alert,
-  Keyboard,
-  StyleSheet,
-  useColorScheme,
-  View,
-} from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Keyboard, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import {
   ColorsType,
@@ -25,6 +19,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SearchAddressInput from '@/components/map/SearchAddressInput.tsx';
 import { AuthContext } from '@/context/AuthContext.tsx';
 import { alertHandler } from '@/utils';
+import { useReadMarkers } from '@/hooks/queries/usePost.ts';
+import CustomMarker from '@/components/map/CustomMarker.tsx';
+import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
+import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
+import SongInfo from '@/components/post/SongInfo.tsx';
+import { Markers } from '@/api';
+import useActionSheet from '@/hooks/common/useActionSheet.ts';
 
 export type MapScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MAP>,
@@ -38,7 +39,11 @@ function MapScreen({ navigation, route }: MapScreenProps) {
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
   const { userLocation, setUserLocation, mapRef } = useLocation();
+  const { data } = useReadMarkers();
   const auth = useContext(AuthContext);
+  const [markerState, setMarkerState] = useState<string | null>(null);
+  const [selectedMarker, setSelectedMarker] = useState<Markers | null>(null);
+  const { isOpen, show, hide } = useActionSheet();
 
   function onPressPostButton() {
     if (auth.isLogin) {
@@ -75,12 +80,31 @@ function MapScreen({ navigation, route }: MapScreenProps) {
         onTapMap={() => {
           Keyboard.dismiss();
         }}
+        isShowScaleBar={false}
+        isShowZoomControls={false}
         mapType="Navi"
         initialCamera={userLocation}
         onCameraIdle={({ latitude, longitude, zoom }) => {
           setUserLocation({ latitude, longitude, zoom: zoom || 14 });
-        }}
-      />
+        }}>
+        {data &&
+          data.map(marker => (
+            <CustomMarker
+              key={marker.id}
+              marker={marker}
+              markerState={markerState}
+              onTap={() => {
+                setMarkerState(marker.id);
+                setSelectedMarker(marker);
+                mapRef.current?.animateCameraTo({
+                  latitude: marker.latitude,
+                  longitude: marker.longitude,
+                });
+                isOpen ? hide() : show();
+              }}
+            />
+          ))}
+      </NaverMapView>
       <View style={[styles.floatingContainer, { top: top || 20 }]}>
         <SearchAddressInput
           onPress={onPressSearchButton}
@@ -88,6 +112,32 @@ function MapScreen({ navigation, route }: MapScreenProps) {
         />
         <FloatingButton onPress={onPressPostButton} />
       </View>
+      <CustomActionSheet
+        isOpen={isOpen}
+        hide={() => {
+          hide();
+          setMarkerState(null);
+          setSelectedMarker(null);
+        }}>
+        {selectedMarker && (
+          <SongInfo
+            size={'small'}
+            title={selectedMarker.title}
+            imageUri={selectedMarker.albumCover}
+            artist={selectedMarker.artist}
+            isButton={true}
+            onPress={() => {
+              hide();
+              navigation.navigate('DetailNavigator', {
+                screen: 'Detail',
+                params: {
+                  id: selectedMarker.id,
+                },
+              });
+            }}
+          />
+        )}
+      </CustomActionSheet>
     </>
   );
 }
