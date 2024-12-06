@@ -6,12 +6,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 
 type CustomActionSheetProps = {
+  isOpen: boolean;
+  hide: () => void;
   children: ReactNode;
 };
 
-function CustomActionSheet({ children }: CustomActionSheetProps) {
+function CustomActionSheet({ isOpen, hide, children }: CustomActionSheetProps) {
   const { bottom } = useSafeAreaInsets();
-  const { hide, isOpen } = useCustomActionSheetStore();
   const theme = useContext(ThemeContext);
   const styles = makeStyle(theme);
   const isAndroid = Platform.OS === 'android';
@@ -22,7 +23,7 @@ function CustomActionSheet({ children }: CustomActionSheetProps) {
       <View
         style={[
           styles.bottomSheetContainer,
-          { height: 'auto', marginBottom: isAndroid ? bottom + 16 : bottom },
+          { height: 'auto', paddingBottom: isAndroid ? bottom + 16 : bottom },
         ]}>
         {children}
       </View>
@@ -45,8 +46,6 @@ const makeStyle = (color: ColorsType) =>
       padding: 16,
       borderTopRightRadius: 16,
       borderTopLeftRadius: 16,
-      borderBottomLeftRadius: 16,
-      borderBottomRightRadius: 16,
     },
     font: {
       color: color.fontColorPrimary,

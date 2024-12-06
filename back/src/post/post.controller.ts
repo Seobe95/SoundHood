@@ -23,7 +23,6 @@ export class PostController {
   constructor(private postService: PostService) {}
 
   @Get('/markers')
-  @UseGuards(AuthGuard())
   getAllMarkers() {
     return this.postService.getAllMarkers();
   }

@@ -1,5 +1,12 @@
 import React, { useContext } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { authNavigations, ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import CustomButton from '@/components/common/CustomButton';
@@ -32,6 +39,9 @@ function AuthHomeScreen({ navigation }: AuthHomeScreenProps) {
           variant="outline"
           onPress={() => navigation.push(authNavigations.REGISTER)}
         />
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={styles.text}>지금은 둘러볼래요</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -57,6 +67,11 @@ const makeStyles = (color: ColorsType) =>
       width: '100%',
       alignItems: 'center',
       gap: 10,
+    },
+    text: {
+      fontSize: 12,
+      paddingTop: 10,
+      color: color.fontColorSecondary,
     },
   });
 

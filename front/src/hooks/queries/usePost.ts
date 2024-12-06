@@ -7,6 +7,8 @@ import {
   createPost,
   CreatePostParams,
   deletePost,
+  getMarkers,
+  Markers,
   Post,
   PostByIdParams,
   readPostById,
@@ -17,6 +19,7 @@ import {
 } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { postQueryKeys } from '@/constants';
+import { useEffect } from 'react';
 
 type QueryCustomType<T = {}> = {
   mutationOptions?: UseMutationCustomOptions;
@@ -33,6 +36,32 @@ function useReadPostById({ id, queryOptions }: UseReadPostByIdParams) {
     staleTime: 60 * 1000,
     ...queryOptions,
   });
+}
+
+function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
+  const { data, isSuccess, isError, isLoading, error } = useQuery<
+    Markers[],
+    ResponseError
+  >({
+    queryKey: [postQueryKeys.POST, 'markers'],
+    queryFn: getMarkers,
+    staleTime: 60 * 1000,
+    ...queryOptions,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('SUCCESS');
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      console.log('ERROR');
+    }
+  }, [isError]);
+
+  return { data, isSuccess, isError, isLoading };
 }
 
 type UseReadPosts = Pick<QueryCustomType<Post[]>, 'queryOptions'>;
@@ -94,4 +123,5 @@ export {
   useUpdatePost,
   useDeletePost,
   useUpdateLikePost,
+  useReadMarkers,
 };

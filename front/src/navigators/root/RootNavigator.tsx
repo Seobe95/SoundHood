@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import AuthNavigator, { AuthStackParamList } from '../auth/AuthNavigator';
 import TabNavigator, { MainTabParamList } from '../tab/TabNavigator';
@@ -9,6 +9,7 @@ import DetailNavigator, {
   DetailStackParamList,
 } from '../detail/DetailNavigator';
 import { rootStackNavigations } from '@/constants';
+import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 
 export type RootStackParamList = {
   [rootStackNavigations.AUTH]: NavigatorScreenParams<AuthStackParamList>;
@@ -21,10 +22,14 @@ export type RootStackParamList = {
 const RootStack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const theme = useContext(ThemeContext);
   return (
     <RootStack.Navigator
       screenOptions={{
         headerShown: false,
+        cardStyle: {
+          backgroundColor: theme.backgroundColor,
+        },
       }}>
       <RootStack.Screen
         options={{

@@ -23,7 +23,14 @@ export class PostService {
     try {
       const markers = await this.postRepository
         .createQueryBuilder('post')
-        .select(['post.id', 'post.latitude', 'post.longitude'])
+        .select([
+          'post.id',
+          'post.latitude',
+          'post.longitude',
+          'post.albumCover',
+          'post.title',
+          'post.artist',
+        ])
         .getMany();
 
       return markers;

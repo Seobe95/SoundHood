@@ -24,6 +24,20 @@ async function readPosts() {
   return data;
 }
 
+export interface Markers {
+  id: string;
+  latitude: number;
+  longitude: number;
+  albumCover: string;
+  title: string;
+  artist: string;
+}
+
+async function getMarkers() {
+  const { data } = await apiInstance.get<Markers[]>('/markers');
+  return data;
+}
+
 export type PostByIdParams = {
   id: string;
 };
@@ -77,4 +91,5 @@ export {
   updatePost,
   deletePost,
   updateLikePost,
+  getMarkers,
 };

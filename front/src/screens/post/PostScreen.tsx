@@ -25,7 +25,7 @@ function PostScreen() {
   const { selectedSong, reset } = useSearchSpotifyStore();
   const { addressName, location } = useCurrentLocation();
   const createPost = useCreatePost();
-  const postNavigate = usePostNavigation<PostStackParamList>();
+  const postNavigate = usePostNavigation();
   const rootNavigate =
     useNavigation<StackNavigationProp<RootStackParamList, 'PostNavigator'>>();
   const description = useForm<{ description: string }>({
@@ -93,9 +93,10 @@ function PostScreen() {
             artist={selectedSong.artists[0].name}
             imageUri={selectedSong.album.images[0].url}
             onPress={navigateToSearchScreen}
+            isButton={true}
           />
         ) : (
-          <SongInfo onPress={navigateToSearchScreen} />
+          <SongInfo onPress={navigateToSearchScreen} isButton={true} />
         )}
         <ContentInput
           placeholder="음악을 소개해주세요. 최대 40자까지 작성 가능합니다."

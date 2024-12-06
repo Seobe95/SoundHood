@@ -25,7 +25,7 @@ const alertMessages = {
   },
   DETAIL: {
     TITLE: '음악을 찾을 수 없습니다.',
-    MESSAGE: '음악이 삭제되었거나, 올바르지 않은 요청입니다.',
+    MESSAGE: '음악이 삭제되었거나, 올바르지 않은 요청이에요.',
     BUTTONS: [{ text: '확인', style: 'default' }],
   },
   LOGIN: {
@@ -38,4 +38,15 @@ const alertMessages = {
   },
 } as const;
 
-export { alertMessages };
+const permissionAlertMessages = {
+  LOCATION: {
+    TITLE: '위치권한 허용이 필요한 기능입니다.',
+    DESCRIPTION: '설정에서 위치를 허용해주세요.',
+  },
+  PHOTO: {
+    TITLE: '사진첩 접근이 필요합니다.',
+    DESCRIPTION: '설정에서 사진첩 접근을 허용해주세요.',
+  },
+} as const;
+
+export { alertMessages, permissionAlertMessages };
