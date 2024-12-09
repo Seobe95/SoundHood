@@ -14,10 +14,11 @@ import {
   UseQueryCustomOptions,
 } from '../../types/common';
 import { removeEncryptedStorage, storeEncryptedStorage } from '@/utils';
-import { authQueryKeys, storageKeys } from '@/constants';
+import { authQueryKeys, storageKeys, toastMessages } from '@/constants';
 import { removeHeader, setHeader } from '@/utils';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import { queryClient } from '@/api';
+import { ToastContext } from '@/context/ToastContext.tsx';
 
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
@@ -27,11 +28,13 @@ function useSignup(mutationOptions?: UseMutationCustomOptions) {
 }
 
 function useLogin(mutationOptions?: UseMutationCustomOptions) {
+  const { show } = useContext(ToastContext);
   return useMutation({
     mutationFn: postSignin,
     onSuccess: ({ accessToken, refreshToken }) => {
       storeEncryptedStorage(storageKeys.REFRESH_TOKEN, refreshToken);
       setHeader('Authorization', `Bearer ${accessToken}`);
+      show({ time: 'short', message: toastMessages.LOGIN.SUCCESS });
     },
     onSettled: () => {
       queryClient.refetchQueries({
@@ -85,11 +88,14 @@ function useGetProfile(queryOptions?: UseQueryCustomOptions<UserInfo>) {
 }
 
 function useLogout(mutationOptions?: UseMutationCustomOptions) {
+  const { show } = useContext(ToastContext);
+
   return useMutation({
     mutationFn: logout,
     onSuccess: () => {
       removeHeader('Authorization');
       removeEncryptedStorage(storageKeys.REFRESH_TOKEN);
+      show({ message: toastMessages.LOGOUT.SUCCESS, time: 'short' });
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: [authQueryKeys.AUTH] });

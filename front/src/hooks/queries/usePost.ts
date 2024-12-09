@@ -33,7 +33,7 @@ function useReadPostById({ id, queryOptions }: UseReadPostByIdParams) {
   return useQuery<Post, ResponseError>({
     queryKey: [postQueryKeys.POST, postQueryKeys.READ_POST_BY_ID, { id }],
     queryFn: () => readPostById({ id }),
-    staleTime: 60 * 1000,
+    refetchOnMount: 'always',
     ...queryOptions,
   });
 }
