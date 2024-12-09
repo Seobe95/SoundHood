@@ -6,6 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import RootNavigator from '@/navigators/root/RootNavigator';
 import { queryClient } from '@/api';
 import { AuthProvider } from '@/context/AuthContext.tsx';
+import { ToastProvider } from '@/context/ToastContext.tsx';
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -13,7 +14,9 @@ function App() {
         <AuthProvider>
           <CustomThemeProvider>
             <NavigationContainer>
-              <RootNavigator />
+              <ToastProvider>
+                <RootNavigator />
+              </ToastProvider>
             </NavigationContainer>
           </CustomThemeProvider>
         </AuthProvider>

@@ -2,7 +2,12 @@ import React, { useContext } from 'react';
 import { Keyboard, Pressable, StyleSheet } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { DetailStackParamList } from '@/navigators/detail/DetailNavigator.tsx';
-import { ColorsType, detailStackNavigations, postQueryKeys } from '@/constants';
+import {
+  ColorsType,
+  detailStackNavigations,
+  postQueryKeys,
+  toastMessages,
+} from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import SongInfo from '@/components/post/SongInfo.tsx';
 import ContentInput from '@/components/post/ContentInput.tsx';
@@ -10,6 +15,7 @@ import CustomButton from '@/components/common/CustomButton.tsx';
 import useEditPostHandler from '@/hooks/post/useEditPostHandler.ts';
 import { useUpdatePost } from '@/hooks/queries/usePost.ts';
 import { queryClient } from '@/api';
+import { ToastContext } from '@/context/ToastContext.tsx';
 
 type EditScreenProps = {} & EditScreenStackParams;
 type EditScreenStackParams = StackScreenProps<
@@ -21,16 +27,15 @@ function EditScreen({ navigation, route }: EditScreenProps) {
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
   const { data } = route.params;
+  const { show } = useContext(ToastContext);
   const { mutate } = useUpdatePost({
     mutationOptions: {
       onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: [postQueryKeys.READ_POST_BY_ID],
-        });
         navigation.reset({
           index: 0,
           routes: [{ name: 'Detail', params: { id: data.id } }],
         });
+        show({ message: toastMessages.EDIT.SUCCESS, time: 'short' });
       },
     },
   });

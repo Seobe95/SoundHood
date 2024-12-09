@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { ColorsType, detailStackNavigations, postQueryKeys } from '@/constants';
+import {
+  ColorsType,
+  detailStackNavigations,
+  postQueryKeys,
+  toastMessages,
+} from '@/constants';
 import { DetailStackParamList } from '@/navigators/detail/DetailNavigator.tsx';
 import {
   useDeletePost,
@@ -20,6 +25,7 @@ import UserInfo from '@/components/detail/UserInfo.tsx';
 import { alertHandler } from '@/utils';
 import { queryClient } from '@/api';
 import useActionSheet from '@/hooks/common/useActionSheet.ts';
+import { ToastContext } from '@/context/ToastContext.tsx';
 
 type DetailScreenProps = {} & DetailStackScreenProps;
 
@@ -36,6 +42,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
   const [isLike, setIsLike] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const styles = makeStyles(theme, top);
+  const { show: toastShow } = useContext(ToastContext);
   const { show, hide, isOpen } = useActionSheet();
   const { data, isSuccess, isError } = useReadPostById({
     id: route.params.id,
@@ -58,6 +65,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
         });
         hide();
         navigation.goBack();
+        toastShow({ message: toastMessages.DELETE.SUCCESS, time: 'short' });
       },
     },
   });

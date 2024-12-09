@@ -22,7 +22,6 @@ import { alertHandler } from '@/utils';
 import { useReadMarkers } from '@/hooks/queries/usePost.ts';
 import CustomMarker from '@/components/map/CustomMarker.tsx';
 import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
-import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 import SongInfo from '@/components/post/SongInfo.tsx';
 import { Markers } from '@/api';
 import useActionSheet from '@/hooks/common/useActionSheet.ts';
