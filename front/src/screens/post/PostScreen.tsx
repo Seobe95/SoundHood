@@ -4,7 +4,6 @@ import SongInfo from '@/components/post/SongInfo';
 import { ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import { useForm } from '@/hooks/useForm';
-import { PostStackParamList } from '@/navigators/post/PostNavigator';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
 import { RFValue, validatePost } from '@/utils';
 import React, { useContext, useEffect } from 'react';
@@ -47,8 +46,8 @@ function PostScreen() {
       artist: selectedSong!.artists[0].name,
       description: description.values.description,
       albumCover: selectedSong!.album.images[0].url,
+      spotifyURL: selectedSong!.external_urls.spotify,
     };
-    console.log(post);
     createPost.mutate({ post: post });
   }
 
@@ -81,7 +80,6 @@ function PostScreen() {
             내가 사는 <Text style={styles.boldFont}>동네</Text>에
           </Text>
         )}
-
         <Text style={styles.font} allowFontScaling={false}>
           <Text style={styles.boldFont}>좋아하는 노래</Text>를 등록해보세요!
         </Text>
@@ -102,6 +100,9 @@ function PostScreen() {
           placeholder="음악을 소개해주세요. 최대 40자까지 작성 가능합니다."
           {...description.getTextInputProps('description')}
         />
+        <Text style={styles.reportWarningFont}>
+          커뮤니티 규칙 위반 내용은 신고 및 삭제될 수 있습니다.
+        </Text>
       </View>
       <View style={styles.buttonContainer}>
         <CustomButton
@@ -133,6 +134,11 @@ const makeStyles = (color: ColorsType, top: number, bottom: number) =>
       color: color.fontColorPrimary,
       fontSize: RFValue(28, top),
       fontWeight: '300',
+    },
+    reportWarningFont: {
+      fontSize: 12,
+      textAlign: 'center',
+      fontWeight: '500',
     },
     boldFont: {
       fontWeight: 'bold',

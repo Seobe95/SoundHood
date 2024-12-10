@@ -16,6 +16,9 @@ export class CreatePostDto {
   @IsString()
   description: string;
 
+  @IsString()
+  spotifyURL: string;
+
   @IsDateString()
   date: Date;
 

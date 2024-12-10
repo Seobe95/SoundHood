@@ -23,6 +23,9 @@ export interface TrackItems {
   artists: Artist[];
   name: string;
   disc_number: number;
+  external_urls: {
+    spotify: string;
+  };
 }
 
 interface Album {
@@ -78,7 +81,6 @@ const getSearchResults = async ({
   const { data } = await spotifyInstance.get<SongType>(
     `https://api.spotify.com/v1/search?${params}`,
   );
-  console.log(data);
   return data.tracks.items;
 };
 

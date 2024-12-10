@@ -120,6 +120,7 @@ export class PostService {
       longitude,
       title,
       artist,
+      spotifyURL,
     } = createPostDto;
 
     const post = this.postRepository.create({
@@ -131,6 +132,7 @@ export class PostService {
       title,
       user,
       artist,
+      spotifyURL,
     });
 
     try {
