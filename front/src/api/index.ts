@@ -4,3 +4,4 @@ export * from './auth';
 export * from './queryClient';
 export * from './spotify';
 export * from './post';
+export * from './report';

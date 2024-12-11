@@ -85,7 +85,9 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
 
   function handleReport() {
     hide();
-    navigation.navigate('Report');
+    navigation.navigate('Report', {
+      id: data!.id,
+    });
   }
 
   function handleLike() {

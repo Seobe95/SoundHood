@@ -90,4 +90,13 @@ function validatePost({ description }: PostMusicParams) {
   return errors;
 }
 
-export { validateLogin, validateRegister, validatePost };
+function validateReport({ reason }: { reason: string }) {
+  const errors = { reason: '' };
+  if (reason === '') {
+    errors.reason = '신고 내용을 입력해주세요.';
+  }
+
+  return errors;
+}
+
+export { validateLogin, validateRegister, validatePost, validateReport };

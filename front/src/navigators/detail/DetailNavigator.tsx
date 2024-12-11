@@ -18,9 +18,12 @@ export type DetailStackParamList = {
   [detailStackNavigations.EDIT]: {
     data: Post;
   };
-  [detailStackNavigations.REPORT]: undefined;
+  [detailStackNavigations.REPORT]: {
+    /** 신고할 게시글의 id */
+    id: string;
+  };
   [detailStackNavigations.DETAIL]: {
-    /** 목록에서 DetailScreen으로 이동 시 요청할 id*/
+    /** 목록에서 DetailScreen으로 이동 시 요청할 post id*/
     id: string;
   };
 };
