@@ -5,9 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { LikeService } from './like/like.service';
-import { LikeController } from './like/like.controller';
 import { LikeModule } from './like/like.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -26,6 +25,7 @@ import { LikeModule } from './like/like.module';
     PostModule,
     AuthModule,
     LikeModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
