@@ -1,5 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import {
+  Dimensions,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
   ColorsType,
@@ -76,9 +83,25 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
     });
   }
 
+  function handleReport() {
+    hide();
+    navigation.navigate('Report', {
+      id: data!.id,
+    });
+  }
+
   function handleLike() {
     handlePostLike.mutate({ id: route.params.id });
   }
+
+  const handleSpotify = useCallback(async () => {
+    const supported = await Linking.canOpenURL(data!.spotifyURL);
+    if (supported) {
+      await Linking.openURL(data!.spotifyURL);
+    } else {
+      toastShow({ message: 'Spotify를 열 수 없습니다.', time: 'long' });
+    }
+  }, [data]);
 
   useEffect(() => {
     if (data) {
@@ -144,6 +167,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
                 label={'Spotify에서 듣기'}
                 size={'medium'}
                 variant={'spotify'}
+                onPress={handleSpotify}
               />
             </View>
           </View>
@@ -176,10 +200,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
               label={'신고하기'}
               size={'large'}
               variant={'filled'}
-              onPress={() => {
-                hide();
-                navigation.navigate('Report');
-              }}
+              onPress={handleReport}
             />
           </>
         )}

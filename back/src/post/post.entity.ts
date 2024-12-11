@@ -48,6 +48,9 @@ export class Post extends BaseEntity {
   @Column()
   artist: string;
 
+  @Column()
+  spotifyURL: string;
+
   @Column({
     type: 'int',
     default: 0,

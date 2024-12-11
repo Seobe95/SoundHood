@@ -7,7 +7,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
 import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
-import { ColorsType } from '@/constants';
+import { ColorsType, storageKeys } from '@/constants';
+import { getEncryptedStorage } from '@/utils';
 
 interface MyPageScreenProps {}
 
@@ -17,6 +18,11 @@ function MyPageScreen({}: MyPageScreenProps) {
   const { show } = useCustomActionSheetStore();
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
+
+  async function checkMyAuth() {
+    const data = await getEncryptedStorage(storageKeys.REFRESH_TOKEN);
+    console.log(data);
+  }
 
   return (
     <View style={styles.container}>
@@ -39,6 +45,7 @@ function MyPageScreen({}: MyPageScreenProps) {
           }}
         />
         <CustomButton label={'바텀 탭'} onPress={show} />
+        <CustomButton label={'바텀 탭'} onPress={checkMyAuth} />
       </View>
     </View>
   );

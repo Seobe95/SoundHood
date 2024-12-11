@@ -7,19 +7,23 @@ import {
   StackScreenProps,
 } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { RouteProp } from '@react-navigation/native';
 import { Post } from '@/api';
+import { HeaderBackButton } from '@react-navigation/elements';
 
 export type DetailStackParamList = {
   [detailStackNavigations.EDIT]: {
     data: Post;
   };
-  [detailStackNavigations.REPORT]: undefined;
+  [detailStackNavigations.REPORT]: {
+    /** 신고할 게시글의 id */
+    id: string;
+  };
   [detailStackNavigations.DETAIL]: {
-    /** 목록에서 DetailScreen으로 이동 시 요청할 id*/
+    /** 목록에서 DetailScreen으로 이동 시 요청할 post id*/
     id: string;
   };
 };
@@ -54,10 +58,19 @@ function setHeaderTitle(
 
 function DetailNavigator({}: DetailStackNavigatorProps) {
   const theme = useContext(ThemeContext);
+  const isAndroid = Platform.OS === 'android';
   return (
     <DetailStack.Navigator
       screenOptions={({ route }) => ({
         headerBackTitle: '이전',
+        headerLeft: props => {
+          if (isAndroid) {
+            return (
+              <HeaderBackButton {...props} tintColor={theme.fontColorPrimary} />
+            );
+          }
+          return <HeaderBackButton {...props} />;
+        },
         headerStyle: {
           backgroundColor: theme.backgroundColor,
           shadowOpacity: 0,

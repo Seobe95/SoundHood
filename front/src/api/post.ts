@@ -17,6 +17,7 @@ export type Post = {
   albumCover: string;
   hasLiked: boolean;
   isMyPost: boolean;
+  spotifyURL: string;
 };
 
 async function readPosts() {
