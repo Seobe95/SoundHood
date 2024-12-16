@@ -23,6 +23,8 @@ import { ImageModule } from './image/image.module';
       entities: [__dirname + '/**/*.entity.{js, ts}'],
       synchronize: false,
       // 개발용에서만 true로 설정하기
+      ssl:
+        process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
     }),
     PostModule,
     AuthModule,
