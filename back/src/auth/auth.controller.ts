@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -14,6 +15,7 @@ import { AuthDto } from './dto/auth.dto';
 import { GetUser } from 'src/@common/decorators/get-user.decorator';
 import { User } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
+import { EditProfileDto } from './dto/edit-profile.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -37,11 +39,8 @@ export class AuthController {
 
   @Patch('/me')
   @UseGuards(AuthGuard())
-  updateUser(
-    @Param('userId', ParseIntPipe) userId: string,
-    @Body() nickname: string,
-  ) {
-    return this.authService.updateUser(userId, nickname);
+  editProfile(@Body() editProfileDto: EditProfileDto, @GetUser() user: User) {
+    return this.authService.editProfile(editProfileDto, user);
   }
 
   @Get('/me')
@@ -54,5 +53,11 @@ export class AuthController {
   @UseGuards(AuthGuard())
   logout(@GetUser() user: User) {
     return this.authService.deleteRefreshToken(user);
+  }
+
+  @Delete('/me')
+  @UseGuards(AuthGuard())
+  deleteAccount(@GetUser() user: User) {
+    return this.authService.deleteAccount(user);
   }
 }
