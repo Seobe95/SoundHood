@@ -43,7 +43,7 @@ const makeStyle = (color: ColorsType) =>
       overflow: 'hidden',
       bottom: 0,
       gap: 16,
-      padding: 16,
+      // padding: 16,
       borderTopRightRadius: 16,
       borderTopLeftRadius: 16,
     },

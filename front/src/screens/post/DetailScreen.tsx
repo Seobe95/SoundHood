@@ -174,42 +174,44 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
         )}
       </View>
       <CustomActionSheet isOpen={isOpen} hide={hide}>
-        {data?.isMyPost ? (
-          <>
-            <CustomButton
-              label={'수정하기'}
-              size={'large'}
-              variant={'filled'}
-              onPress={() => {
-                hide();
-                navigation.navigate('Edit', {
-                  data,
-                });
-              }}
-            />
-            <CustomButton
-              label={'삭제하기'}
-              size={'large'}
-              variant={'filled'}
-              onPress={handleDelete}
-            />
-          </>
-        ) : (
-          <>
-            <CustomButton
-              label={'신고하기'}
-              size={'large'}
-              variant={'filled'}
-              onPress={handleReport}
-            />
-          </>
-        )}
-        <CustomButton
-          label={'취소'}
-          size={'large'}
-          variant={'outline'}
-          onPress={hide}
-        />
+        <View style={styles.actionSheetContainer}>
+          {data?.isMyPost ? (
+            <>
+              <CustomButton
+                label={'수정하기'}
+                size={'large'}
+                variant={'filled'}
+                onPress={() => {
+                  hide();
+                  navigation.navigate('Edit', {
+                    data,
+                  });
+                }}
+              />
+              <CustomButton
+                label={'삭제하기'}
+                size={'large'}
+                variant={'filled'}
+                onPress={handleDelete}
+              />
+            </>
+          ) : (
+            <>
+              <CustomButton
+                label={'신고하기'}
+                size={'large'}
+                variant={'filled'}
+                onPress={handleReport}
+              />
+            </>
+          )}
+          <CustomButton
+            label={'취소'}
+            size={'large'}
+            variant={'outline'}
+            onPress={hide}
+          />
+        </View>
       </CustomActionSheet>
     </>
   );
@@ -262,7 +264,6 @@ const makeStyles = (color: ColorsType, top = 0) =>
     descriptionText: {
       fontSize: RFValue(16, top),
     },
-
     buttonContainer: {
       flexDirection: 'row',
       width: '100%',
@@ -282,6 +283,10 @@ const makeStyles = (color: ColorsType, top = 0) =>
       fontSize: RFValue(16, top),
       fontWeight: 'bold',
       color: '#FFFFFF',
+    },
+    actionSheetContainer: {
+      margin: 16,
+      gap: 8,
     },
   });
 
