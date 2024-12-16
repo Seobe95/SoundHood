@@ -15,6 +15,7 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { NicknameMaker } from '../@common/nickname/nickname.maker';
+import { EditProfileDto } from './dto/edit-profile.dto';
 
 @Injectable()
 export class AuthService {
@@ -77,36 +78,6 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async updateUser(id: string, nickname?: string, profileImageUri?: string) {
-    if (!nickname && !profileImageUri) {
-      throw new BadRequestException('변경할 데이터가 없습니다.');
-    }
-    try {
-      const user = await this.userRepository
-        .createQueryBuilder('user')
-        .where('user.id = :id', { id })
-        .getOne();
-
-      if (!user) {
-        throw new NotFoundException('존재하지 않는 유저입니다.');
-      }
-      if (nickname) {
-        user.nickname = nickname;
-      }
-      if (profileImageUri) {
-        user.imageUri = profileImageUri;
-      }
-      if (nickname || profileImageUri) {
-        await this.userRepository.save(user);
-      }
-    } catch (e) {
-      throw new InternalServerErrorException(
-        e,
-        '닉네임 변경 중 문제가 발생했습니다.',
-      );
-    }
-  }
-
   private async getTokens(payload: { email: string }) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(payload, {
@@ -154,6 +125,30 @@ export class AuthService {
     return { ...rest };
   }
 
+  async editProfile(editProfileDto: EditProfileDto, user: User) {
+    const profile = await this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id: user.id })
+      .getOne();
+
+    if (!profile) {
+      throw new NotFoundException('존재하지 않는 유저입니다.');
+    }
+
+    const { nickname, imageUri } = editProfileDto;
+    profile.nickname = nickname;
+    profile.imageUri = imageUri;
+
+    try {
+      await this.userRepository.save(profile);
+    } catch (e) {
+      console.log(e);
+      throw new InternalServerErrorException(
+        '프로필 수정 도중 에러가 발생했습니다.',
+      );
+    }
+  }
+
   async deleteRefreshToken(user: User) {
     try {
       await this.userRepository.update(user.id, { hashedRefreshToken: null });
@@ -161,6 +156,22 @@ export class AuthService {
       console.log(error);
       throw new InternalServerErrorException(
         '로그아웃 도중 에러가 발생했습니다.',
+      );
+    }
+  }
+
+  async deleteAccount(user: User) {
+    try {
+      await this.userRepository
+        .createQueryBuilder('user')
+        .delete()
+        .from(User)
+        .where('id = :id', { id: user.id })
+        .execute();
+    } catch (e) {
+      console.log(e);
+      throw new BadRequestException(
+        '탈퇴할 수 없습니다. 남은 데이터가 존재하는지 확인해주세요.',
       );
     }
   }

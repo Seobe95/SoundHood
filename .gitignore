@@ -96,3 +96,4 @@ logs/
 
 # PM2 logs (Nest.js에서 사용하는 경우)
 /pm2-logs/
+soundhood-server.pem
