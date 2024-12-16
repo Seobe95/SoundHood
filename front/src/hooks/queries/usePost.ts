@@ -18,8 +18,9 @@ import {
   UpdatePostParams,
 } from '@/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { postQueryKeys } from '@/constants';
-import { useEffect } from 'react';
+import { postQueryKeys, toastMessages } from '@/constants';
+import { useContext, useEffect } from 'react';
+import { ToastContext } from '@/context/ToastContext.tsx';
 
 type QueryCustomType<T = {}> = {
   mutationOptions?: UseMutationCustomOptions;
@@ -39,6 +40,7 @@ function useReadPostById({ id, queryOptions }: UseReadPostByIdParams) {
 }
 
 function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
+  const { show } = useContext(ToastContext);
   const { data, isSuccess, isError, isLoading, error } = useQuery<
     Markers[],
     ResponseError
@@ -57,7 +59,7 @@ function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
 
   useEffect(() => {
     if (isError) {
-      console.log('ERROR');
+      show({ message: toastMessages.MAP.ERROR, time: 'long' });
     }
   }, [isError]);
 

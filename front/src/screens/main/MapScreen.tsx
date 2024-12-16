@@ -25,6 +25,8 @@ import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
 import SongInfo from '@/components/post/SongInfo.tsx';
 import { Markers } from '@/api';
 import useActionSheet from '@/hooks/common/useActionSheet.ts';
+import CustomButton from '@/components/common/CustomButton.tsx';
+import SongInfoActionSheet from '@/components/map/SongInfoActionSheet.tsx';
 
 export type MapScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MAP>,
@@ -40,7 +42,6 @@ function MapScreen({ navigation, route }: MapScreenProps) {
   const { userLocation, setUserLocation, mapRef } = useLocation();
   const { data } = useReadMarkers();
   const auth = useContext(AuthContext);
-  const [markerState, setMarkerState] = useState<string | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<Markers | null>(null);
   const { isOpen, show, hide } = useActionSheet();
 
@@ -69,6 +70,22 @@ function MapScreen({ navigation, route }: MapScreenProps) {
     });
   }
 
+  function onPressActionSheet() {
+    hide();
+    if (auth.isLogin) {
+      navigation.navigate('DetailNavigator', {
+        screen: 'Detail',
+        params: {
+          id: selectedMarker?.id ?? '',
+        },
+      });
+    } else {
+      navigation.navigate('AuthNavigator', {
+        screen: 'AuthHome',
+      });
+    }
+  }
+
   return (
     <>
       <NaverMapView
@@ -91,9 +108,7 @@ function MapScreen({ navigation, route }: MapScreenProps) {
             <CustomMarker
               key={marker.id}
               marker={marker}
-              markerState={markerState}
               onTap={() => {
-                setMarkerState(marker.id);
                 setSelectedMarker(marker);
                 mapRef.current?.animateCameraTo({
                   latitude: marker.latitude,
@@ -115,27 +130,13 @@ function MapScreen({ navigation, route }: MapScreenProps) {
         isOpen={isOpen}
         hide={() => {
           hide();
-          setMarkerState(null);
           setSelectedMarker(null);
         }}>
-        {selectedMarker && (
-          <SongInfo
-            size={'small'}
-            title={selectedMarker.title}
-            imageUri={selectedMarker.albumCover}
-            artist={selectedMarker.artist}
-            isButton={true}
-            onPress={() => {
-              hide();
-              navigation.navigate('DetailNavigator', {
-                screen: 'Detail',
-                params: {
-                  id: selectedMarker.id,
-                },
-              });
-            }}
-          />
-        )}
+        <SongInfoActionSheet
+          isLogin={auth.isLogin}
+          selectedMarker={selectedMarker}
+          onPress={onPressActionSheet}
+        />
       </CustomActionSheet>
     </>
   );
@@ -176,6 +177,16 @@ const makeStyles = (color: ColorsType) =>
       justifyContent: 'center',
       alignItems: 'flex-end',
       padding: 0,
+    },
+    loginContainer: {
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: color.backgroundColor,
+      opacity: 0.88,
+      zIndex: 10000,
+      width: '100%',
+      height: '100%',
     },
   });
 

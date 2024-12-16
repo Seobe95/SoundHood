@@ -23,6 +23,10 @@ const toastMessages = {
     SUCCESS: '삭제가 완료되었습니다.',
     FAIL: '삭제에 실패했습니다.',
   },
+  MAP: {
+    ERROR: '음악을 불러오는데 에러가 발생했습니다.',
+    FAIL: '삭제에 실패했습니다.',
+  },
 } as const;
 
 export { toastMessages };

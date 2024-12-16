@@ -1,10 +1,5 @@
 import React, { createContext } from 'react';
-import {
-  Platform,
-  StatusBar,
-  StatusBarStyle,
-  useColorScheme,
-} from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 import { theme, ThemeType } from '../constants';
 
 interface ThemeProviderProps {

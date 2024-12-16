@@ -19,6 +19,7 @@ import { removeHeader, setHeader } from '@/utils';
 import { useContext, useEffect } from 'react';
 import { queryClient } from '@/api';
 import { ToastContext } from '@/context/ToastContext.tsx';
+import { timeToMilliseconds } from '@/utils/timeToMilliseconds.ts';
 
 function useSignup(mutationOptions?: UseMutationCustomOptions) {
   return useMutation({
@@ -55,8 +56,8 @@ function useGetRefreshToken() {
   const { data, isSuccess, isError } = useQuery<ResponseToken>({
     queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_ACCESS_TOKEN],
     queryFn: getAccessToken,
-    staleTime: 1000 * 60 * 60 - 1000 * 60 * 3,
-    refetchInterval: 1000 * 60 * 60 - 1000 * 60 * 3,
+    staleTime: timeToMilliseconds({ days: 30 }),
+    refetchInterval: timeToMilliseconds({ days: 27 }),
     refetchOnReconnect: true,
     refetchIntervalInBackground: true,
   });
