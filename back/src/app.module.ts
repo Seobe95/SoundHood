@@ -21,7 +21,7 @@ import { ImageModule } from './image/image.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
       entities: [__dirname + '/**/*.entity.{js, ts}'],
-      synchronize: true,
+      synchronize: false,
       // 개발용에서만 true로 설정하기
     }),
     PostModule,
