@@ -47,3 +47,4 @@ local.env
 local.*
 
 rest/
+soundhood-server.pem
