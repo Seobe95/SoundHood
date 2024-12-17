@@ -9,7 +9,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment files
-.env
+src/config/.env
 .env.*.local
 
 # Production build
@@ -48,3 +48,4 @@ local.*
 
 rest/
 soundhood-server.pem
+/src/config
