@@ -27,7 +27,10 @@ export const typeOrmModuleOptions: TypeOrmModuleOptions = {
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      envFilePath: `./src/config/.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       ...typeOrmModuleOptions,
     }),
