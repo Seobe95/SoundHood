@@ -11,12 +11,6 @@ import { ImageController } from './image/image.controller';
 import { ImageModule } from './image/image.module';
 
 export const typeOrmModuleOptions: TypeOrmModuleOptions = {
-  type: 'postgres',
-  host: process.env.DB_HOST,
-  port: 5432,
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
   entities: [__dirname + '/**/*.entity.{js, ts}'],
   synchronize: false,
   // 개발용에서만 true로 설정하기
@@ -30,6 +24,12 @@ export const typeOrmModuleOptions: TypeOrmModuleOptions = {
       isGlobal: true,
     }),
     TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: 5432,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
       ...typeOrmModuleOptions,
     }),
     PostModule,
