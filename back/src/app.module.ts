@@ -10,13 +10,6 @@ import { ReportModule } from './report/report.module';
 import { ImageController } from './image/image.controller';
 import { ImageModule } from './image/image.module';
 
-export const typeOrmModuleOptions: TypeOrmModuleOptions = {
-  entities: [__dirname + '/**/*.entity.{js, ts}'],
-  synchronize: false,
-  // 개발용에서만 true로 설정하기
-  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
-};
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,7 +23,10 @@ export const typeOrmModuleOptions: TypeOrmModuleOptions = {
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      ...typeOrmModuleOptions,
+      ssl:
+        process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+      entities: [__dirname + '/**/*.entity.{js, ts}'],
+      synchronize: false,
     }),
     PostModule,
     AuthModule,
