@@ -1,13 +1,11 @@
 /* eslint-disable react/no-unstable-nested-components */
 import HeaderLeftButton from '@/components/common/HeaderLeftButton';
-import HeaderRightButton from '@/components/common/HeaderRightButton';
-import { ColorsType, postStackNavigations } from '@/constants';
+import { postStackNavigations } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import PostScreen from '@/screens/post/PostScreen';
 import SearchScreen from '@/screens/common/SearchScreen.tsx';
-import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 interface PostNavigatorProps {}
 
@@ -33,7 +31,6 @@ function PostNavigator({}: PostNavigatorProps) {
           headerLeft: props => <HeaderLeftButton {...props} label="취소" />,
           headerTitle: '음악 등록',
           headerTitleStyle: { color: theme.fontColorPrimary },
-          // headerRight: () => <HeaderRightButton label="등록" />,
           headerRightContainerStyle: {
             paddingRight: 8,
           },

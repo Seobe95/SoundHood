@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { StyleSheet, Animated, Text, Dimensions, View } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { ColorsType } from '@/constants';

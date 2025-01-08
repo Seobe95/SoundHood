@@ -101,7 +101,7 @@ function TabNavigator({}: TabNavigatorProps) {
         tabBarStyle: {
           backgroundColor: themeColor.backgroundColor,
           borderTopWidth: 0,
-          elevation: 0,
+          shadowOpacity: 0.15,
         },
         tabBarIcon: props => handleTabbarIcon(route.name, props, themeColor),
         tabBarLabel: props => handleTabbarText(route.name, props, themeColor),
@@ -126,7 +126,7 @@ function TabNavigator({}: TabNavigatorProps) {
         name={mainTabNavigations.MY_PAGE}
         component={MyPageScreen}
         options={{
-          title: '설정',
+          title: '마이페이지',
         }}
       />
     </MainTab.Navigator>

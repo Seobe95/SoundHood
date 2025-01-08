@@ -1,6 +1,6 @@
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
 import React, { useContext, useState } from 'react';
-import { Keyboard, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Keyboard, StyleSheet, useColorScheme, View } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import {
   ColorsType,
@@ -22,10 +22,8 @@ import { alertHandler } from '@/utils';
 import { useReadMarkers } from '@/hooks/queries/usePost.ts';
 import CustomMarker from '@/components/map/CustomMarker.tsx';
 import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
-import SongInfo from '@/components/post/SongInfo.tsx';
 import { Markers } from '@/api';
 import useActionSheet from '@/hooks/common/useActionSheet.ts';
-import CustomButton from '@/components/common/CustomButton.tsx';
 import SongInfoActionSheet from '@/components/map/SongInfoActionSheet.tsx';
 
 export type MapScreenProps = CompositeScreenProps<

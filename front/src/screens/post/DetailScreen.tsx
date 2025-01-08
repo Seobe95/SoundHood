@@ -26,7 +26,7 @@ import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import CustomButton from '@/components/common/CustomButton.tsx';
 import { RFValue } from '@/utils';
-import SongInfo from '@/components/post/SongInfo.tsx';
+import SongInfo from '@/components/common/SongInfo.tsx';
 import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
 import UserInfo from '@/components/detail/UserInfo.tsx';
 import { alertHandler } from '@/utils';

@@ -1,6 +1,6 @@
 import CustomButton from '@/components/common/CustomButton';
 import ContentInput from '@/components/post/ContentInput';
-import SongInfo from '@/components/post/SongInfo';
+import SongInfo from '@/components/common/SongInfo.tsx';
 import { ColorsType } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import { useForm } from '@/hooks/useForm';
