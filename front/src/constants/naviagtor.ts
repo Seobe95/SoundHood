@@ -31,10 +31,19 @@ const postStackNavigations = {
   SEARCH: 'Search',
 } as const;
 
+const settingStackNavigations = {
+  SETTING: 'Setting',
+  NICKNAME_CHANGE: 'NicknameChange',
+  OPEN_SOURCE_INFORMAION: 'OpenSourceInformation',
+  PERSONAL_INFORMATION: 'PersonalInformation',
+  USE_TERMS_INFORMATION: 'UseTermsInformation',
+} as const;
+
 export {
   authNavigations,
   mainTabNavigations,
   detailStackNavigations,
   rootStackNavigations,
   postStackNavigations,
+  settingStackNavigations,
 };

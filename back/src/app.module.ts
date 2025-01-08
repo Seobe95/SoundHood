@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
@@ -26,7 +26,7 @@ import { ImageModule } from './image/image.module';
       ssl:
         process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
       entities: [__dirname + '/**/*.entity.{js, ts}'],
-      synchronize: false,
+      synchronize: process.env.NODE_ENV === 'development' ? true : false,
     }),
     PostModule,
     AuthModule,

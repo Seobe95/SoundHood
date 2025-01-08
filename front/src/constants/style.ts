@@ -6,6 +6,7 @@ type DefaultColorsType = {
   fontColorPrimary: string;
   fontColorSecondary: string;
   borderColor: string;
+  notionWebviewBackground: string;
 };
 
 export type ColorsType = PointColorsType & DefaultColorsType;
@@ -43,6 +44,8 @@ const theme: ThemeType = {
     fontColorPrimary: '#212121',
     fontColorSecondary: '#757575',
     borderColor: '#BDBDBD',
+    notionWebviewBackground: '#FFFFFF',
+
     ...colors,
   },
   dark: {
@@ -52,6 +55,7 @@ const theme: ThemeType = {
     fontColorPrimary: '#E0E0E0',
     fontColorSecondary: '#828282',
     borderColor: '#424242',
+    notionWebviewBackground: '#191919',
     ...colors,
   },
 };

@@ -47,7 +47,7 @@ function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
   >({
     queryKey: [postQueryKeys.POST, 'markers'],
     queryFn: getMarkers,
-    staleTime: 60 * 1000,
+    refetchOnMount: true,
     ...queryOptions,
   });
 
@@ -61,6 +61,7 @@ function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
     if (isError) {
       show({ message: toastMessages.MAP.ERROR, time: 'long' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
   return { data, isSuccess, isError, isLoading };

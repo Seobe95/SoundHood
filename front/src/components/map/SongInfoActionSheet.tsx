@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
-import SongInfo from '@/components/post/SongInfo.tsx';
+import SongInfo from '@/components/common/SongInfo.tsx';
 import { Markers } from '@/api';
 
 type SongInfoActionSheetProps = {

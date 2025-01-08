@@ -36,6 +36,14 @@ const alertMessages = {
       { text: '취소', style: 'cancel' },
     ],
   },
+  WEBVIEW: {
+    TITLE: '외부 링크를 연결하시겠습니까?',
+    MESSAGE: '사용하시던 브라우저로 연결됩니다.',
+    BUTTONS: [
+      { text: '열기', style: 'default' },
+      { text: '취소', style: 'cancel' },
+    ],
+  },
 } as const;
 
 const permissionAlertMessages = {

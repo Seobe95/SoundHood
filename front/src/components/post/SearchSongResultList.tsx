@@ -6,7 +6,7 @@ import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
 import React, { useContext, useEffect } from 'react';
 import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
 import SearchBar from './SearchInput';
-import SongInfo from './SongInfo';
+import SongInfo from '../common/SongInfo.tsx';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import { ColorsType } from '@/constants';
 import { TrackItems } from '@/api/spotify';

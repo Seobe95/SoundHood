@@ -1,6 +1,6 @@
-import { TrackItems } from '@/api/spotify';
+import { TrackItems } from '@/api/spotify.ts';
 import { ColorsType } from '@/constants';
-import { ThemeContext } from '@/context/CustomThemeContext';
+import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { RFValue } from '@/utils';
 import React, { useContext } from 'react';
 import {

@@ -9,7 +9,7 @@ import {
   toastMessages,
 } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
-import SongInfo from '@/components/post/SongInfo.tsx';
+import SongInfo from '@/components/common/SongInfo.tsx';
 import ContentInput from '@/components/post/ContentInput.tsx';
 import CustomButton from '@/components/common/CustomButton.tsx';
 import useEditPostHandler from '@/hooks/post/useEditPostHandler.ts';

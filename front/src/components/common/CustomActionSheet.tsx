@@ -1,9 +1,8 @@
-import React, { ReactNode, useContext } from 'react';
+import { ReactNode, useContext } from 'react';
 import { View, StyleSheet, Modal, Pressable, Platform } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { ColorsType } from '@/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import useCustomActionSheetStore from '@/stores/useCustomActionSheetStore.ts';
 
 type CustomActionSheetProps = {
   isOpen: boolean;

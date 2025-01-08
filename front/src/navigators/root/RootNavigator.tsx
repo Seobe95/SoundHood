@@ -10,13 +10,16 @@ import DetailNavigator, {
 } from '../detail/DetailNavigator';
 import { rootStackNavigations } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
+import SettingNavigator, {
+  SettingStackParamList,
+} from '@/navigators/setting/SettingNavigator.tsx';
 
 export type RootStackParamList = {
   [rootStackNavigations.AUTH]: NavigatorScreenParams<AuthStackParamList>;
   [rootStackNavigations.MAIN_TAP]: NavigatorScreenParams<MainTabParamList>;
   [rootStackNavigations.DETAIL]: NavigatorScreenParams<DetailStackParamList>;
   [rootStackNavigations.POST]: NavigatorScreenParams<PostStackParamList>;
-  [rootStackNavigations.SETTING]: undefined;
+  [rootStackNavigations.SETTING]: NavigatorScreenParams<SettingStackParamList>;
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -49,6 +52,10 @@ function RootNavigator() {
       <RootStack.Screen
         name={rootStackNavigations.DETAIL}
         component={DetailNavigator}
+      />
+      <RootStack.Screen
+        name={rootStackNavigations.SETTING}
+        component={SettingNavigator}
       />
     </RootStack.Navigator>
   );
