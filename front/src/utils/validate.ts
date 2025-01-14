@@ -75,6 +75,24 @@ function validateRegister(
   return errors;
 }
 
+interface UserProfile {
+  nickname: string;
+}
+
+function validateNickname(values: UserProfile) {
+  const errors = {
+    nickname: '',
+  };
+
+  if (!/^(?!.* {2})[a-zA-Z가-힣0-9 ]{1,15}(?<! )$/.test(values.nickname)) {
+    errors.nickname = '닉네임은 1-15자로 만들어주세요.';
+  } else {
+    errors.nickname = '';
+  }
+
+  return errors;
+}
+
 interface PostMusicParams {
   description: string;
 }
@@ -99,4 +117,10 @@ function validateReport({ reason }: { reason: string }) {
   return errors;
 }
 
-export { validateLogin, validateRegister, validatePost, validateReport };
+export {
+  validateLogin,
+  validateRegister,
+  validatePost,
+  validateReport,
+  validateNickname,
+};

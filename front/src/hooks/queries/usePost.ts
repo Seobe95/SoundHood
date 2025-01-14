@@ -47,7 +47,7 @@ function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
   >({
     queryKey: [postQueryKeys.POST, 'markers'],
     queryFn: getMarkers,
-    refetchOnMount: true,
+    refetchOnMount: 'always',
     ...queryOptions,
   });
 

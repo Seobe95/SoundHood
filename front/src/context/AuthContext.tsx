@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import useAuth from '@/hooks/queries/useAuth.ts';
 import { UserInfo } from '@/api';
 
@@ -24,9 +24,15 @@ function AuthProvider({ children }: AuthProviderProps) {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(
     getProfileQuery.data || null,
   );
+
   function logout() {
     setUserInfo(null);
   }
+
+  useEffect(() => {
+    setUserInfo(getProfileQuery.data ?? null);
+  }, [getProfileQuery.data]);
+
   return (
     <AuthContext.Provider value={{ isLogin, userInfo, logout }}>
       {children}

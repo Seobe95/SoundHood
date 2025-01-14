@@ -57,9 +57,21 @@ const getAccessToken = async () => {
   return data;
 };
 
+const patchProfile = async (nickname: string) => {
+  const { data } = await apiInstance.patch('/auth/me', { nickname });
+  return data;
+};
+
 const logout = async () => {
   await apiInstance.post('/auth/logout');
 };
 
-export { postSignup, postSignin, getProfile, getAccessToken, logout };
+export {
+  postSignup,
+  postSignin,
+  getProfile,
+  getAccessToken,
+  patchProfile,
+  logout,
+};
 export type { ResponseToken };
