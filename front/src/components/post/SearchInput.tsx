@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import {
   Dimensions,
   Keyboard,
@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import { ColorsType } from '@/constants';
-import { mergeRefs } from '@/utils/common';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RFValue } from '@/utils';

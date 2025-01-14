@@ -36,7 +36,7 @@ const settingScreenDatas: SettingScreenType[] = [
   {
     screen: settingStackNavigations.NICKNAME_CHANGE,
     icon: 'person-circle-outline',
-    title: '로그인이 필요합니다.',
+    title: '내 프로필',
   },
   {
     screen: settingStackNavigations.USE_TERMS_INFORMATION,
@@ -58,13 +58,14 @@ const settingScreenDatas: SettingScreenType[] = [
 function MyPageScreen({ navigation }: MyPageScreenProps) {
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
-  const { userInfo, isLogin, logout } = useContext(AuthContext);
+  const { isLogin, logout, userInfo } = useContext(AuthContext);
   const { logoutMutation } = useAuth();
   function handleNavigateButton(
     screenName: SettingNavigationType,
     url?: string,
   ) {
     if (screenName === 'NicknameChange' && !isLogin) {
+      console.log(userInfo);
       navigation.navigate('AuthNavigator', {
         screen: 'AuthHome',
       });
@@ -91,15 +92,10 @@ function MyPageScreen({ navigation }: MyPageScreenProps) {
         data={settingScreenDatas}
         renderItem={data => {
           const { item } = data;
-          const nicknameChangeScreenTitle = userInfo?.nickname ?? item.title;
-          const settingTitle =
-            item.screen === 'NicknameChange'
-              ? nicknameChangeScreenTitle
-              : item.title;
 
           return (
             <SettingListItem
-              title={settingTitle}
+              title={item.title}
               icon={item.icon}
               key={`${item.screen}${item.title}`}
               onPress={() => handleNavigateButton(item.screen)}

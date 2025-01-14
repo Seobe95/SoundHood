@@ -3,6 +3,7 @@ import {
   getAccessToken,
   getProfile,
   logout,
+  patchProfile,
   postSignin,
   postSignup,
   ResponseToken,
@@ -46,7 +47,7 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
       });
     },
     onError: error => {
-      console.log(error.name, error.cause, error.message);
+      console.log('LOGIN ERROR', error.name, error.cause, error.message);
     },
     ...mutationOptions,
   });
@@ -88,6 +89,17 @@ function useGetProfile(queryOptions?: UseQueryCustomOptions<UserInfo>) {
   });
 }
 
+function usePatchProfile(mutationOptions?: UseMutationCustomOptions) {
+  const { show } = useContext(ToastContext);
+
+  return useMutation({
+    mutationFn: patchProfile,
+    onSuccess: () => {
+      show({ message: toastMessages.PATCH_PROFILE.SUCCESS, time: 'short' });
+    },
+  });
+}
+
 function useLogout(mutationOptions?: UseMutationCustomOptions) {
   const { show } = useContext(ToastContext);
 
@@ -113,11 +125,13 @@ function useAuth() {
   });
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
+  const patchProfileMutation = usePatchProfile();
   return {
     signupMutation,
     loginMutation,
     getProfileQuery,
     logoutMutation,
+    patchProfileMutation,
   };
 }
 
