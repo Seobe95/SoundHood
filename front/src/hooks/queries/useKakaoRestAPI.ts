@@ -36,6 +36,7 @@ function useKakaoSearchAddress(
       }, 1000),
     [],
   );
+
   const onChangeText = (text: string) => {
     if (text === '') {
       setSearchParams('');

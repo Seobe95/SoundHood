@@ -4,7 +4,8 @@ import NicknameChangeScreen from '@/screens/setting/NicknameChangeScreen';
 import OpenSourceInformationScreen from '@/screens/setting/OpenSourceInformationScreen';
 import PersonalInformationScreen from '@/screens/setting/PersonalInformationScreen';
 import UseTermsInformationScreen from '@/screens/setting/UseTermsInformationScreen';
-import { Text } from 'react-native';
+import { useContext } from 'react';
+import { ThemeContext } from '@/context/CustomThemeContext';
 
 export type SettingStackParamList = {
   [settingStackNavigations.SETTING]: undefined;
@@ -31,12 +32,19 @@ function headerTitleHandler(title: string) {
 }
 
 function SettingNavigator({}: SettingNavigatorProps) {
+  const theme = useContext(ThemeContext);
   return (
     <SettingStackNavigator.Navigator
       screenOptions={({ route }) => ({
         headerShown: true,
-        headerTitle: headerTitleHandler(route.name),
         headerBackTitle: '이전',
+        headerStyle: {
+          backgroundColor: theme.backgroundColor,
+          shadowOpacity: 0,
+          elevation: 0,
+        },
+        headerTitleStyle: { color: theme.fontColorPrimary },
+        headerTitle: headerTitleHandler(route.name),
       })}>
       <SettingStackNavigator.Screen
         name={settingStackNavigations.NICKNAME_CHANGE}

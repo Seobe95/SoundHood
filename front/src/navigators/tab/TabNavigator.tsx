@@ -108,6 +108,8 @@ function TabNavigator({}: TabNavigatorProps) {
         headerShown: true,
         headerStyle: {
           backgroundColor: themeColor.backgroundColor,
+          shadowOpacity: 0,
+          elevation: 0,
         },
         headerTitleStyle: {
           color: themeColor.fontColorPrimary,
