@@ -13,6 +13,7 @@ import CustomButton from '@/components/common/CustomButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParamList } from '@/navigators/auth/AuthNavigator';
+import KakaoLoginButton from '@/components/common/KakaoLoginButton';
 
 type AuthHomeScreenProps = StackScreenProps<AuthStackParamList>;
 
@@ -39,6 +40,7 @@ function AuthHomeScreen({ navigation }: AuthHomeScreenProps) {
           variant="outline"
           onPress={() => navigation.push(authNavigations.REGISTER)}
         />
+        <KakaoLoginButton />
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={styles.text}>지금은 둘러볼래요</Text>
         </Pressable>
