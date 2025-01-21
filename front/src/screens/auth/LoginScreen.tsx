@@ -1,25 +1,36 @@
 import React, { useContext, useRef } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import CustomButton from '@/components/common/CustomButton';
 import { useForm } from '@/hooks/useForm';
 import { validateLogin } from '@/utils/validate';
 import useAuth from '@/hooks/queries/useAuth';
-import { ColorsType } from '@/constants';
+import { ColorsType, toastMessages } from '@/constants';
 import InputField from '@/components/common/InputField';
+import { ToastContext } from '@/context/ToastContext';
 
 function LoginScreen() {
   const themeColor = useContext(ThemeContext);
   const styles = makeStyles(themeColor);
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
+  const { show } = useContext(ToastContext);
   const { loginMutation } = useAuth();
   const login = useForm({
     initialValue: { email: '', password: '' },
     validate: validateLogin,
   });
   const onPress = async () => {
-    loginMutation.mutate(login.values);
+    Keyboard.dismiss();
+    loginMutation.mutate(login.values, {
+      onError: error => {
+        show({
+          message:
+            error.response?.data.message || toastMessages.ERROR.UNEXPECT_ERROR,
+          time: 'short',
+        });
+      },
+    });
   };
 
   return (

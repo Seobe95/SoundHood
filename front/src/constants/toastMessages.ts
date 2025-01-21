@@ -31,6 +31,9 @@ const toastMessages = {
     SUCCESS: '닉네임 변경이 완료되었습니다.',
     FAIL: '닉네임 변경에 실패했습니다.',
   },
+  ERROR: {
+    UNEXPECT_ERROR: '알 수 없는 에러가 발생했습니다.',
+  },
 } as const;
 
 export { toastMessages };

@@ -16,6 +16,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { NicknameMaker } from '../@common/nickname/nickname.maker';
 import { EditProfileDto } from './dto/edit-profile.dto';
+import axios from 'axios';
+import { KakaoLoginResponse } from 'src/@common/types/kakaoLoginTypes';
 
 @Injectable()
 export class AuthService {
@@ -28,10 +30,7 @@ export class AuthService {
 
   nicknameMaker = new NicknameMaker();
 
-  async signup(authDto: AuthDto) {
-    const { email, password } = authDto;
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
+  private async checkNicknameDuplication(): Promise<string> {
     let nickname: string;
     let isDuplicate: boolean;
 
@@ -40,6 +39,15 @@ export class AuthService {
       isDuplicate =
         (await this.userRepository.findOne({ where: { nickname } })) !== null;
     } while (isDuplicate);
+
+    return nickname;
+  }
+
+  async signup(authDto: AuthDto) {
+    const { email, password } = authDto;
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const nickname = await this.checkNicknameDuplication();
 
     const user = this.userRepository.create({
       email,
@@ -51,7 +59,6 @@ export class AuthService {
     try {
       await this.userRepository.save(user);
     } catch (error) {
-      console.log(error);
       if (error.code === '23505') {
         throw new ConflictException('이미 존재하는 이메일입니다.');
       }
@@ -76,6 +83,65 @@ export class AuthService {
     await this.updateHashedRefreshToken(user.id, refreshToken);
 
     return { accessToken, refreshToken };
+  }
+
+  async kakaoSignIn(kakaoToken: { token: string }) {
+    const { token } = kakaoToken;
+    const response = await axios
+      .get<KakaoLoginResponse>('https://kapi.kakao.com/v2/user/me', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+        },
+      })
+      .catch((error) => {
+        console.log(error);
+        throw new UnauthorizedException(
+          '카카오 로그인이 실패했습니다. 다시 한 번 시도하세요.',
+        );
+      });
+
+    const email = String(response.data.id);
+    const verifyUser = await this.userRepository.findOneBy({ email });
+
+    if (verifyUser) {
+      const { accessToken, refreshToken } = await this.getTokens({ email });
+      await this.updateHashedRefreshToken(verifyUser.id, refreshToken);
+      return { accessToken, refreshToken };
+    }
+
+    const nickname = await this.checkNicknameDuplication();
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(nickname, salt);
+
+    const user = this.userRepository.create({
+      email,
+      nickname,
+      password: hashedPassword,
+      loginType: 'kakao',
+    });
+
+    try {
+      await this.userRepository.save(user);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        '회원가입 도중 에러가 발생했습니다.',
+      );
+    }
+
+    const { accessToken, refreshToken } = await this.getTokens({ email });
+    await this.updateHashedRefreshToken(user.id, refreshToken);
+
+    return { accessToken, refreshToken };
+  }
+
+  async appleSignIn(appleIdentity: {
+    identityToken: string;
+    appId: string;
+    nickname: string | null;
+  }) {
+    console.log(appleIdentity);
   }
 
   private async getTokens(payload: { email: string }) {

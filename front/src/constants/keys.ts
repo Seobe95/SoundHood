@@ -18,6 +18,7 @@ const kakaoQueryKeys = {
 
 const postQueryKeys = {
   POST: 'post',
+  GET_MAKERS: 'markers',
   READ_POST_BY_ID: 'readPostById',
   READ_POST: 'readPost',
   READ_POST_LIKE_COUNT: 'readPostLikeCount',

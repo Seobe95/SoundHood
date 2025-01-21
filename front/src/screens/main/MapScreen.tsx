@@ -8,7 +8,7 @@ import {
   rootStackNavigations,
 } from '@/constants';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CompositeScreenProps } from '@react-navigation/native';
+import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MainTabParamList } from '@/navigators/tab/TabNavigator.tsx';
@@ -25,6 +25,7 @@ import CustomActionSheet from '@/components/common/CustomActionSheet.tsx';
 import { Markers } from '@/api';
 import useActionSheet from '@/hooks/common/useActionSheet.ts';
 import SongInfoActionSheet from '@/components/map/SongInfoActionSheet.tsx';
+import { useRefreshOnFocus } from '@/hooks/common/useRefreshOnFocus';
 
 export type MapScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MAP>,
@@ -38,10 +39,12 @@ function MapScreen({ navigation, route }: MapScreenProps) {
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
   const { userLocation, setUserLocation, mapRef } = useLocation();
-  const { data } = useReadMarkers();
+  const { data, refetch } = useReadMarkers();
   const auth = useContext(AuthContext);
   const [selectedMarker, setSelectedMarker] = useState<Markers | null>(null);
   const { isOpen, show, hide } = useActionSheet();
+
+  useRefreshOnFocus(refetch);
 
   function onPressPostButton() {
     if (auth.isLogin) {

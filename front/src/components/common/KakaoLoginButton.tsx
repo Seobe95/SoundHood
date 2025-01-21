@@ -1,29 +1,52 @@
+import { toastMessages } from '@/constants';
+import { ToastContext } from '@/context/ToastContext';
+import useAuth from '@/hooks/queries/useAuth';
 import { RFValue } from '@/utils';
 import { login } from '@react-native-seoul/kakao-login';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface KakaoLoginButtonProps {}
 
 function KakaoLoginButton({}: KakaoLoginButtonProps) {
-  const [result, setResult] = useState<string>('');
   const { top } = useSafeAreaInsets();
   const styles = makeStyle(top);
-
-  const signInWithKakao = async (): Promise<void> => {
+  const { kakaoSignInMutation } = useAuth();
+  const { show } = useContext(ToastContext);
+  const signInWithKakao = async () => {
     try {
-      const token = await login();
-      const log = JSON.stringify(token);
-      setResult(JSON.stringify(token));
-      console.log(log);
-    } catch (err) {
-      console.error('login err', err);
+      const { accessToken } = await login();
+      return accessToken;
+    } catch (error) {
+      console.log(error);
+      throw new Error('소셜 로그인 실패');
+    }
+  };
+
+  const sendKakaoAccessTokenToServer = async (accessToken: string) => {
+    kakaoSignInMutation.mutate(
+      { token: accessToken },
+      {
+        onSuccess: () => {
+          show({ message: toastMessages.LOGIN.SUCCESS, time: 'long' });
+        },
+      },
+    );
+  };
+
+  const handleSignIn = async () => {
+    try {
+      const accessToken = await signInWithKakao();
+      const response = await sendKakaoAccessTokenToServer(accessToken);
+      console.log(response);
+    } catch (error) {
+      throw new Error('에러입니다.');
     }
   };
 
   return (
-    <Pressable style={styles.container} onPress={signInWithKakao}>
+    <Pressable style={styles.container} onPress={handleSignIn}>
       <View style={styles.logoConatiner}>
         <Image
           source={require('@/assets/logo/kakao_logo.png')}

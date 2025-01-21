@@ -11,6 +11,7 @@ import {
   Markers,
   Post,
   PostByIdParams,
+  queryClient,
   readPostById,
   readPosts,
   updateLikePost,
@@ -41,11 +42,11 @@ function useReadPostById({ id, queryOptions }: UseReadPostByIdParams) {
 
 function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
   const { show } = useContext(ToastContext);
-  const { data, isSuccess, isError, isLoading, error } = useQuery<
+  const { data, isSuccess, isError, isLoading, refetch } = useQuery<
     Markers[],
     ResponseError
   >({
-    queryKey: [postQueryKeys.POST, 'markers'],
+    queryKey: [postQueryKeys.GET_MAKERS],
     queryFn: getMarkers,
     refetchOnMount: 'always',
     ...queryOptions,
@@ -64,7 +65,7 @@ function useReadMarkers(queryOptions?: UseQueryCustomOptions<Markers[]>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
-  return { data, isSuccess, isError, isLoading };
+  return { data, isSuccess, isError, isLoading, refetch };
 }
 
 type UseReadPosts = Pick<QueryCustomType<Post[]>, 'queryOptions'>;
@@ -86,6 +87,9 @@ function useCreatePost(
 ) {
   return useMutation({
     mutationFn: createPost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [postQueryKeys.GET_MAKERS] });
+    },
     ...mutationOptions,
   });
 }
@@ -107,6 +111,9 @@ type UseDeletePostParams = Pick<QueryCustomType, 'mutationOptions'>;
 function useDeletePost({ mutationOptions }: UseDeletePostParams) {
   return useMutation({
     mutationFn: deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [postQueryKeys.GET_MAKERS] });
+    },
     ...mutationOptions,
   });
 }
@@ -116,6 +123,9 @@ type UseUpdateLikePostParams = Pick<QueryCustomType, 'mutationOptions'>;
 function useUpdateLikePost({ mutationOptions }: UseUpdateLikePostParams) {
   return useMutation({
     mutationFn: updateLikePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [postQueryKeys.GET_MAKERS] });
+    },
     ...mutationOptions,
   });
 }
