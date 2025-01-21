@@ -1,7 +1,7 @@
 import CustomButton from '@/components/common/CustomButton';
 import ContentInput from '@/components/post/ContentInput';
 import SongInfo from '@/components/common/SongInfo.tsx';
-import { ColorsType } from '@/constants';
+import { ColorsType, postQueryKeys } from '@/constants';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import { useForm } from '@/hooks/useForm';
 import { useSearchSpotifyStore } from '@/stores/useSpotifySearchStore';
@@ -12,7 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePostNavigation } from '@/hooks/navigation/usePostNavigation.ts';
 import useCurrentLocation from '@/hooks/map/useCurrentLocation.ts';
 import { useCreatePost } from '@/hooks/queries/usePost.ts';
-import { CreatePostParams } from '@/api';
+import { CreatePostParams, queryClient } from '@/api';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
@@ -48,7 +48,16 @@ function PostScreen() {
       albumCover: selectedSong!.album.images[0].url,
       spotifyURL: selectedSong!.external_urls.spotify,
     };
-    createPost.mutate({ post: post });
+    createPost.mutate(
+      { post: post },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: [postQueryKeys.GET_MAKERS],
+          });
+        },
+      },
+    );
   }
 
   useEffect(() => {
