@@ -29,6 +29,23 @@ export class AuthController {
     return this.authService.signin(authDto);
   }
 
+  @Post('/oauth/kakao')
+  kakaoSignIn(@Body() kakaoToken: { token: string }) {
+    return this.authService.kakaoSignIn(kakaoToken);
+  }
+
+  @Post('/oauth/apple')
+  appleSignIn(
+    @Body()
+    appleIdentity: {
+      identityToken: string;
+      appId: string;
+      nickname: string | null;
+    },
+  ) {
+    return this.authService.appleSignIn(appleIdentity);
+  }
+
   @Get('/refresh')
   @UseGuards(AuthGuard())
   refresh(@GetUser() user: User) {
