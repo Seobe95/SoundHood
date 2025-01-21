@@ -4,6 +4,7 @@ import {
   getProfile,
   logout,
   patchProfile,
+  postKakaoSignIn,
   postSignin,
   postSignup,
   ResponseToken,
@@ -33,6 +34,31 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
   const { show } = useContext(ToastContext);
   return useMutation({
     mutationFn: postSignin,
+    onSuccess: ({ accessToken, refreshToken }) => {
+      storeEncryptedStorage(storageKeys.REFRESH_TOKEN, refreshToken);
+      setHeader('Authorization', `Bearer ${accessToken}`);
+      show({ time: 'short', message: toastMessages.LOGIN.SUCCESS });
+    },
+    onSettled: () => {
+      queryClient.refetchQueries({
+        queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_ACCESS_TOKEN],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_PROFILE],
+      });
+    },
+    onError: error => {
+      console.log('LOGIN ERROR', error.name, error.cause, error.message);
+    },
+    ...mutationOptions,
+  });
+}
+
+function useKakaoLogin(mutationOptions?: UseMutationCustomOptions) {
+  const { show } = useContext(ToastContext);
+
+  return useMutation({
+    mutationFn: postKakaoSignIn,
     onSuccess: ({ accessToken, refreshToken }) => {
       storeEncryptedStorage(storageKeys.REFRESH_TOKEN, refreshToken);
       setHeader('Authorization', `Bearer ${accessToken}`);
@@ -126,12 +152,14 @@ function useAuth() {
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
   const patchProfileMutation = usePatchProfile();
+  const kakaoSignInMutation = useKakaoLogin();
   return {
     signupMutation,
     loginMutation,
     getProfileQuery,
     logoutMutation,
     patchProfileMutation,
+    kakaoSignInMutation,
   };
 }
 

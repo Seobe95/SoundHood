@@ -42,6 +42,15 @@ const postSignin = async ({
   return data;
 };
 
+const postKakaoSignIn = async ({
+  token,
+}: {
+  token: string;
+}): Promise<ResponseToken> => {
+  const { data } = await apiInstance.post('/auth/oauth/kakao', { token });
+  return data;
+};
+
 const getProfile = async (): Promise<UserInfo> => {
   const { data } = await apiInstance.get('/auth/me');
   return data;
@@ -69,6 +78,7 @@ const logout = async () => {
 export {
   postSignup,
   postSignin,
+  postKakaoSignIn,
   getProfile,
   getAccessToken,
   patchProfile,

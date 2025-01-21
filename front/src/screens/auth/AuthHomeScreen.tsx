@@ -31,6 +31,7 @@ function AuthHomeScreen({ navigation }: AuthHomeScreenProps) {
         />
       </View>
       <View style={styles.buttonContainer}>
+        <KakaoLoginButton />
         <CustomButton
           label="이메일 로그인"
           onPress={() => navigation.push(authNavigations.LOGIN)}
@@ -40,7 +41,6 @@ function AuthHomeScreen({ navigation }: AuthHomeScreenProps) {
           variant="outline"
           onPress={() => navigation.push(authNavigations.REGISTER)}
         />
-        <KakaoLoginButton />
         <Pressable onPress={() => navigation.goBack()}>
           <Text style={styles.text}>지금은 둘러볼래요</Text>
         </Pressable>
