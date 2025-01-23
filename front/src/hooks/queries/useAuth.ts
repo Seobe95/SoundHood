@@ -1,9 +1,10 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { MutationFunction, useMutation, useQuery } from '@tanstack/react-query';
 import {
   getAccessToken,
   getProfile,
   logout,
   patchProfile,
+  postAppleSignIn,
   postKakaoSignIn,
   postSignin,
   postSignup,
@@ -30,10 +31,13 @@ function useSignup(mutationOptions?: UseMutationCustomOptions) {
   });
 }
 
-function useLogin(mutationOptions?: UseMutationCustomOptions) {
+function useLogin<T>(
+  loginApi: MutationFunction<ResponseToken, T>,
+  mutationOptions?: UseMutationCustomOptions,
+) {
   const { show } = useContext(ToastContext);
   return useMutation({
-    mutationFn: postSignin,
+    mutationFn: loginApi,
     onSuccess: ({ accessToken, refreshToken }) => {
       storeEncryptedStorage(storageKeys.REFRESH_TOKEN, refreshToken);
       setHeader('Authorization', `Bearer ${accessToken}`);
@@ -54,29 +58,16 @@ function useLogin(mutationOptions?: UseMutationCustomOptions) {
   });
 }
 
-function useKakaoLogin(mutationOptions?: UseMutationCustomOptions) {
-  const { show } = useContext(ToastContext);
+function useEmailLogin(mutationOptions?: UseMutationCustomOptions) {
+  return useLogin(postSignin, mutationOptions);
+}
 
-  return useMutation({
-    mutationFn: postKakaoSignIn,
-    onSuccess: ({ accessToken, refreshToken }) => {
-      storeEncryptedStorage(storageKeys.REFRESH_TOKEN, refreshToken);
-      setHeader('Authorization', `Bearer ${accessToken}`);
-      show({ time: 'short', message: toastMessages.LOGIN.SUCCESS });
-    },
-    onSettled: () => {
-      queryClient.refetchQueries({
-        queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_ACCESS_TOKEN],
-      });
-      queryClient.invalidateQueries({
-        queryKey: [authQueryKeys.AUTH, authQueryKeys.GET_PROFILE],
-      });
-    },
-    onError: error => {
-      console.log('LOGIN ERROR', error.name, error.cause, error.message);
-    },
-    ...mutationOptions,
-  });
+function useKakaoLogin(mutationOptions?: UseMutationCustomOptions) {
+  return useLogin(postKakaoSignIn, mutationOptions);
+}
+
+function useAppleLogin(mutationOptions?: UseMutationCustomOptions) {
+  return useLogin(postAppleSignIn, mutationOptions);
 }
 
 function useGetRefreshToken() {
@@ -149,10 +140,11 @@ function useAuth() {
   const getProfileQuery = useGetProfile({
     enabled: refreshTokenQuery.isSuccess,
   });
-  const loginMutation = useLogin();
+  const loginMutation = useEmailLogin();
   const logoutMutation = useLogout();
   const patchProfileMutation = usePatchProfile();
   const kakaoSignInMutation = useKakaoLogin();
+  const appleSignInMutation = useAppleLogin();
   return {
     signupMutation,
     loginMutation,
@@ -160,6 +152,7 @@ function useAuth() {
     logoutMutation,
     patchProfileMutation,
     kakaoSignInMutation,
+    appleSignInMutation,
   };
 }
 

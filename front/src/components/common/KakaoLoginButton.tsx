@@ -46,7 +46,12 @@ function KakaoLoginButton({}: KakaoLoginButtonProps) {
   };
 
   return (
-    <Pressable style={styles.container} onPress={handleSignIn}>
+    <Pressable
+      style={({ pressed }) => [
+        styles.container,
+        pressed && styles.pressedConatiner,
+      ]}
+      onPress={handleSignIn}>
       <View style={styles.logoConatiner}>
         <Image
           source={require('@/assets/logo/kakao_logo.png')}
@@ -69,19 +74,19 @@ const makeStyle = (top: number) =>
       backgroundColor: '#FEE500',
       alignItems: 'center',
       width: '100%',
+      height: 44,
       justifyContent: 'center',
-      paddingVertical: 7,
       paddingHorizontal: 16,
       borderRadius: 8,
     },
+    pressedConatiner: { opacity: 0.6 },
     logoConatiner: {
-      flex: 0,
+      marginRight: 8,
     },
     kakaoLogo: {
-      width: 24,
+      width: 18,
     },
     labelConatiner: {
-      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       marginRight: 24,

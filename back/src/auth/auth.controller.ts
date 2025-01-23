@@ -40,7 +40,6 @@ export class AuthController {
     appleIdentity: {
       identityToken: string;
       appId: string;
-      nickname: string | null;
     },
   ) {
     return this.authService.appleSignIn(appleIdentity);

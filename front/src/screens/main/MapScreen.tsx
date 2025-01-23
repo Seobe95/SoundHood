@@ -8,7 +8,7 @@ import {
   rootStackNavigations,
 } from '@/constants';
 import { StackScreenProps } from '@react-navigation/stack';
-import { CompositeScreenProps, useFocusEffect } from '@react-navigation/native';
+import { CompositeScreenProps } from '@react-navigation/native';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MainTabParamList } from '@/navigators/tab/TabNavigator.tsx';

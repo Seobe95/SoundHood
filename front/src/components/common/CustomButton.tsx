@@ -75,7 +75,7 @@ const makeStyles = (color: ColorsType, top = 0) =>
     },
     large: {
       width: '100%',
-      paddingVertical: 16,
+      height: 44,
       alignItems: 'center',
     },
     medium: {
@@ -97,7 +97,8 @@ const makeStyles = (color: ColorsType, top = 0) =>
       borderWidth: 1,
     },
     filledPressed: {
-      backgroundColor: color.BLUE_300,
+      backgroundColor: color.BLUE_400,
+      opacity: 0.6,
     },
     outlinePressed: {
       borderColor: color.BLUE_200,

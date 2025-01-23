@@ -31,7 +31,7 @@ function NicknameChangeScreen({}: NicknameChangeScreenProps) {
   return (
     <Container ph="middle">
       <Pressable style={styles.container} onPress={() => Keyboard.dismiss()}>
-        <Text>닉네임 변경</Text>
+        <Text style={styles.font}>닉네임 변경</Text>
         <InputField
           keyboardType="default"
           placeholder={userInfo?.nickname ?? '변경하실 닉네임을 입력하세요.'}
@@ -65,6 +65,9 @@ const makeStyles = (color: ColorsType) =>
     },
     buttonContainer: {
       marginTop: 24,
+    },
+    font: {
+      color: color.fontColorPrimary,
     },
   });
 
