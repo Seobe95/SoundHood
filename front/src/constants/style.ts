@@ -7,6 +7,7 @@ type DefaultColorsType = {
   fontColorSecondary: string;
   borderColor: string;
   notionWebviewBackground: string;
+  appleLoginButtonBackground: string;
 };
 
 export type ColorsType = PointColorsType & DefaultColorsType;
@@ -45,7 +46,7 @@ const theme: ThemeType = {
     fontColorSecondary: '#757575',
     borderColor: '#BDBDBD',
     notionWebviewBackground: '#FFFFFF',
-
+    appleLoginButtonBackground: '#000000',
     ...colors,
   },
   dark: {
@@ -56,6 +57,7 @@ const theme: ThemeType = {
     fontColorSecondary: '#828282',
     borderColor: '#424242',
     notionWebviewBackground: '#191919',
+    appleLoginButtonBackground: '#FFFFFF',
     ...colors,
   },
 };

@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import {
   Dimensions,
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -14,12 +15,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParamList } from '@/navigators/auth/AuthNavigator';
 import KakaoLoginButton from '@/components/common/KakaoLoginButton';
+import AppleLoginButton from '@/components/common/AppleLoginButton';
 
 type AuthHomeScreenProps = StackScreenProps<AuthStackParamList>;
 
 function AuthHomeScreen({ navigation }: AuthHomeScreenProps) {
   const themeColor = useContext(ThemeContext);
   const styles = makeStyles(themeColor);
+  const isiOS = Platform.OS === 'ios';
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,6 +34,7 @@ function AuthHomeScreen({ navigation }: AuthHomeScreenProps) {
         />
       </View>
       <View style={styles.buttonContainer}>
+        {isiOS && <AppleLoginButton />}
         <KakaoLoginButton />
         <CustomButton
           label="이메일 로그인"
@@ -57,7 +61,7 @@ const makeStyles = (color: ColorsType) =>
       paddingHorizontal: 16,
     },
     imageContainer: {
-      flex: 1.5,
+      flex: 1,
       width: Dimensions.get('screen').width / 2,
     },
     image: {

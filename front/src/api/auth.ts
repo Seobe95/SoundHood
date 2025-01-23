@@ -51,6 +51,19 @@ const postKakaoSignIn = async ({
   return data;
 };
 
+const postAppleSignIn = async (appleIdentity: {
+  identityToken: string;
+  appId: string;
+}): Promise<ResponseToken> => {
+  const { appId, identityToken } = appleIdentity;
+  const { data } = await apiInstance.post('/auth/oauth/apple', {
+    appId,
+    identityToken,
+  });
+
+  return data;
+};
+
 const getProfile = async (): Promise<UserInfo> => {
   const { data } = await apiInstance.get('/auth/me');
   return data;
@@ -79,6 +92,7 @@ export {
   postSignup,
   postSignin,
   postKakaoSignIn,
+  postAppleSignIn,
   getProfile,
   getAccessToken,
   patchProfile,
