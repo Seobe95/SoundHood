@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Post } from './post.entity';
 import { User } from '../auth/user.entity';
 import { Like } from '../like/like.entity';
@@ -181,6 +181,31 @@ export class PostService {
       console.log(e);
       throw new InternalServerErrorException(
         '장소를 수정하던 도중 에러가 발생했습니다.',
+      );
+    }
+  }
+
+  async getUserLikePost(id: string) {
+    try {
+      const posts = await this.likeRepository
+        .createQueryBuilder('like')
+        .where('like.userId = :userId', { userId: id })
+        .select(['like.post.id'])
+        .getRawMany();
+
+      const likePostIds = posts.map((item) => {
+        return item.like_postId;
+      });
+
+      const usersLikePosts = await this.postRepository.find({
+        where: { id: In(likePostIds) },
+      });
+
+      return usersLikePosts;
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException(
+        '좋아요 목록을 불러오는데 에러가 발생했습니다.',
       );
     }
   }
