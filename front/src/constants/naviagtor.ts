@@ -1,6 +1,6 @@
 const mainTabNavigations = {
   MAP: 'Map',
-  LIST: 'List',
+  LIKE: 'Like',
   MY_PAGE: 'MyPage',
 } as const;
 
@@ -33,10 +33,16 @@ const postStackNavigations = {
 
 const settingStackNavigations = {
   SETTING: 'Setting',
-  NICKNAME_CHANGE: 'NicknameChange',
+  MY_PAGE_HOME: 'MyPageHome',
   OPEN_SOURCE_INFORMAION: 'OpenSourceInformation',
   PERSONAL_INFORMATION: 'PersonalInformation',
   USE_TERMS_INFORMATION: 'UseTermsInformation',
+} as const;
+
+const myPageStackNavigations = {
+  NICKNAME_CHANGE: 'NicknameChange',
+  MY_POST_PAGE: 'MyPostPage',
+  MY_PAGE_HOME: 'MyPageHome',
 } as const;
 
 export {
@@ -46,4 +52,5 @@ export {
   rootStackNavigations,
   postStackNavigations,
   settingStackNavigations,
+  myPageStackNavigations,
 };
