@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
@@ -7,34 +7,40 @@ import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import {
   ColorsType,
   mainTabNavigations,
+  myPageStackNavigations,
   rootStackNavigations,
   settingStackNavigations,
 } from '@/constants';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MainTabParamList } from '@/navigators/tab/TabNavigator.tsx';
 import { AuthContext } from '@/context/AuthContext.tsx';
-import CustomButton from '@/components/common/CustomButton';
-import useAuth from '@/hooks/queries/useAuth';
-import SettingListItem from '@/components/mypage/SettingListItem';
+import NavigationListItem from '@/components/mypage/NavigationListItem';
+import Container from '@/components/common/Container';
 
 type MyPageScreenProps = CompositeScreenProps<
-  BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MY_PAGE>,
+  BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.SETTING>,
   StackScreenProps<RootStackParamList, typeof rootStackNavigations.SETTING>
 >;
 
 type SettingNavigationType =
   (typeof settingStackNavigations)[keyof typeof settingStackNavigations];
 
-type SettingScreenType = {
-  screen: SettingNavigationType;
+export type MyPageNavigationType =
+  (typeof myPageStackNavigations)[keyof typeof myPageStackNavigations];
+
+export type NavigationListType<T, U = undefined> = {
+  screen?: T | U;
   icon: string;
   title: string;
   url?: string;
 };
 
-const settingScreenDatas: SettingScreenType[] = [
+const settingScreenDatas: NavigationListType<
+  MyPageNavigationType,
+  SettingNavigationType
+>[] = [
   {
-    screen: settingStackNavigations.NICKNAME_CHANGE,
+    screen: myPageStackNavigations.MY_PAGE_HOME,
     icon: 'person-circle-outline',
     title: '내 프로필',
   },
@@ -55,77 +61,58 @@ const settingScreenDatas: SettingScreenType[] = [
   },
 ];
 
-function MyPageScreen({ navigation }: MyPageScreenProps) {
+function SettingScreen({ navigation }: MyPageScreenProps) {
   const theme = useContext(ThemeContext);
   const styles = makeStyles(theme);
-  const { isLogin, logout, userInfo } = useContext(AuthContext);
-  const { logoutMutation } = useAuth();
+  const { isLogin } = useContext(AuthContext);
+
   function handleNavigateButton(
-    screenName: SettingNavigationType,
-    url?: string,
+    screenName: SettingNavigationType | MyPageNavigationType,
   ) {
-    if (screenName === 'NicknameChange' && !isLogin) {
-      console.log(userInfo);
-      navigation.navigate('AuthNavigator', {
+    if (screenName === 'MyPageHome' && !isLogin) {
+      navigation.navigate(rootStackNavigations.AUTH, {
         screen: 'AuthHome',
       });
+      return;
+    }
+
+    if (screenName === myPageStackNavigations.MY_PAGE_HOME) {
+      navigation.navigate(rootStackNavigations.MYPAGE, {
+        screen: myPageStackNavigations.MY_PAGE_HOME,
+      });
     } else {
-      navigation.navigate('Setting', {
-        screen: screenName,
+      navigation.navigate(rootStackNavigations.SETTING, {
+        screen: screenName as SettingNavigationType,
       });
     }
   }
 
-  function handleLogoutButton() {
-    logoutMutation.mutate(
-      {},
-      {
-        onSuccess: () => {
-          logout();
-        },
-      },
-    );
-  }
   return (
-    <View style={styles.container}>
+    <Container>
       <FlatList
+        style={styles.listContainer}
         data={settingScreenDatas}
         renderItem={data => {
           const { item } = data;
-
           return (
-            <SettingListItem
+            <NavigationListItem
               title={item.title}
               icon={item.icon}
               key={`${item.screen}${item.title}`}
-              onPress={() => handleNavigateButton(item.screen)}
+              onPress={() => handleNavigateButton(item.screen!)}
             />
           );
         }}
       />
-      {isLogin && (
-        <View style={styles.buttonContainer}>
-          <CustomButton label="로그아웃" onPress={handleLogoutButton} />
-        </View>
-      )}
-    </View>
+    </Container>
   );
 }
 
 const makeStyles = (color: ColorsType) =>
   StyleSheet.create({
-    container: {
-      backgroundColor: color.backgroundColor,
+    listContainer: {
       height: '100%',
-    },
-    font: {
-      color: color.fontColorPrimary,
-      fontSize: 20,
-    },
-    buttonContainer: {
-      paddingHorizontal: 16,
-      paddingBottom: 16,
     },
   });
 
-export default MyPageScreen;
+export default SettingScreen;

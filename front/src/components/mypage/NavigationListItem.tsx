@@ -1,17 +1,17 @@
-import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, Pressable, PressableProps } from 'react-native';
+import React, { useContext } from 'react';
+import { StyleSheet, Pressable, PressableProps } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import { ColorsType } from '@/constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RFValue } from '@/utils';
 import CustomIcon from '../common/CustomIcon';
+import CustomFont from '../common/CustomFont';
 
 interface MyPageContentProps extends PressableProps {
   title: string;
   icon: string;
 }
 
-function SettingListItem({ title, icon, ...props }: MyPageContentProps) {
+function NavigationListItem({ title, icon, ...props }: MyPageContentProps) {
   const theme = useContext(ThemeContext);
   const { top } = useSafeAreaInsets();
   const styles = makeStyles(theme, top);
@@ -24,7 +24,7 @@ function SettingListItem({ title, icon, ...props }: MyPageContentProps) {
         color={theme.fontColorPrimary}
         style={styles.profileIcon}
       />
-      <Text style={styles.font}>{title}</Text>
+      <CustomFont fontSize={20}>{title}</CustomFont>
       <CustomIcon
         name="chevron-forward"
         size={25}
@@ -46,13 +46,9 @@ const makeStyles = (color: ColorsType, top = 0) =>
     profileIcon: {
       marginRight: 8,
     },
-    font: {
-      color: color.fontColorPrimary,
-      fontSize: RFValue(20, top),
-    },
     chevron: {
       marginLeft: 'auto',
     },
   });
 
-export default SettingListItem;
+export default NavigationListItem;

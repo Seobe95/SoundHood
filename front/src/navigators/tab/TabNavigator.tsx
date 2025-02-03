@@ -5,7 +5,7 @@ import {
   mainTabNavigations,
   rootStackNavigations,
 } from '@/constants';
-import MyPageScreen from '@/screens/main/MyPageScreen';
+import SettingScreen from '@/screens/main/SettingScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ReactNode, useContext } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -24,7 +24,7 @@ export type MainTabParamList = {
     addressName?: string;
   };
   [mainTabNavigations.LIKE]: undefined;
-  [mainTabNavigations.MY_PAGE]: undefined;
+  [mainTabNavigations.SETTING]: undefined;
 };
 
 const MainTab = createBottomTabNavigator<MainTabParamList>();
@@ -56,7 +56,7 @@ const handleTabbarIcon = (
       iconName = focused ? 'heart' : 'heart-outline';
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
-    case mainTabNavigations.MY_PAGE:
+    case mainTabNavigations.SETTING:
       iconName = focused ? 'settings' : 'settings-outline';
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
@@ -85,7 +85,7 @@ const handleTabbarText = (
     case mainTabNavigations.LIKE:
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
-    case mainTabNavigations.MY_PAGE:
+    case mainTabNavigations.SETTING:
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
   }
@@ -134,8 +134,8 @@ function TabNavigator({}: TabNavigatorProps) {
         }}
       />
       <MainTab.Screen
-        name={mainTabNavigations.MY_PAGE}
-        component={MyPageScreen}
+        name={mainTabNavigations.SETTING}
+        component={SettingScreen}
         options={{
           title: '설정',
         }}

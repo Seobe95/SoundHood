@@ -1,7 +1,7 @@
 const mainTabNavigations = {
   MAP: 'Map',
   LIKE: 'Like',
-  MY_PAGE: 'MyPage',
+  SETTING: 'Setting',
 } as const;
 
 const authNavigations = {
@@ -23,7 +23,8 @@ const rootStackNavigations = {
   AUTH: 'AuthNavigator',
   POST: 'PostNavigator',
   DETAIL: 'DetailNavigator',
-  SETTING: 'Setting',
+  SETTING: 'RootSetting',
+  MYPAGE: 'Mypage',
 } as const;
 
 const postStackNavigations = {
@@ -32,8 +33,6 @@ const postStackNavigations = {
 } as const;
 
 const settingStackNavigations = {
-  SETTING: 'Setting',
-  MY_PAGE_HOME: 'MyPageHome',
   OPEN_SOURCE_INFORMAION: 'OpenSourceInformation',
   PERSONAL_INFORMATION: 'PersonalInformation',
   USE_TERMS_INFORMATION: 'UseTermsInformation',

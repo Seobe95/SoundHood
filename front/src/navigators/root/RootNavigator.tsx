@@ -13,6 +13,9 @@ import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import SettingNavigator, {
   SettingStackParamList,
 } from '@/navigators/setting/SettingNavigator.tsx';
+import MyPageNavigator, {
+  MyPageStackParamList,
+} from '../mypage/MyPageNavigator';
 
 export type RootStackParamList = {
   [rootStackNavigations.AUTH]: NavigatorScreenParams<AuthStackParamList>;
@@ -20,6 +23,7 @@ export type RootStackParamList = {
   [rootStackNavigations.DETAIL]: NavigatorScreenParams<DetailStackParamList>;
   [rootStackNavigations.POST]: NavigatorScreenParams<PostStackParamList>;
   [rootStackNavigations.SETTING]: NavigatorScreenParams<SettingStackParamList>;
+  [rootStackNavigations.MYPAGE]: NavigatorScreenParams<MyPageStackParamList>;
 };
 
 const RootStack = createStackNavigator<RootStackParamList>();
@@ -56,6 +60,10 @@ function RootNavigator() {
       <RootStack.Screen
         name={rootStackNavigations.SETTING}
         component={SettingNavigator}
+      />
+      <RootStack.Screen
+        name={rootStackNavigations.MYPAGE}
+        component={MyPageNavigator}
       />
     </RootStack.Navigator>
   );
