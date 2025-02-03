@@ -71,4 +71,10 @@ export class PostController {
     const { id } = params;
     return this.postService.updatePost(id, updatePostDto);
   }
+
+  @Get('/my/like')
+  @UseGuards(AuthGuard())
+  getUserLikePost(@GetUser() user: User) {
+    return this.postService.getUserLikePost(user.id);
+  }
 }

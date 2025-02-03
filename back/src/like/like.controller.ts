@@ -22,7 +22,6 @@ export class LikeController {
     @Param('postId', ValidationPipe) postId: string,
     @GetUser() user: User,
   ) {
-    console.log(postId, user.id);
     return this.likeService.toggleLike(user.id, postId);
   }
 

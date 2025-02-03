@@ -22,6 +22,7 @@ const postQueryKeys = {
   READ_POST_BY_ID: 'readPostById',
   READ_POST: 'readPost',
   READ_POST_LIKE_COUNT: 'readPostLikeCount',
+  READ_USERS_LIKE_POSTS: 'readUsersLikePosts',
 } as const;
 
 const storageKeys = {

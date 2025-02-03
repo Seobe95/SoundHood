@@ -69,7 +69,7 @@ function DetailNavigator({}: DetailStackNavigatorProps) {
               <HeaderBackButton {...props} tintColor={theme.fontColorPrimary} />
             );
           }
-          return <HeaderBackButton {...props} />;
+          return undefined;
         },
         headerStyle: {
           backgroundColor: theme.backgroundColor,

@@ -85,6 +85,11 @@ async function updateLikePost({ id }: PostByIdParams) {
   return data;
 }
 
+async function getUsersLikePosts() {
+  const { data } = await apiInstance.get('/my/like');
+  return data;
+}
+
 export {
   readPosts,
   readPostById,
@@ -93,4 +98,5 @@ export {
   deletePost,
   updateLikePost,
   getMarkers,
+  getUsersLikePosts,
 };

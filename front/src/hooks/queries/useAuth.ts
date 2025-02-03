@@ -114,6 +114,7 @@ function usePatchProfile(mutationOptions?: UseMutationCustomOptions) {
     onSuccess: () => {
       show({ message: toastMessages.PATCH_PROFILE.SUCCESS, time: 'short' });
     },
+    ...mutationOptions,
   });
 }
 

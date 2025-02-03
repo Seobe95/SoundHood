@@ -148,6 +148,7 @@ const makeStyles = (color: ColorsType, top: number, bottom: number) =>
       fontSize: 12,
       textAlign: 'center',
       fontWeight: '500',
+      color: color.fontColorPrimary,
     },
     boldFont: {
       fontWeight: 'bold',

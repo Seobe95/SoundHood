@@ -8,6 +8,7 @@ import {
   CreatePostParams,
   deletePost,
   getMarkers,
+  getUsersLikePosts,
   Markers,
   Post,
   PostByIdParams,
@@ -130,6 +131,33 @@ function useUpdateLikePost({ mutationOptions }: UseUpdateLikePostParams) {
   });
 }
 
+function useGetUsersLikePosts(queryOptions?: UseQueryCustomOptions<Post[]>) {
+  const { show } = useContext(ToastContext);
+  const { data, isSuccess, isError, isLoading, refetch } = useQuery<
+    Post[],
+    ResponseError
+  >({
+    queryKey: [postQueryKeys.READ_USERS_LIKE_POSTS],
+    queryFn: getUsersLikePosts,
+    refetchOnMount: 'always',
+    ...queryOptions,
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log('GET USER LIKE POSTS SUCCESS');
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (isError) {
+      show({ message: toastMessages.MAP.ERROR, time: 'long' });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isError]);
+
+  return { data, isSuccess, isError, isLoading, refetch };
+}
 export {
   useReadPostById,
   useCreatePost,
@@ -137,4 +165,5 @@ export {
   useDeletePost,
   useUpdateLikePost,
   useReadMarkers,
+  useGetUsersLikePosts,
 };

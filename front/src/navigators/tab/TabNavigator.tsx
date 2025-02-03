@@ -5,7 +5,7 @@ import {
   mainTabNavigations,
   rootStackNavigations,
 } from '@/constants';
-import MyPageScreen from '@/screens/main/MyPageScreen';
+import SettingScreen from '@/screens/main/SettingScreen';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { ReactNode, useContext } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -15,6 +15,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import { LabelPosition } from '@react-navigation/bottom-tabs/lib/typescript/src/types';
 import { Text } from 'react-native';
+import LikeScreen from '@/screens/main/LikeScreen';
 
 export type MainTabParamList = {
   [mainTabNavigations.MAP]: {
@@ -22,8 +23,8 @@ export type MainTabParamList = {
     longitude?: number;
     addressName?: string;
   };
-  [mainTabNavigations.LIST]: undefined;
-  [mainTabNavigations.MY_PAGE]: undefined;
+  [mainTabNavigations.LIKE]: undefined;
+  [mainTabNavigations.SETTING]: undefined;
 };
 
 const MainTab = createBottomTabNavigator<MainTabParamList>();
@@ -51,12 +52,12 @@ const handleTabbarIcon = (
       iconName = focused ? 'map' : 'map-outline';
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
-    case mainTabNavigations.LIST:
-      iconName = focused ? 'newspaper' : 'newspaper-outline';
+    case mainTabNavigations.LIKE:
+      iconName = focused ? 'heart' : 'heart-outline';
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
-    case mainTabNavigations.MY_PAGE:
-      iconName = focused ? 'person-circle' : 'person-circle-outline';
+    case mainTabNavigations.SETTING:
+      iconName = focused ? 'settings' : 'settings-outline';
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
   }
@@ -81,10 +82,10 @@ const handleTabbarText = (
     case mainTabNavigations.MAP:
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
-    case mainTabNavigations.LIST:
+    case mainTabNavigations.LIKE:
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
-    case mainTabNavigations.MY_PAGE:
+    case mainTabNavigations.SETTING:
       tintColor = focused ? iconColor.BLUE_400 : color;
       break;
   }
@@ -103,6 +104,7 @@ function TabNavigator({}: TabNavigatorProps) {
           borderTopWidth: 0,
           shadowOpacity: 0.15,
         },
+        tabBarShowLabel: false,
         tabBarIcon: props => handleTabbarIcon(route.name, props, themeColor),
         tabBarLabel: props => handleTabbarText(route.name, props, themeColor),
         headerShown: true,
@@ -123,12 +125,19 @@ function TabNavigator({}: TabNavigatorProps) {
           title: '지도',
         }}
       />
-      {/* <MainTab.Screen name={mainTabNavigations.LIST} component={ListScreen} /> */}
       <MainTab.Screen
-        name={mainTabNavigations.MY_PAGE}
-        component={MyPageScreen}
+        name={mainTabNavigations.LIKE}
+        component={LikeScreen}
         options={{
-          title: '마이페이지',
+          headerShown: true,
+          title: '좋아요',
+        }}
+      />
+      <MainTab.Screen
+        name={mainTabNavigations.SETTING}
+        component={SettingScreen}
+        options={{
+          title: '설정',
         }}
       />
     </MainTab.Navigator>
