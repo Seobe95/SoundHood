@@ -48,9 +48,12 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   hashedRefreshToken?: string;
 
+  @Column({ nullable: true, default: null })
+  appleRefreshToken?: string;
+
   @OneToMany(() => Post, (post) => post.user, { eager: false })
   post: Post[];
 
-  @OneToMany(() => Like, (like) => like.user)
+  @OneToMany(() => Like, (like) => like.user, { onDelete: 'CASCADE' })
   likes: Like[];
 }

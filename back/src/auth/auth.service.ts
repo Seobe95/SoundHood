@@ -17,14 +17,19 @@ import { ConfigService } from '@nestjs/config';
 import { NicknameMaker } from '../@common/nickname/nickname.maker';
 import { EditProfileDto } from './dto/edit-profile.dto';
 import axios from 'axios';
-import appleSignInAuth from 'apple-signin-auth';
+import appleSignInAuth, {
+  AppleAuthorizationTokenResponseType,
+} from 'apple-signin-auth';
 import { KakaoLoginResponse } from 'src/@common/types/kakaoLoginTypes';
+import { Post } from 'src/post/post.entity';
+import { Like } from 'src/like/like.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private userRepository: Repository<User>,
+    @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(Like) private likeRepository: Repository<Like>,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -141,10 +146,13 @@ export class AuthService {
     }
   }
 
-  async appleSignIn(appleIdentity: { identityToken: string; appId: string }) {
+  async appleSignIn(appleIdentity: {
+    identityToken: string;
+    appId: string;
+    authorizationCode: string;
+  }) {
     try {
-      const { appId, identityToken } = appleIdentity;
-      console.log(appleIdentity);
+      const { appId, identityToken, authorizationCode } = appleIdentity;
       const { sub: userAppleId } = await appleSignInAuth.verifyIdToken(
         identityToken,
         {
@@ -152,6 +160,9 @@ export class AuthService {
           ignoreException: true,
         },
       );
+
+      const { refresh_token } =
+        await this.getAppleRefreshToken(authorizationCode);
 
       const existingUser = await this.userRepository.findOneBy({
         email: userAppleId,
@@ -172,6 +183,7 @@ export class AuthService {
         nickname,
         password: '',
         loginType: 'apple',
+        appleRefreshToken: refresh_token,
       });
 
       try {
@@ -186,7 +198,6 @@ export class AuthService {
       const { accessToken, refreshToken } = await this.getTokens({
         email: newUser.email,
       });
-      console.log(newUser.id);
       this.updateHashedRefreshToken(newUser.id, refreshToken);
 
       return { accessToken, refreshToken };
@@ -194,6 +205,38 @@ export class AuthService {
       console.log(error);
       throw new InternalServerErrorException('Apple 서버 에러가 발생했습니다.');
     }
+  }
+
+  private async getAppleRefreshToken(authorizationCode: string) {
+    const { clientID, clientSecret } = this.getAppleClientInformation();
+    const { data } = await axios.post<AppleAuthorizationTokenResponseType>(
+      'https://appleid.apple.com/auth/token',
+      null,
+      {
+        params: {
+          client_id: clientID,
+          client_secret: clientSecret,
+          code: authorizationCode,
+          grant_type: 'authorization_code',
+        },
+      },
+    );
+
+    return data;
+  }
+
+  private getAppleClientInformation() {
+    const privateKey = process.env.APPLE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+    const clientID = process.env.APPLE_CLIENT_ID;
+
+    const clientSecret = appleSignInAuth.getClientSecret({
+      clientID,
+      teamID: process.env.APPLE_TEAM_ID,
+      privateKey: privateKey,
+      keyIdentifier: process.env.APPLE_KEY_IDENTIFIER,
+    });
+
+    return { clientSecret, clientID };
   }
 
   private async getTokens(payload: { email: string }) {
@@ -279,17 +322,39 @@ export class AuthService {
 
   async deleteAccount(user: User) {
     try {
-      await this.userRepository
-        .createQueryBuilder('user')
-        .delete()
-        .from(User)
-        .where('id = :id', { id: user.id })
-        .execute();
+      const { loginType, appleRefreshToken } =
+        await this.userRepository.findOneBy({
+          id: user.id,
+        });
+      if (loginType === 'apple') {
+        await this.revokeAppleTokens(appleRefreshToken);
+      }
+      await this.userRepository.update(user.id, {
+        nickname: '탈퇴한 사용자',
+        email: `deleted_${user.id}@example.com`,
+        password: `password`,
+      });
+      await this.likeRepository.delete({ user: { id: user.id } });
+      await this.userRepository.softDelete(user.id);
     } catch (e) {
-      console.log(e);
+      console.error(e);
       throw new BadRequestException(
         '탈퇴할 수 없습니다. 남은 데이터가 존재하는지 확인해주세요.',
       );
+    }
+  }
+
+  async revokeAppleTokens(appleRefreshToken: string) {
+    const { clientID, clientSecret } = this.getAppleClientInformation();
+
+    try {
+      await appleSignInAuth.revokeAuthorizationToken(appleRefreshToken, {
+        clientID: clientID,
+        clientSecret: clientSecret,
+        tokenTypeHint: 'refresh_token',
+      });
+    } catch (e) {
+      console.error(e, 'apple revoke fail');
     }
   }
 }

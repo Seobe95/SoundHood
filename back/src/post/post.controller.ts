@@ -27,12 +27,6 @@ export class PostController {
     return this.postService.getAllMarkers();
   }
 
-  @Get('/markers/:userId')
-  @UseGuards(AuthGuard())
-  getAllMyMarkers(@GetUser() user: User) {
-    return this.postService.getAllMyMarkers(user);
-  }
-
   @Get('/posts')
   getPosts(@Query('page') page: number) {
     return this.postService.getPosts(page);
@@ -76,5 +70,11 @@ export class PostController {
   @UseGuards(AuthGuard())
   getUserLikePost(@GetUser() user: User) {
     return this.postService.getUserLikePost(user.id);
+  }
+
+  @Get('/my/posts')
+  @UseGuards(AuthGuard())
+  getAllMyMarkers(@GetUser() user: User) {
+    return this.postService.getMyPosts(user);
   }
 }

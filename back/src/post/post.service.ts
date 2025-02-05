@@ -42,12 +42,12 @@ export class PostService {
     }
   }
 
-  async getAllMyMarkers(user: User) {
+  async getMyPosts(user: User) {
     try {
       const markers = await this.postRepository
         .createQueryBuilder('post')
         .where('post.userId = :userId', { userId: user.id })
-        .select(['post.id', 'post.latitude', 'post.longitude'])
+        .select(['post.id', 'post.albumCover', 'post.title', 'post.artist'])
         .getMany();
 
       return markers;
