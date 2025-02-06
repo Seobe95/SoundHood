@@ -17,9 +17,7 @@ import { ConfigService } from '@nestjs/config';
 import { NicknameMaker } from '../@common/nickname/nickname.maker';
 import { EditProfileDto } from './dto/edit-profile.dto';
 import axios from 'axios';
-import appleSignInAuth, {
-  AppleAuthorizationTokenResponseType,
-} from 'apple-signin-auth';
+import appleSignInAuth from 'apple-signin-auth';
 import { KakaoLoginResponse } from 'src/@common/types/kakaoLoginTypes';
 import { Post } from 'src/post/post.entity';
 import { Like } from 'src/like/like.entity';
@@ -161,7 +159,7 @@ export class AuthService {
         },
       );
 
-      const { refresh_token } =
+      const appleRefreshToken =
         await this.getAppleRefreshToken(authorizationCode);
 
       const existingUser = await this.userRepository.findOneBy({
@@ -181,9 +179,9 @@ export class AuthService {
       const newUser = await this.userRepository.create({
         email: userAppleId,
         nickname,
+        appleRefreshToken,
         password: '',
         loginType: 'apple',
-        appleRefreshToken: refresh_token,
       });
 
       try {
@@ -209,20 +207,28 @@ export class AuthService {
 
   private async getAppleRefreshToken(authorizationCode: string) {
     const { clientID, clientSecret } = this.getAppleClientInformation();
-    const { data } = await axios.post<AppleAuthorizationTokenResponseType>(
-      'https://appleid.apple.com/auth/token',
-      null,
+    const { refresh_token } = await appleSignInAuth.getAuthorizationToken(
+      authorizationCode,
       {
-        params: {
-          client_id: clientID,
-          client_secret: clientSecret,
-          code: authorizationCode,
-          grant_type: 'authorization_code',
-        },
+        clientID,
+        clientSecret,
+        redirectUri: '',
       },
     );
+    // const { data } = await axios.post<AppleAuthorizationTokenResponseType>(
+    //   'https://appleid.apple.com/auth/token',
+    //   null,
+    //   {
+    //     params: {
+    //       client_id: clientID,
+    //       client_secret: clientSecret,
+    //       code: authorizationCode,
+    //       grant_type: 'authorization_code',
+    //     },
+    //   },
+    // );
 
-    return data;
+    return refresh_token;
   }
 
   private getAppleClientInformation() {
