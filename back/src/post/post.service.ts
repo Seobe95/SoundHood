@@ -83,15 +83,29 @@ export class PostService {
         throw new NotFoundException('존재하지 않는 피드입니다.');
       }
       const { user, ...post } = foundPost;
+
       const existingLike = await this.likeRepository.findOne({
         where: { user: { id: userId }, post: { id: id } },
       });
-      const hasLiked = !!existingLike;
+
+      if (user === null) {
+        return {
+          ...post,
+          hasLiked: existingLike ? !!existingLike : false,
+          isMyPost: false,
+          author: {
+            id: 'deletedUser',
+            nickname: '탈퇴한 사용자',
+            profileUri: '',
+          },
+        };
+      }
+
       const isMyPost = user.id === userId;
 
       return {
         ...post,
-        hasLiked,
+        hasLiked: existingLike ? !!existingLike : false,
         isMyPost,
         author: {
           id: user.id,
@@ -100,7 +114,8 @@ export class PostService {
             user.loginType === 'kakao' ? user.kakaoImageUri : user.imageUri,
         },
       };
-    } catch {
+    } catch (e) {
+      console.log(e);
       throw new InternalServerErrorException(
         '장소를 가져오는 도중 에러가 발생했습니다.',
       );

@@ -215,19 +215,6 @@ export class AuthService {
         redirectUri: '',
       },
     );
-    // const { data } = await axios.post<AppleAuthorizationTokenResponseType>(
-    //   'https://appleid.apple.com/auth/token',
-    //   null,
-    //   {
-    //     params: {
-    //       client_id: clientID,
-    //       client_secret: clientSecret,
-    //       code: authorizationCode,
-    //       grant_type: 'authorization_code',
-    //     },
-    //   },
-    // );
-
     return refresh_token;
   }
 
@@ -332,6 +319,7 @@ export class AuthService {
         await this.userRepository.findOneBy({
           id: user.id,
         });
+
       if (loginType === 'apple') {
         await this.revokeAppleTokens(appleRefreshToken);
       }
@@ -339,7 +327,9 @@ export class AuthService {
         nickname: '탈퇴한 사용자',
         email: `deleted_${user.id}@example.com`,
         password: `password`,
+        appleRefreshToken: null,
       });
+
       await this.likeRepository.delete({ user: { id: user.id } });
       await this.userRepository.softDelete(user.id);
     } catch (e) {

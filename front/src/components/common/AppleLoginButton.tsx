@@ -24,11 +24,18 @@ function AppleLoginButton({}: AppleLoginButtonProps) {
         });
 
       if (identityToken && authorizationCode) {
-        appleSignInMutation.mutate({
-          identityToken,
-          authorizationCode,
-          appId: Config.APP_ID!,
-        });
+        appleSignInMutation.mutate(
+          {
+            identityToken,
+            authorizationCode,
+            appId: Config.APP_ID!,
+          },
+          {
+            onSuccess: result => {
+              console.log(result.accessToken);
+            },
+          },
+        );
       }
     } catch (error: any) {
       if (error.code !== appleAuth.Error.CANCELED) {
