@@ -73,6 +73,8 @@ yarn-error.log
 dist/
 build/
 
+.vscode
+
 # 환경 파일
 .env
 .env.*  # .env.development, .env.production 등
