@@ -46,7 +46,8 @@ function SettingNavigator({}: SettingNavigatorProps) {
         headerTitleStyle: { color: theme.fontColorPrimary },
         headerTitle: headerTitleHandler(route.name),
         headerLeft: isAndroid
-          ? props => {
+          ? // eslint-disable-next-line react/no-unstable-nested-components
+            props => {
               return (
                 <HeaderLeftButton
                   {...props}

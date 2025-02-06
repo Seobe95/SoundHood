@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { ThemeContext } from '@/context/CustomThemeContext';
 import { Platform } from 'react-native';
 import HeaderLeftButton from '@/components/common/HeaderLeftButton';
+import { HeaderBackButtonProps } from '@react-navigation/elements';
 
 export type MyPageStackParamList = {
   [myPageStackNavigations.NICKNAME_CHANGE]: undefined;
@@ -19,6 +20,7 @@ const MyPageStack = createStackNavigator<MyPageStackParamList>();
 function MyPageNavigator() {
   const theme = useContext(ThemeContext);
   const isAndroid = Platform.OS === 'android';
+
   function handleHeaderTitle(title: string) {
     switch (title) {
       case myPageStackNavigations.MY_PAGE_HOME:
@@ -45,7 +47,8 @@ function MyPageNavigator() {
         },
         headerTitleStyle: { color: theme.fontColorPrimary },
         headerLeft: isAndroid
-          ? props => {
+          ? // eslint-disable-next-line react/no-unstable-nested-components
+            props => {
               return (
                 <HeaderLeftButton
                   {...props}

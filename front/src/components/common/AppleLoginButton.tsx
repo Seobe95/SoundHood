@@ -17,14 +17,18 @@ function AppleLoginButton({}: AppleLoginButtonProps) {
 
   async function handlePressAppleSignIn() {
     try {
-      const { identityToken } = await appleAuth.performRequest({
-        requestedOperation: appleAuth.Operation.LOGIN,
-        requestedScopes: [appleAuth.Scope.EMAIL],
-      });
+      const { identityToken, authorizationCode } =
+        await appleAuth.performRequest({
+          requestedOperation: appleAuth.Operation.LOGIN,
+          requestedScopes: [appleAuth.Scope.EMAIL],
+        });
 
-      if (identityToken) {
-        console.log({ identityToken, appId: Config.APP_ID! });
-        appleSignInMutation.mutate({ identityToken, appId: Config.APP_ID! });
+      if (identityToken && authorizationCode) {
+        appleSignInMutation.mutate({
+          identityToken,
+          authorizationCode,
+          appId: Config.APP_ID!,
+        });
       }
     } catch (error: any) {
       if (error.code !== appleAuth.Error.CANCELED) {
