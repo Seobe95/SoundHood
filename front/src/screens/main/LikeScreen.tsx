@@ -10,7 +10,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useContext } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import AuthRequiredScreen from '../auth/AuthRequiredScreen';
 import { useRefreshOnFocus } from '@/hooks/common/useRefreshOnFocus';
 
@@ -18,6 +18,14 @@ type LikeScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.LIKE>,
   StackScreenProps<RootStackParamList, typeof rootStackNavigations.MAIN_TAP>
 >;
+
+function EmptyLikeScreen() {
+  return (
+    <View style={styles.empty}>
+      <CustomFont>좋아요를 누른 음악이 없어요...🥲</CustomFont>
+    </View>
+  );
+}
 
 function LikeScreen({ navigation }: LikeScreenProps) {
   const { isLogin } = useContext(AuthContext);
@@ -60,6 +68,8 @@ function LikeScreen({ navigation }: LikeScreenProps) {
               />
             );
           }}
+          ListEmptyComponent={EmptyLikeScreen}
+          contentContainerStyle={styles.listContainer}
         />
       ) : (
         <AuthRequiredScreen
@@ -74,6 +84,11 @@ function LikeScreen({ navigation }: LikeScreenProps) {
 const styles = StyleSheet.create({
   listContainer: {
     height: '100%',
+  },
+  empty: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
