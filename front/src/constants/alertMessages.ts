@@ -44,6 +44,14 @@ const alertMessages = {
       { text: '취소', style: 'cancel' },
     ],
   },
+  DELETE_ACCOUNT: {
+    TITLE: '회원 탈퇴를 진행하시겠습니까?',
+    MESSAGE: '회원 탈퇴 시 데이터 복구는 불가합니다.',
+    BUTTONS: [
+      { text: '탈퇴', style: 'destructive' },
+      { text: '취소', style: 'cancel' },
+    ],
+  },
 } as const;
 
 const permissionAlertMessages = {

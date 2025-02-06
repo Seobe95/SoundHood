@@ -4,6 +4,7 @@ import { FlatList, StyleSheet } from 'react-native';
 import AuthRequiredScreen from '../auth/AuthRequiredScreen';
 import Container from '@/components/common/Container';
 import {
+  alertMessages,
   authNavigations,
   myPageStackNavigations,
   rootStackNavigations,
@@ -20,6 +21,7 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import useAuth from '@/hooks/queries/useAuth';
 import useDeleteAccount from '@/hooks/auth/useDeleteAccount';
 import { MypageNavigateTitle } from '@/constants/navigateTitle';
+import { alertHandler } from '@/utils';
 
 const myPageNavigationData: NavigationListType<MyPageNavigationType>[] = [
   {
@@ -68,9 +70,12 @@ function MypageHome({ navigation }: MypageHomeProps) {
         logoutHandler();
         break;
       case MypageNavigateTitle.DELETE_ACCOUNT:
-        handleDeleteAccount(userInfo?.loginType, () => {
-          navigation.goBack();
+        alertHandler('DELETE_ACCOUNT', () => {
+          handleDeleteAccount(userInfo?.loginType, () => {
+            navigation.goBack();
+          });
         });
+
         break;
     }
   }
@@ -91,6 +96,7 @@ function MypageHome({ navigation }: MypageHomeProps) {
     <Container>
       {isLogin ? (
         <FlatList
+          style={styles.list}
           data={myPageNavigationData}
           renderItem={item => {
             const { icon, screen, title } = item.item;
@@ -117,6 +123,10 @@ function MypageHome({ navigation }: MypageHomeProps) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  list: {
+    height: '100%',
+  },
+});
 
 export default MypageHome;
