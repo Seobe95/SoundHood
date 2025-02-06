@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import AuthNavigator, { AuthStackParamList } from '../auth/AuthNavigator';
 import TabNavigator, { MainTabParamList } from '../tab/TabNavigator';
@@ -16,6 +16,9 @@ import SettingNavigator, {
 import MyPageNavigator, {
   MyPageStackParamList,
 } from '../mypage/MyPageNavigator';
+import useAuth from '@/hooks/queries/useAuth';
+import appleAuth from '@invertase/react-native-apple-authentication';
+import { ToastContext } from '@/context/ToastContext';
 
 export type RootStackParamList = {
   [rootStackNavigations.AUTH]: NavigatorScreenParams<AuthStackParamList>;
@@ -30,6 +33,22 @@ const RootStack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const theme = useContext(ThemeContext);
+  const { deleteAccountMutation } = useAuth();
+  const { show } = useContext(ToastContext);
+
+  useEffect(() => {
+    return appleAuth.onCredentialRevoked(() => {
+      deleteAccountMutation.mutate(
+        {},
+        {
+          onSuccess: () => {
+            show({ message: '애플 회원탈퇴가 반영되었습니다.', time: 'short' });
+          },
+        },
+      );
+    });
+  }, [deleteAccountMutation, show]);
+
   return (
     <RootStack.Navigator
       screenOptions={{

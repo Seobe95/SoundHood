@@ -23,6 +23,9 @@ function LoginScreen() {
   const onPress = async () => {
     Keyboard.dismiss();
     loginMutation.mutate(login.values, {
+      onSuccess: result => {
+        console.log(result.accessToken);
+      },
       onError: error => {
         show({
           message:

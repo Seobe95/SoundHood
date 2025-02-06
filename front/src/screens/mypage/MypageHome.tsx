@@ -18,24 +18,26 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { MyPageStackParamList } from '@/navigators/mypage/MyPageNavigator';
 import { CompositeScreenProps } from '@react-navigation/native';
 import useAuth from '@/hooks/queries/useAuth';
+import useDeleteAccount from '@/hooks/auth/useDeleteAccount';
+import { MypageNavigateTitle } from '@/constants/navigateTitle';
 
 const myPageNavigationData: NavigationListType<MyPageNavigationType>[] = [
   {
     screen: myPageStackNavigations.MY_POST_PAGE,
     icon: 'newspaper-outline',
-    title: '내가 작성한 글',
+    title: MypageNavigateTitle.MY_POST_PAGE,
   },
   {
     screen: myPageStackNavigations.NICKNAME_CHANGE,
     icon: 'id-card-outline',
-    title: '닉네임 변경',
+    title: MypageNavigateTitle.NICKNAME_CHANGE,
   },
   {
-    title: '로그아웃',
+    title: MypageNavigateTitle.LOGOUT,
     icon: 'log-out-outline',
   },
   {
-    title: '회원 탈퇴',
+    title: MypageNavigateTitle.DELETE_ACCOUNT,
     icon: 'person-remove-outline',
   },
 ];
@@ -46,26 +48,30 @@ type MypageHomeProps = CompositeScreenProps<
 >;
 
 function MypageHome({ navigation }: MypageHomeProps) {
-  const { isLogin, logout } = useContext(AuthContext);
+  const { isLogin, logout, userInfo } = useContext(AuthContext);
   const { logoutMutation } = useAuth();
+  const { handleDeleteAccount } = useDeleteAccount();
 
-  function handleNavigateButton(
-    screen: MyPageNavigationType | undefined,
-    title: string,
-  ) {
-    switch (screen) {
-      case myPageStackNavigations.MY_POST_PAGE:
+  function handleNavigateButton(title: string) {
+    switch (title) {
+      case MypageNavigateTitle.MY_POST_PAGE:
         navigation.navigate(rootStackNavigations.MYPAGE, {
           screen: myPageStackNavigations.MY_POST_PAGE,
         });
         break;
-      case myPageStackNavigations.NICKNAME_CHANGE:
+      case MypageNavigateTitle.NICKNAME_CHANGE:
         navigation.navigate(rootStackNavigations.MYPAGE, {
           screen: myPageStackNavigations.NICKNAME_CHANGE,
         });
         break;
-      default:
-        title === '로그아웃' ? logoutHandler() : undefined;
+      case MypageNavigateTitle.LOGOUT:
+        logoutHandler();
+        break;
+      case MypageNavigateTitle.DELETE_ACCOUNT:
+        handleDeleteAccount(userInfo?.loginType, () => {
+          navigation.goBack();
+        });
+        break;
     }
   }
 
@@ -75,6 +81,7 @@ function MypageHome({ navigation }: MypageHomeProps) {
       {
         onSuccess: () => {
           logout();
+          navigation.goBack();
         },
       },
     );
@@ -91,7 +98,7 @@ function MypageHome({ navigation }: MypageHomeProps) {
               <NavigationListItem
                 icon={icon}
                 title={title}
-                onPress={() => handleNavigateButton(screen, title)}
+                onPress={() => handleNavigateButton(title)}
               />
             );
           }}

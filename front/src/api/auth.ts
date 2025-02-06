@@ -54,11 +54,13 @@ const postKakaoSignIn = async ({
 const postAppleSignIn = async (appleIdentity: {
   identityToken: string;
   appId: string;
+  authorizationCode: string;
 }): Promise<ResponseToken> => {
-  const { appId, identityToken } = appleIdentity;
+  const { appId, identityToken, authorizationCode } = appleIdentity;
   const { data } = await apiInstance.post('/auth/oauth/apple', {
     appId,
     identityToken,
+    authorizationCode,
   });
 
   return data;
@@ -88,6 +90,10 @@ const logout = async () => {
   await apiInstance.post('/auth/logout');
 };
 
+const deleteAccount = async () => {
+  await apiInstance.delete('/auth/me');
+};
+
 export {
   postSignup,
   postSignin,
@@ -97,5 +103,6 @@ export {
   getAccessToken,
   patchProfile,
   logout,
+  deleteAccount,
 };
 export type { ResponseToken };
