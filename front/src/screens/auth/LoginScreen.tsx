@@ -64,7 +64,7 @@ function LoginScreen() {
       <View style={styles.buttonContainer}>
         <CustomButton
           label="로그인"
-          invalid={!login.isVaild}
+          invalid={!login.isValid}
           onPress={onPress}
           isLoading={loginMutation.isPending}
         />

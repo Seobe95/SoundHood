@@ -6,14 +6,14 @@ interface UseFormProps<T> {
 }
 /**
  * Form에 사용되는 hook입니다.
- * @param initailValue
+ * @param initialValue
  * @returns
  */
 export function useForm<T>({ initialValue, validate }: UseFormProps<T>) {
   const [values, setValues] = useState(initialValue);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [isVaild, setIsVaild] = useState<boolean>(false);
+  const [isValid, setIsValid] = useState<boolean>(false);
 
   const handleChangeText = (name: keyof T, text: string) => {
     setValues({
@@ -48,8 +48,8 @@ export function useForm<T>({ initialValue, validate }: UseFormProps<T>) {
   useEffect(() => {
     const newErrors = validate(values);
     setErrors(newErrors);
-    setIsVaild(updateButtonState(newErrors));
+    setIsValid(updateButtonState(newErrors));
   }, [validate, values]);
 
-  return { values, touched, errors, isVaild, getTextInputProps };
+  return { values, touched, errors, isValid, getTextInputProps };
 }
