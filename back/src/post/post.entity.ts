@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { ColumnNumericTransformer } from 'src/@common/transformer/numeric.transformer';
+import { ColumnNumericTransformer } from '../@common/transformer/numeric.transformer';
 import { User } from '../auth/user.entity';
 import { Like } from '../like/like.entity';
 
