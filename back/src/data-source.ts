@@ -1,10 +1,9 @@
-import 'dotenv/config';
 import * as path from 'path';
 import { DataSource } from 'typeorm';
 
 const __dirname = path.resolve();
 
-export default new DataSource({
+export const AppDataSource =  new DataSource({
   type: 'postgres',
   host: process.env.DB_HOST,
   port: 5432,
@@ -18,3 +17,6 @@ export default new DataSource({
   migrationsTableName: 'migrations',
   migrations: ['src/migrations/*.{js, ts}'],
 });
+
+export default AppDataSource;
+module.exports = AppDataSource;
