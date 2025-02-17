@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import AuthNavigator, { AuthStackParamList } from '../auth/AuthNavigator';
 import TabNavigator, { MainTabParamList } from '../tab/TabNavigator';
 import PostNavigator, { PostStackParamList } from '../post/PostNavigator';
@@ -37,16 +37,21 @@ function RootNavigator() {
   const { show } = useContext(ToastContext);
 
   useEffect(() => {
-    return appleAuth.onCredentialRevoked(() => {
-      deleteAccountMutation.mutate(
-        {},
-        {
-          onSuccess: () => {
-            show({ message: '애플 회원탈퇴가 반영되었습니다.', time: 'short' });
+    if (Platform.OS === 'ios') {
+      return appleAuth.onCredentialRevoked(() => {
+        deleteAccountMutation.mutate(
+          {},
+          {
+            onSuccess: () => {
+              show({
+                message: '애플 회원탈퇴가 반영되었습니다.',
+                time: 'short',
+              });
+            },
           },
-        },
-      );
-    });
+        );
+      });
+    }
   }, [deleteAccountMutation, show]);
 
   return (
