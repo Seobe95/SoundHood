@@ -67,7 +67,7 @@ function RegisterScreen({}: RegisterScreenProps) {
         <CustomButton
           label="회원가입"
           onPress={onPress}
-          invalid={!signup.isVaild}
+          invalid={!signup.isValid}
         />
       </View>
     </View>

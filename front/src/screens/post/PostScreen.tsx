@@ -118,7 +118,7 @@ function PostScreen() {
           label="등록하기"
           onPress={onSubmit}
           invalid={
-            !(location !== null && description.isVaild && selectedSong !== null)
+            !(location !== null && description.isValid && selectedSong !== null)
           }
           isLoading={createPost.isPending}
         />
