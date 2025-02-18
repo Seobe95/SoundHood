@@ -26,7 +26,7 @@ import { ImageModule } from './image/image.module';
       ssl:
         process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
       entities: [__dirname + '/**/*.entity.{js, ts}'],
-      synchronize: process.env.NODE_ENV === 'development' ? true : false,
+      synchronize: true,
     }),
     PostModule,
     AuthModule,
