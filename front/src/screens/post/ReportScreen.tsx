@@ -58,7 +58,7 @@ function ReportScreen({ navigation, route }: ReportScreenProps) {
       <CustomButton
         label={'신고하기'}
         onPress={handleReportButton}
-        invalid={!reportForm.isVaild}
+        invalid={!reportForm.isValid}
       />
     </Pressable>
   );
