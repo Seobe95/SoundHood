@@ -15,6 +15,9 @@ const toastMessages = {
     SUCCESS: '노래가 성공적으로 등록되었습니다.',
     FAIL: '노래 등록에 실패했습니다.',
   },
+  LIKE: {
+    ERROR: '좋아요 목록을 불러오는데 실패했습니다.',
+  },
   EDIT: {
     SUCCESS: '수정이 완료되었습니다.',
     FAIL: '수정이 실패했습니다.',
@@ -37,6 +40,9 @@ const toastMessages = {
   DELETE_ACCOUNT: {
     SUCCESS: '회원탈퇴가 완료되었습니다.',
     FAIL: '회원탈퇴에 실패하였습니다. 잠시 후 다시 시도해주세요.',
+  },
+  GET_POST: {
+    ERROR: '게시글 조회에 실패했습니다. 잠시 후 다시 시도해주세요.',
   },
 } as const;
 

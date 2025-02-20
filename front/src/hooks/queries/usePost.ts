@@ -8,6 +8,7 @@ import {
   CreatePostParams,
   deletePost,
   getMarkers,
+  getMyPosts,
   getUsersLikePosts,
   Markers,
   Post,
@@ -19,7 +20,12 @@ import {
   updatePost,
   UpdatePostParams,
 } from '@/api';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  QueryFunction,
+  QueryKey,
+  useMutation,
+  useQuery,
+} from '@tanstack/react-query';
 import { postQueryKeys, toastMessages } from '@/constants';
 import { useContext, useEffect } from 'react';
 import { ToastContext } from '@/context/ToastContext.tsx';
@@ -131,14 +137,19 @@ function useUpdateLikePost({ mutationOptions }: UseUpdateLikePostParams) {
   });
 }
 
-function useGetUsersLikePosts(queryOptions?: UseQueryCustomOptions<Post[]>) {
+function useGetPosts<T>(
+  getPostApi: QueryFunction<T>,
+  errorMessage: string,
+  queryKey?: string,
+  queryOptions?: UseQueryCustomOptions<T>,
+) {
   const { show } = useContext(ToastContext);
   const { data, isSuccess, isError, isLoading, refetch } = useQuery<
-    Post[],
+    T,
     ResponseError
   >({
-    queryKey: [postQueryKeys.READ_USERS_LIKE_POSTS],
-    queryFn: getUsersLikePosts,
+    queryKey: [queryKey],
+    queryFn: getPostApi,
     refetchOnMount: 'always',
     ...queryOptions,
   });
@@ -151,13 +162,32 @@ function useGetUsersLikePosts(queryOptions?: UseQueryCustomOptions<Post[]>) {
 
   useEffect(() => {
     if (isError) {
-      show({ message: toastMessages.MAP.ERROR, time: 'long' });
+      show({ message: errorMessage, time: 'long' });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isError]);
 
   return { data, isSuccess, isError, isLoading, refetch };
 }
+
+function useGetUsersLikePosts(queryOptions?: UseQueryCustomOptions<Post[]>) {
+  return useGetPosts<Post[]>(
+    getUsersLikePosts,
+    toastMessages.LIKE.ERROR,
+    postQueryKeys.READ_USERS_LIKE_POSTS,
+    queryOptions,
+  );
+}
+
+function useGetMyPosts(queryOptions?: UseQueryCustomOptions<Post[]>) {
+  return useGetPosts<Post[]>(
+    getMyPosts,
+    toastMessages.GET_POST.ERROR,
+    postQueryKeys.READ_MY_POST,
+    queryOptions,
+  );
+}
+
 export {
   useReadPostById,
   useCreatePost,
@@ -166,4 +196,5 @@ export {
   useUpdateLikePost,
   useReadMarkers,
   useGetUsersLikePosts,
+  useGetMyPosts,
 };

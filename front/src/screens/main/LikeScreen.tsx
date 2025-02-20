@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 import Container from '@/components/common/Container';
 import CustomFont from '@/components/common/CustomFont';
 import SongInfo from '@/components/common/SongInfo';
@@ -9,29 +10,26 @@ import { MainTabParamList } from '@/navigators/tab/TabNavigator';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { CompositeScreenProps } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import AuthRequiredScreen from '../auth/AuthRequiredScreen';
 import { useRefreshOnFocus } from '@/hooks/common/useRefreshOnFocus';
+import EmptyScreen from '../common/EmptyScreen';
 
 type LikeScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.LIKE>,
   StackScreenProps<RootStackParamList, typeof rootStackNavigations.MAIN_TAP>
 >;
 
-function EmptyLikeScreen() {
-  return (
-    <View style={styles.empty}>
-      <CustomFont>좋아요를 누른 음악이 없어요...🥲</CustomFont>
-    </View>
-  );
-}
-
 function LikeScreen({ navigation }: LikeScreenProps) {
   const { isLogin } = useContext(AuthContext);
-  const { data, isSuccess, refetch } = useGetUsersLikePosts();
-
-  useRefreshOnFocus(refetch);
+  const { data, refetch, isError } = useGetUsersLikePosts({
+    enabled: isLogin,
+  });
+  const informationMessage = isError
+    ? '음악을 불러오는데 문제가 발생했어요..'
+    : '좋아요를 누른 음악이 없어요...🥲';
+  useRefreshOnFocus(refetch, isLogin);
 
   function handleNavigateToDetailScreen({ postId }: { postId: string }) {
     navigation.navigate('DetailNavigator', {
@@ -47,7 +45,6 @@ function LikeScreen({ navigation }: LikeScreenProps) {
       screen: 'AuthHome',
     });
   }
-
   return (
     <Container>
       {isLogin ? (
@@ -68,7 +65,9 @@ function LikeScreen({ navigation }: LikeScreenProps) {
               />
             );
           }}
-          ListEmptyComponent={EmptyLikeScreen}
+          ListEmptyComponent={() => (
+            <EmptyScreen informationMessage={informationMessage} />
+          )}
           contentContainerStyle={styles.listContainer}
         />
       ) : (

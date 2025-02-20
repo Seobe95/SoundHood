@@ -44,13 +44,13 @@ export class PostService {
 
   async getMyPosts(user: User) {
     try {
-      const markers = await this.postRepository
+      const myPosts = await this.postRepository
         .createQueryBuilder('post')
         .where('post.userId = :userId', { userId: user.id })
         .select(['post.id', 'post.albumCover', 'post.title', 'post.artist'])
         .getMany();
 
-      return markers;
+      return myPosts;
     } catch (e) {
       console.log(e);
       throw new InternalServerErrorException(
