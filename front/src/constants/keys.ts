@@ -21,6 +21,7 @@ const postQueryKeys = {
   GET_MAKERS: 'markers',
   READ_POST_BY_ID: 'readPostById',
   READ_POST: 'readPost',
+  READ_MY_POST: 'readMyPost',
   READ_POST_LIKE_COUNT: 'readPostLikeCount',
   READ_USERS_LIKE_POSTS: 'readUsersLikePosts',
 } as const;

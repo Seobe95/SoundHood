@@ -90,6 +90,11 @@ async function getUsersLikePosts() {
   return data;
 }
 
+async function getMyPosts() {
+  const { data } = await apiInstance.get('/my/posts');
+  return data;
+}
+
 export {
   readPosts,
   readPostById,
@@ -99,4 +104,5 @@ export {
   updateLikePost,
   getMarkers,
   getUsersLikePosts,
+  getMyPosts,
 };
