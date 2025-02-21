@@ -16,6 +16,7 @@ import { FlatList, StyleSheet } from 'react-native';
 import EmptyScreen from '../common/EmptyScreen';
 import { RootStackParamList } from '@/navigators/root/RootNavigator';
 import { useRefreshOnFocus } from '@/hooks/common/useRefreshOnFocus';
+import SourceInformationText from '@/components/common/SourceInformationText';
 
 type MyPostsScreenProps = CompositeScreenProps<
   StackScreenProps<
@@ -26,7 +27,7 @@ type MyPostsScreenProps = CompositeScreenProps<
 >;
 
 function MyPostsScreen({ navigation }: MyPostsScreenProps) {
-  const { data, refetch, isError } = useGetMyPosts();
+  const { data, refetch, isError, isSuccess } = useGetMyPosts();
   const informationMessage = isError
     ? '내가 등록한 음악을 불러오는데 실패했어요.'
     : '등록한 음악이 없어요...🥲';
@@ -65,6 +66,12 @@ function MyPostsScreen({ navigation }: MyPostsScreenProps) {
           <EmptyScreen informationMessage={informationMessage} />
         )}
         contentContainerStyle={styles.listContainer}
+        ListFooterComponent={() => {
+          const arr = data !== undefined ? data : [];
+          if (isSuccess && arr.length > 0) {
+            return <SourceInformationText />;
+          }
+        }}
       />
     </Container>
   );

@@ -1,6 +1,6 @@
 import { NaverMapView } from '@mj-studio/react-native-naver-map';
 import React, { useContext, useState } from 'react';
-import { Keyboard, StyleSheet, useColorScheme, View } from 'react-native';
+import { Keyboard, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import { ThemeContext } from '@/context/CustomThemeContext.tsx';
 import {
   ColorsType,
@@ -26,6 +26,8 @@ import { Markers } from '@/api';
 import useActionSheet from '@/hooks/common/useActionSheet.ts';
 import SongInfoActionSheet from '@/components/map/SongInfoActionSheet.tsx';
 import { useRefreshOnFocus } from '@/hooks/common/useRefreshOnFocus';
+import CustomFont from '@/components/common/CustomFont';
+import SourceInformationText from '@/components/common/SourceInformationText';
 
 export type MapScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MAP>,
@@ -133,11 +135,14 @@ function MapScreen({ navigation, route }: MapScreenProps) {
           hide();
           setSelectedMarker(null);
         }}>
-        <SongInfoActionSheet
-          isLogin={auth.isLogin}
-          selectedMarker={selectedMarker}
-          onPress={onPressActionSheet}
-        />
+        <View style={styles.actionSheetContainer}>
+          <SongInfoActionSheet
+            isLogin={auth.isLogin}
+            selectedMarker={selectedMarker}
+            onPress={onPressActionSheet}
+          />
+          <SourceInformationText />
+        </View>
       </CustomActionSheet>
     </>
   );
@@ -189,6 +194,7 @@ const makeStyles = (color: ColorsType) =>
       width: '100%',
       height: '100%',
     },
+    actionSheetContainer: {},
   });
 
 export default MapScreen;

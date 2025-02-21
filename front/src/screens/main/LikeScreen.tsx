@@ -15,6 +15,7 @@ import { FlatList, StyleSheet, View } from 'react-native';
 import AuthRequiredScreen from '../auth/AuthRequiredScreen';
 import { useRefreshOnFocus } from '@/hooks/common/useRefreshOnFocus';
 import EmptyScreen from '../common/EmptyScreen';
+import SourceInformationText from '@/components/common/SourceInformationText';
 
 type LikeScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.LIKE>,
@@ -23,7 +24,7 @@ type LikeScreenProps = CompositeScreenProps<
 
 function LikeScreen({ navigation }: LikeScreenProps) {
   const { isLogin } = useContext(AuthContext);
-  const { data, refetch, isError } = useGetUsersLikePosts({
+  const { data, refetch, isError, isSuccess } = useGetUsersLikePosts({
     enabled: isLogin,
   });
   const informationMessage = isError
@@ -69,6 +70,12 @@ function LikeScreen({ navigation }: LikeScreenProps) {
             <EmptyScreen informationMessage={informationMessage} />
           )}
           contentContainerStyle={styles.listContainer}
+          ListFooterComponent={() => {
+            const arr = data !== undefined ? data : [];
+            if (isSuccess && arr.length > 0) {
+              return <SourceInformationText />;
+            }
+          }}
         />
       ) : (
         <AuthRequiredScreen

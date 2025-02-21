@@ -35,6 +35,7 @@ import { alertHandler } from '@/utils';
 import { queryClient } from '@/api';
 import useActionSheet from '@/hooks/common/useActionSheet.ts';
 import { ToastContext } from '@/context/ToastContext.tsx';
+import SourceInformationText from '@/components/common/SourceInformationText';
 
 type DetailScreenProps = {} & DetailStackScreenProps;
 
@@ -174,6 +175,7 @@ function DetailScreen({ navigation, route }: DetailScreenProps) {
             </View>
           </View>
         )}
+        <SourceInformationText margin="none" />
       </View>
       <CustomActionSheet isOpen={isOpen} hide={hide}>
         <View style={styles.actionSheetContainer}>
