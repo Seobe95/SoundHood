@@ -16,6 +16,7 @@ import { CreatePostParams, queryClient } from '@/api';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '@/navigators/root/RootNavigator.tsx';
+import SourceInformationText from '@/components/common/SourceInformationText';
 
 function PostScreen() {
   const themeColor = useContext(ThemeContext);
@@ -112,6 +113,7 @@ function PostScreen() {
         <Text style={styles.reportWarningFont}>
           커뮤니티 규칙 위반 내용은 신고 및 삭제될 수 있습니다.
         </Text>
+        {selectedSong && <SourceInformationText margin="none" />}
       </View>
       <View style={styles.buttonContainer}>
         <CustomButton

@@ -141,7 +141,7 @@ function MapScreen({ navigation, route }: MapScreenProps) {
             selectedMarker={selectedMarker}
             onPress={onPressActionSheet}
           />
-          <SourceInformationText />
+          <SourceInformationText margin="large" />
         </View>
       </CustomActionSheet>
     </>
