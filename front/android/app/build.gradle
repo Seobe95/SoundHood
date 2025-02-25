@@ -72,18 +72,35 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+project.ext.envConfigFiles = [
+        developdebug: "env/.env.development",
+        product: "env/.env.production",
+        anothercustombuild: ".env"
+]
+
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+project.ext.vectoricons = [
+    iconFontNames: [ 'Ionicons.ttf' ] // Specify font files
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.front"
+    namespace "com.soundhood.seobe"
     defaultConfig {
-        applicationId "com.front"
+        applicationId "com.soundhood.seobe"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [
+            kakaoScheme: "kakao${project.env.get("KAKAO_NATIVE_APP_KEY")}"
+        ]
     }
     signingConfigs {
         debug {
@@ -105,12 +122,25 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    flavorDimensions 'version'
+    productFlavors {
+        develop {
+            dimension "version"
+        }
+        staging {
+
+        }
+        product {
+            dimension "version"
+        }
+    }
+
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
