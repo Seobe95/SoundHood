@@ -45,8 +45,8 @@ function usePermission(type: PermissionsType) {
     const permissionOS = isAndroid ? androidPermission : iOSPermission;
 
     (async () => {
-      const checked = await check(permissionOS[type]);
-      switch (checked) {
+      const isChecked = await check(permissionOS[type]);
+      switch (isChecked) {
         case 'denied':
           if (isAndroid) {
             requestSettingAlert();

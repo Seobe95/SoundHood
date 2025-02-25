@@ -102,6 +102,8 @@ function MapScreen({ navigation, route }: MapScreenProps) {
         isShowScaleBar={false}
         isShowZoomControls={false}
         mapType="Navi"
+        isShowCompass={false}
+        logoAlign="TopRight"
         initialCamera={userLocation}
         onCameraIdle={({ latitude, longitude, zoom }) => {
           setUserLocation({ latitude, longitude, zoom: zoom || 14 });
