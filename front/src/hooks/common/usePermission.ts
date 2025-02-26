@@ -45,13 +45,13 @@ function usePermission(type: PermissionsType) {
     const permissionOS = isAndroid ? androidPermission : iOSPermission;
 
     (async () => {
-      const isChecked = await check(permissionOS[type]);
+      let isChecked = await check(permissionOS[type]);
       switch (isChecked) {
         case 'denied':
           if (isAndroid) {
             requestSettingAlert();
           } else {
-            await request(permissionOS[type]);
+            isChecked = await request(permissionOS[type]);
           }
           break;
         case 'blocked':
@@ -61,9 +61,9 @@ function usePermission(type: PermissionsType) {
           requestSettingAlert();
           break;
         default:
+          setChecked(isChecked);
           break;
       }
-      setChecked(checked);
     })();
   }, [type]);
 

@@ -74,7 +74,9 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 
 project.ext.envConfigFiles = [
         developdebug: "env/.env.development",
-        product: "env/.env.production",
+        developrelease: "env/.env.development",
+        productdebug: "env/.env.production",
+        productrelease: "env/.env.production",
         anothercustombuild: ".env"
 ]
 
@@ -97,7 +99,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         manifestPlaceholders = [
             kakaoScheme: "kakao${project.env.get("KAKAO_NATIVE_APP_KEY")}"
         ]

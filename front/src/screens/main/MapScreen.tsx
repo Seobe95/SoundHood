@@ -28,6 +28,7 @@ import SongInfoActionSheet from '@/components/map/SongInfoActionSheet.tsx';
 import { useRefreshOnFocus } from '@/hooks/common/useRefreshOnFocus';
 import CustomFont from '@/components/common/CustomFont';
 import SourceInformationText from '@/components/common/SourceInformationText';
+import Config from 'react-native-config';
 
 export type MapScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainTabParamList, typeof mainTabNavigations.MAP>,
@@ -103,7 +104,6 @@ function MapScreen({ navigation, route }: MapScreenProps) {
         isShowZoomControls={false}
         mapType="Navi"
         isShowCompass={false}
-        logoAlign="TopRight"
         initialCamera={userLocation}
         onCameraIdle={({ latitude, longitude, zoom }) => {
           setUserLocation({ latitude, longitude, zoom: zoom || 14 });
