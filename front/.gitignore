@@ -79,4 +79,4 @@ yarn-error.log
 # react-native-config 설정 파일
 ios/tmp.xcconfig
 
-./android/gradle.properties
+android/gradle.properties
